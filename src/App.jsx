@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import liff, { initLiff, getProfile } from "./liff";
+import { initLiff, getProfile } from "./liff/liff";
 
 function App() {
   const [loading, setLoading] = useState(true);

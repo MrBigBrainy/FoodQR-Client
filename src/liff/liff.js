@@ -2,6 +2,7 @@ import liff from "@line/liff";
 
 
 export const initLiff = async () => {
+    const liffId = "2008556874-G43oa4Nq"
     try {
         await liff.init({ liffId });
         console.log("LIFF init success");
