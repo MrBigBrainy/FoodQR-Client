@@ -1,35 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import liff, { initLiff, getProfile } from "./liff";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const startLiff = async () => {
+      try {
+        await initLiff();
+        const profileData = await getProfile();
+        setProfile(profileData);
+      } catch (err) {
+        console.error(err);
+        setError("Cannot init LIFF");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    startLiff();
+  }, []);
+
+  const handleLogout = () => {
+    if (liff.isLoggedIn()) {
+      liff.logout();
+      window.location.reload();
+    }
+  };
+
+  if (loading) return <div>Loading LIFF...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div style={{ padding: 16 }}>
+      <h1>React + LINE LIFF</h1>
+
+      {profile ? (
+        <>
+          <img
+            src={profile.pictureUrl}
+            alt="profile"
+            style={{ width: 80, borderRadius: "50%" }}
+          />
+          <h2>{profile.displayName}</h2>
+          <p>UserID: {profile.userId}</p>
+          {profile.statusMessage && <p>{profile.statusMessage}</p>}
+
+          <button onClick={handleLogout}>Logout</button>
+        </>
+      ) : (
+        <p>No profile (not logged in?)</p>
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
