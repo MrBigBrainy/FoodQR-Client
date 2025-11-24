@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { initLiff, getProfile } from "./liff/liff";
+import { QRCodeSVG } from "qrcode.react";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -35,6 +36,8 @@ function App() {
 
   return (
     <div style={{ padding: 16 }}>
+      <h1>Scan MY QR Code</h1>
+      <QRCodeSVG value={'https://liff.line.me/2008556874-G43oa4Nq'} size={256} />
       <h1>React + LINE LIFF</h1>
 
       {profile ? (
