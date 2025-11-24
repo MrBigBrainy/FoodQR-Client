@@ -7,6 +7,23 @@ function App() {
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState(null);
 
+  Omise.setPublicKey(import.meta.env.VITE_OMISE_PUBLIC_KEY)
+
+  const createSource = () => {
+    return new Promise((resolve, reject) => {
+      // ทำการส่ง source ที่ต้องการจ่ายไป omise เพื่อนำ source token กลับมา
+      Omise.createSource('rabbit_linepay', {
+        amount: (100 * 100),
+        currency: 'THB'
+      }, (statusCode, response) => {
+        if (statusCode !== 200) {
+          return reject(response)
+        }
+        resolve(response)
+      })
+    })
+  }
+
   useEffect(() => {
     const startLiff = async () => {
       try {
@@ -36,6 +53,11 @@ function App() {
 
   return (
     <div style={{ padding: 16 }}>
+      <h1>Omise Response</h1>
+      <button onClick={async () => {
+        const response = await createSource()
+        console.log(response)
+      }}>Test Omise Response</button>
       <h1>Scan MY QR Code</h1>
       <QRCodeSVG value={'https://liff.line.me/2008556874-G43oa4Nq'} size={256} />
       <h1>React + LINE LIFF</h1>
