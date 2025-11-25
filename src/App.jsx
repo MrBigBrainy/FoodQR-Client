@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { initLiff, getProfile } from "./liff/liff";
 import { QRCodeSVG } from "qrcode.react";
+import axios from "axios"
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -55,8 +56,13 @@ function App() {
     <div style={{ padding: 16 }}>
       <h1>Omise Response</h1>
       <button onClick={async () => {
-        const response = await createSource()
+        const omiseResponse = await createSource()
+
+        const response = await axios.post('http://localhost:3000/api/omise', {
+          source: omiseResponse.id
+        })
         console.log(response)
+
       }}>Test Omise Response</button>
       <h1>Scan MY QR Code</h1>
       <QRCodeSVG value={'https://liff.line.me/2008556874-G43oa4Nq'} size={256} />
