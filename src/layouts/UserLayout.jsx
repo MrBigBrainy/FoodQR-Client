@@ -8,7 +8,7 @@ function UserLayout() {
   return (
     <div>
       <Header />
-      <div>
+      <div className="pt-15">
         <Outlet />
       </div>
       <CartIcon />

@@ -1,8 +1,9 @@
 //หน้าเมนู มีรายการ อาหาร มี category
 import React from "react";
+import MenuList from "../components/MenuList";
 
 function MenuPage() {
-  return <div>MenuPage</div>;
+  return <MenuList />;
 }
 
 export default MenuPage;
