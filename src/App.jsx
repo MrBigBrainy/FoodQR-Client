@@ -13,7 +13,7 @@ function App() {
   const createSource = () => {
     return new Promise((resolve, reject) => {
       // ทำการส่ง source ที่ต้องการจ่ายไป omise เพื่อนำ source token กลับมา
-      Omise.createSource('rabbit_linepay', {
+      Omise.createSource('promptpay', {
         amount: (100 * 100),
         currency: 'THB'
       }, (statusCode, response) => {
