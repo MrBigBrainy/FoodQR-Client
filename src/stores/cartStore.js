@@ -1,10 +1,18 @@
 import React from "react";
 import { create } from "zustand";
 
+const calculatesTotalAmount = (items) => {
+  return items.reduce((total, item) => total + item.price * item.amount, 0);
+};
+const calculatesTotalItems = (items) => {
+  return items.reduce((total, item) => total + item.amount, 0);
+};
+
 //ค่าเริ่มต้น
 const defaultCartState = {
   items: [],
   totalAmount: 0,
+  totalCartItems: 0,
 };
 
 const useCartStore = create((set, get) => ({
@@ -12,8 +20,6 @@ const useCartStore = create((set, get) => ({
   //เมื่อกดเพิ่มลงตะหร้า
   addItem: (item) =>
     set((state) => {
-      const updatedTotalAmount = state.totalAmount + item.price * item.amount;
-
       const existingCartItem = state.items.findIndex(
         (cartItem) => cartItem.id === item.id
       );
@@ -31,9 +37,13 @@ const useCartStore = create((set, get) => ({
       } else {
         updateItems = state.items.concat(item);
       }
+
+      const updatedTotalAmount = calculatesTotalAmount(updateItems);
+      const updateTotalItems = calculatesTotalItems(updateItems);
       return {
         items: updateItems,
         totalAmount: updatedTotalAmount,
+        totalCartItems: updateTotalItems,
       };
     }),
   decreaseItem: (id) =>
@@ -42,7 +52,6 @@ const useCartStore = create((set, get) => ({
       const existingItem = state.items[existingCartItem];
 
       if (!existingItem) return state;
-      const updatedTotalAmount = state.totalAmount - existingItem.price;
 
       let updatedItems;
 
@@ -56,9 +65,13 @@ const useCartStore = create((set, get) => ({
         updatedItems = [...state.items];
         updatedItems[existingCartItem] = updatedItems;
       }
+
+      const updatedTotalAmount = calculatesTotalAmount(updateItems);
+      const updateTotalItems = calculatesTotalItems(updateItems);
       return {
         items: updatedItems,
         totalAmount: updatedTotalAmount,
+        totalCartItems: updateTotalItems,
       };
     }),
 }));

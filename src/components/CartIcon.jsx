@@ -1,8 +1,10 @@
 //ปุ่ม icon ของ cart navigate ไปหน้า cart
 import React from "react";
 import { useNavigate } from "react-router";
+import useCartStore from "../stores/cartStore";
 
 function CartIcon() {
+  const totalCartItems = useCartStore((state) => state.totalCartItems);
   const navigate = useNavigate();
   const navigateToCart = () => {
     navigate("/cart");
@@ -31,7 +33,9 @@ function CartIcon() {
         >
           <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
         </svg>
-        <span className="bg-white text-red-600 rounded-full w-6 h-6 flex items-center justify-center text-xs font-black absolute top-[-5px] right-[-5px]"></span>
+        <span className="bg-white text-red-600 rounded-full w-6 h-6 flex items-center justify-center text-xs font-black absolute top-[-5px] right-[-5px]">
+          {totalCartItems}
+        </span>
       </div>
       <span className="text-lg hidden sm:block"></span>
     </button>
