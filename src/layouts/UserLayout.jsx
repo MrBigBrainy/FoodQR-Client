@@ -1,4 +1,3 @@
-import React from "react";
 import { Outlet } from "react-router";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -11,6 +10,7 @@ function UserLayout() {
       <div className="pt-15">
         <Outlet />
       </div>
+
       <CartIcon />
       <Footer />
     </div>
