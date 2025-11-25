@@ -5,7 +5,10 @@ import CartPage from "../pages/CartPage";
 import SummaryPage from "../pages/SummaryPage";
 import UserLayout from "../layouts/UserLayout";
 // import AdminPage from "../pages/AdminPage";
-import AdminDashboard from "../pages/AdminPage";
+
+import AdminPage from "../pages/AdminPage";
+import AdminDashboard from "../pages/AdminDashbord";
+import AdminAddMenu from "../pages/AdminAddMenu";
 
 const router = createBrowserRouter([
   {
@@ -18,7 +21,13 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/admin", element: <AdminDashboard />,
+    path: "/admin",
+    element: <AdminPage />,
+    children: [
+      { index: true, element: <AdminDashboard /> },
+      { path: "addmenu", element: <AdminAddMenu /> },
+      { path: '*', element: <AdminDashboard /> }
+    ],
   }
 ]);
 
