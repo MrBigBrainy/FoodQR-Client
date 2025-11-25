@@ -4,11 +4,11 @@ import Header from "../components/Header";
 import CartIcon from "../components/CartIcon";
 import { useEffect, useState } from "react";
 import { initLiff, getProfile } from "@/liff/liff";
-// import {useUserSTore}
+import useUserStore from "@/stores/userStore";
 
 function UserLayout() {
   const [loading, setLoading] = useState(true);
-  const { lineId, displayName } = useUserStore();
+  const { setUserStore } = useUserStore.getState();
 
   const [error, setError] = useState(null);
   useEffect(() => {
@@ -16,7 +16,8 @@ function UserLayout() {
       try {
         await initLiff();
         const profileData = await getProfile();
-        setProfile(profileData);
+        console.log('profile Data', profileData)
+        setUserStore(profileData);
       } catch (err) {
         console.error(err);
         setError("Cannot init LIFF");

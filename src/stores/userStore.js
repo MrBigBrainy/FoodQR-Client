@@ -1,13 +1,13 @@
 import { create } from "zustand";
 
 const useUserStore = create((set, get) => ({
-    lineId: null,
-    imageProfileUrl:null,
-    displayName:null,
-    setUserStore: ({ lineId, imageProfileUrl, displayName }) =>
+  lineId: null,
+  pictureUrl: null,
+  displayName: null,
+  setUserStore: ({ lineId, pictureUrl, displayName }) =>
     set(() => ({
       lineId,
-      imageProfileUrl,
+      pictureUrl,
       displayName,
     })),
 }));
