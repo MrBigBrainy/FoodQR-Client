@@ -28,12 +28,12 @@ const useCartStore = create((set, get) => ({
 
       let updateItems;
       if (existingItem) {
-        const updateItems = {
+        const updateItem = {
           ...existingItem,
           amount: existingItem.amount + item.amount,
         };
         updateItems = [...state.items];
-        updateItems[existingCartItem] = updateItems;
+        updateItems[existingCartItem] = updateItem;
       } else {
         updateItems = state.items.concat(item);
       }
@@ -58,12 +58,12 @@ const useCartStore = create((set, get) => ({
       if (existingItem.amount === 1) {
         updatedItems = state.items.filter((item) => item.id !== id);
       } else {
-        const updatedItems = {
+        const updatedItem = {
           ...existingItem,
           amount: existingItem.amount - 1,
         };
         updatedItems = [...state.items];
-        updatedItems[existingCartItem] = updatedItems;
+        updatedItems[existingCartItem] = updatedItem;
       }
 
       const updatedTotalAmount = calculatesTotalAmount(updateItems);

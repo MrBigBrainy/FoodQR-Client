@@ -5,19 +5,20 @@ import useCartStore from "../stores/cartStore";
 
 function CartIcon() {
   const totalCartItems = useCartStore((state) => state.totalCartItems);
+  const totalAmount = useCartStore((state) => state.totalAmount);
   const navigate = useNavigate();
   const navigateToCart = () => {
     navigate("/cart");
   };
   return (
     <button
-      className="fixed bottom-20 right-6 x 
+      className="fixed bottom-20 mx-
                  bg-red-600 hover:bg-red-700 
                  text-white font-bold py-3 px-5 
                  rounded-full shadow-xl 
                  flex items-center space-x-3 
                  transition duration-300 
-                 z-50"
+                 z-50 w-full"
       onClick={navigateToCart}
     >
       <div className="flex items-center space-x-2 relative">
@@ -37,7 +38,7 @@ function CartIcon() {
           {totalCartItems}
         </span>
       </div>
-      <span className="text-lg hidden sm:block"></span>
+      <span>฿{totalAmount}</span>
     </button>
   );
 }
