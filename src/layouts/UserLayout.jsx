@@ -32,10 +32,7 @@ function UserLayout() {
   return (
     <div>
       <Header />
-      <div className="pt-15">
-        <Outlet />
-      </div>
-
+      <Outlet />
       <CartIcon />
       <Footer />
     </div>

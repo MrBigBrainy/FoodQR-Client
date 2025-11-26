@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShoppingCart } from 'lucide-react';
+import { Link } from 'react-router';
 
 
 const EmptyCart = () => {
@@ -10,9 +11,9 @@ const EmptyCart = () => {
             </div>
             <h2 className="text-xl font-medium text-gray-700 mb-2">ตะกร้าว่างเปล่า</h2>
             <p className="text-gray-500 mb-8">เพิ่มเมนูอาหารเข้าตะกร้า</p>
-            <button className="bg-[#C10007] text-white font-medium py-3 px-8 rounded-lg shadow-md hover:bg-[#a30006] transition-colors w-full max-w-xs cursor-pointer">
+            <Link to="/" className="bg-[#C10007] text-white font-medium py-3 px-8 rounded-lg shadow-md hover:bg-[#a30006] transition-colors w-full max-w-xs cursor-pointer">
                 เลือกเมนูอาหาร
-            </button>
+            </Link>
         </div>
     );
 };
