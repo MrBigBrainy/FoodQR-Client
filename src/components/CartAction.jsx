@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowLeft, Bell, Receipt } from 'lucide-react';
-
+//onclick bg-color #FF6900
 const MenuActions = () => {
     const handleBackClick = () => console.log('Go back to menu clicked');
     const handleCallStaffClick = () => console.log('Call staff clicked');
@@ -22,7 +22,7 @@ const MenuActions = () => {
 
             <div className="flex space-x-4">
 
-                <button className="bg-[#FFF7ED] flex gap-2  justify-center items-center text-[#F54B02] font-medium py-2 px-3 rounded-lg shadow-md hover:bg-[#a30006] transition-colors w-full max-w-xs cursor-pointer">
+                <button className="bg-[#FFF7ED] flex gap-2  justify-center items-center text-[#F54B02] font-medium py-2 px-3 rounded-lg shadow-md hover:bg-[#FFEEDB] transition-colors w-full max-w-xs cursor-pointer">
                     <Bell className="w-5 h-5 mr-2" />
                     <p>เรียกพนักงาน</p>
                 </button>

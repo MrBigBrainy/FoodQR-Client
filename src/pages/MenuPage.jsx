@@ -74,4 +74,4 @@ function MenuPage() {
   );
 }
 
-export default HomePage;
+export default MenuPage;
