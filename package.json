@@ -10,7 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@line/liff": "^2.27.3",
     "@tailwindcss/vite": "^4.1.17",
+    "axios": "^1.13.2",
+    "dotenv": "^17.2.3",
+    "qrcode.react": "^4.2.0",
     "chart.js": "^4.5.1",
     "react": "^19.2.0",
     "react-chartjs-2": "^5.3.1",

@@ -1,0 +1,1 @@
+Omise.setPublicKey(import.meta.env.VITE_OMISE_PUBLIC_KEY) ในหน้า checkout

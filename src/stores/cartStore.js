@@ -1,10 +1,18 @@
 import React from "react";
 import { create } from "zustand";
 
+const calculatesTotalAmount = (items) => {
+  return items.reduce((total, item) => total + item.price * item.amount, 0);
+};
+const calculatesTotalItems = (items) => {
+  return items.reduce((total, item) => total + item.amount, 0);
+};
+
 //ค่าเริ่มต้น
 const defaultCartState = {
   items: [],
   totalAmount: 0,
+  totalCartItems: 0,
 };
 
 const useCartStore = create((set, get) => ({
@@ -12,8 +20,6 @@ const useCartStore = create((set, get) => ({
   //เมื่อกดเพิ่มลงตะหร้า
   addItem: (item) =>
     set((state) => {
-      const updatedTotalAmount = state.totalAmount + item.price * item.amount;
-
       const existingCartItem = state.items.findIndex(
         (cartItem) => cartItem.id === item.id
       );
@@ -22,18 +28,22 @@ const useCartStore = create((set, get) => ({
 
       let updateItems;
       if (existingItem) {
-        const updateItems = {
+        const updateItem = {
           ...existingItem,
           amount: existingItem.amount + item.amount,
         };
         updateItems = [...state.items];
-        updateItems[existingCartItem] = updateItems;
+        updateItems[existingCartItem] = updateItem;
       } else {
         updateItems = state.items.concat(item);
       }
+
+      const updatedTotalAmount = calculatesTotalAmount(updateItems);
+      const updateTotalItems = calculatesTotalItems(updateItems);
       return {
         items: updateItems,
         totalAmount: updatedTotalAmount,
+        totalCartItems: updateTotalItems,
       };
     }),
   decreaseItem: (id) =>
@@ -42,23 +52,26 @@ const useCartStore = create((set, get) => ({
       const existingItem = state.items[existingCartItem];
 
       if (!existingItem) return state;
-      const updatedTotalAmount = state.totalAmount - existingItem.price;
 
       let updatedItems;
 
       if (existingItem.amount === 1) {
         updatedItems = state.items.filter((item) => item.id !== id);
       } else {
-        const updatedItems = {
+        const updatedItem = {
           ...existingItem,
           amount: existingItem.amount - 1,
         };
         updatedItems = [...state.items];
-        updatedItems[existingCartItem] = updatedItems;
+        updatedItems[existingCartItem] = updatedItem;
       }
+
+      const updatedTotalAmount = calculatesTotalAmount(updateItems);
+      const updateTotalItems = calculatesTotalItems(updateItems);
       return {
         items: updatedItems,
         totalAmount: updatedTotalAmount,
+        totalCartItems: updateTotalItems,
       };
     }),
 }));
