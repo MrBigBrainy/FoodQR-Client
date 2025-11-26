@@ -26,9 +26,9 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <AdminDashboard /> },
       { path: "addmenu", element: <AdminAddMenu /> },
-      { path: '*', element: <AdminDashboard /> }
+      { path: "*", element: <AdminDashboard /> },
     ],
-  }
+  },
 ]);
 
 function AppRouter() {
