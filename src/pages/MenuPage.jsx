@@ -54,7 +54,7 @@ const DUMMY_MENU_DATA = [
   },
 ];
 
-function HomePage() {
+function MenuPage() {
   const [menuItems, setMenuItems] = useState([]);
 
   useEffect(() => {
@@ -74,4 +74,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default MenuPage;
