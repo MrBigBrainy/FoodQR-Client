@@ -2,13 +2,6 @@ import React, { useState, useEffect } from "react";
 import MenuList from "../components/MenuList";
 import SearchBar from "../components/SearchBar";
 
-function MenuPage() {
-  return
-  <>
-
-    <MenuList />;
-  </>
-// 💡 1. ข้อมูลจำลอง (Mock Data)
 const DUMMY_MENU_DATA = [
   {
     id: "t1",
