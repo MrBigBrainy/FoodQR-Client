@@ -28,7 +28,7 @@ const useCartStore = create((set, get) => ({
 
       let updateItems;
       if (existingItem) {
-        const updateItem = {
+        let updateItems = {
           ...existingItem,
           amount: existingItem.amount + item.amount,
         };
@@ -58,7 +58,7 @@ const useCartStore = create((set, get) => ({
       if (existingItem.amount === 1) {
         updatedItems = state.items.filter((item) => item.id !== id);
       } else {
-        const updatedItem = {
+        let updatedItems = {
           ...existingItem,
           amount: existingItem.amount - 1,
         };
