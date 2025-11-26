@@ -1,8 +1,10 @@
-//หน้าสรุปรายหารอาหารืี่สรา้ง สามารถกด + - ลบได้ กดสั่งอาหารได้
-import React from "react";
+import EmptyCart from "@/components/EmptyCart";
+import { motion, easeInOut } from 'motion/react';
 
 function CartPage() {
-  return <div>CartPage</div>;
+  return (<motion.div initial={{ x: "100%" }} animate={{ x: 0 }} transition={{ duration: 0.3, ease: easeInOut }}>
+    <EmptyCart />
+  </motion.div>)
 }
 
 export default CartPage;
