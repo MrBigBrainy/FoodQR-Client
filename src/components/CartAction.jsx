@@ -5,7 +5,7 @@ const MenuActions = () => {
     const handleBackClick = () => console.log('Go back to menu clicked');
     const handleCallStaffClick = () => console.log('Call staff clicked');
     const handleCheckBillClick = () => console.log('Check bill clicked');
-
+    //test
     return (
         <div className="bg-white p-4 max-w-lg mx-auto  ">
 
