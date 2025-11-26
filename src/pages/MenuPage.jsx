@@ -2,12 +2,6 @@ import React, { useState, useEffect } from "react";
 import MenuList from "../components/MenuList";
 import SearchBar from "../components/SearchBar";
 
-function MenuPage() {
-  return
-  <>
-
-    <MenuList />;
-  </>
 // 💡 1. ข้อมูลจำลอง (Mock Data)
 const DUMMY_MENU_DATA = [
   {
@@ -60,7 +54,7 @@ const DUMMY_MENU_DATA = [
   },
 ];
 
-function HomePage() {
+function MenuPage() {
   const [menuItems, setMenuItems] = useState([]);
 
   useEffect(() => {
@@ -80,4 +74,5 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+
+export default MenuPage;
