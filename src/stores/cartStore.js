@@ -1,4 +1,3 @@
-import React from "react";
 import { create } from "zustand";
 
 const calculatesTotalAmount = (items) => {
@@ -8,7 +7,6 @@ const calculatesTotalItems = (items) => {
   return items.reduce((total, item) => total + item.amount, 0);
 };
 
-//ค่าเริ่มต้น
 const defaultCartState = {
   items: [],
   totalAmount: 0,
@@ -17,7 +15,6 @@ const defaultCartState = {
 
 const useCartStore = create((set, get) => ({
   ...defaultCartState,
-  //เมื่อกดเพิ่มลงตะหร้า
   addItem: (item) =>
     set((state) => {
       const existingCartItem = state.items.findIndex(
