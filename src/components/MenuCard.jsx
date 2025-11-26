@@ -36,7 +36,7 @@ const MenuCard = ({ id, name, price, ImageUrl }) => {
           className="w-full mt-2 bg-green-500 hover:bg-green-600 text-white 
                      font-medium py-1 rounded-md text-xs transition duration-150"
         >
-          + เพิ่มลงในตะกร้า
+          + ตะกร้า
         </button>
       </div>
     </div>
