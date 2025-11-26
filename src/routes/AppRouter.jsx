@@ -4,7 +4,7 @@ import MenuPage from "../pages/MenuPage";
 import CartPage from "../pages/CartPage";
 import SummaryPage from "../pages/SummaryPage";
 import UserLayout from "../layouts/UserLayout";
-// import AdminPage from "../pages/AdminPage";
+import AuthPage from "../pages/AuthPage";
 
 import AdminPage from "../pages/AdminPage";
 import AdminDashboard from "../pages/AdminDashbord";
@@ -20,6 +20,7 @@ const router = createBrowserRouter([
       { path: "/summary", element: <SummaryPage /> },
     ],
   },
+  { path: "auth", element: <AuthPage /> },
   {
     path: "/admin",
     element: <AdminPage />,
