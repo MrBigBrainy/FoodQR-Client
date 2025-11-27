@@ -6,9 +6,10 @@ const MenuCard = ({ id, name, price, ImageUrl }) => {
 
   const addToCard = () => {
     addItem({
-      id: id,
-      name: name,
-      price: price,
+      id,
+      name,
+      price,
+      ImageUrl,
       amount: 1,
     });
   };

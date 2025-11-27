@@ -10,6 +10,8 @@ function MenuPage() {
   const menu = useMenuStore((state) => state.menu);
   const { setMenu } = useMenuStore.getState();
 
+  useEffect(() => console.log(menu), [menu])
+
 
   // useEffect(() => {
   //   setTimeout(() => {
@@ -32,7 +34,7 @@ function MenuPage() {
     <div>
       <SearchBar />
       <div className="p-4 max-w-6xl mx-auto pb-36 pt-50">
-        <h2 className="text-2xl font-bold mb-4">เมนูสำหรับทดสอบ</h2>
+        {/* <h2 className="text-2xl font-bold mb-4">เมนูสำหรับทดสอบ</h2> */}
         <MenuList items={menu} />
       </div>
       <CartIcon />

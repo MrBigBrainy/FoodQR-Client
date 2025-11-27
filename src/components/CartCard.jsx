@@ -64,7 +64,7 @@ function CartCard({ item }) {
   };
 
   return (
-    <div className="flex w-full bg-white p-4 rounded-xl shadow-md border border-gray-200">
+    <div className="flex w-full bg-white px-4 py-6 m-0 border-b border-gray-200">
       <div className="flex-shrink-0 w-24 h-24 mr-4">
         <img
           src={item.ImageUrl || "placeholder.jpg"}
@@ -103,12 +103,12 @@ function CartCard({ item }) {
         </div>
         <div className="flex justify-between items-end mt-2">
           <div className="flex flex-col text-sm space-y-0.5">
-            <p className="text-gray-500">ราคา/หน่วย: {item.price}</p>
+            <p className="text-gray-500">{item.price}</p>
             {NoteUpdate()}
           </div>
           <div className="flex flex-col items-end space-y-1">
-            <div className="text-base font-bold text-red-600">
-              รวม: {totalPrice}
+            <div className="text-base font-medium">
+              {totalPrice}
             </div>
             <div className="flex items-center space-x-2">
               <button

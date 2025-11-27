@@ -19,7 +19,7 @@ function CartPage() {
       transition={{ duration: 0.3, ease: easeInOut }}
     >
       <CartAction />
-      <div className="lg:col-span-2 space-y-4 pt-50 pb-65">
+      <div className="lg:col-span-2 space-y-4 pb-65">
         {items?.map((item) => (
           <CartCard key={item.id} item={item} />
         ))}
