@@ -12,13 +12,13 @@ function CartIcon() {
   };
   return (
     <button
-      className="fixed bottom-20 mx-
+      className="fixed bottom-20 left-0 right-0 mx-auto
                  bg-red-600 hover:bg-red-700 
                  text-white font-bold py-3 px-5 
                  rounded-full shadow-xl 
                  flex items-center space-x-3 
                  transition duration-300 
-                 z-50 w-full"
+                 z-50 w-[90%]"
       onClick={navigateToCart}
     >
       <div className="flex items-center space-x-2 relative">
