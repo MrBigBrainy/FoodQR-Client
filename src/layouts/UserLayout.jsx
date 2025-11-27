@@ -16,7 +16,7 @@ function UserLayout() {
       try {
         await initLiff();
         const profileData = await getProfile();
-        console.log('profile Data', profileData)
+        console.log("profile Data", profileData);
         setUserStore(profileData);
       } catch (err) {
         console.error(err);
@@ -33,7 +33,6 @@ function UserLayout() {
     <div>
       <Header />
       <Outlet />
-      <CartIcon />
       <Footer />
     </div>
   );

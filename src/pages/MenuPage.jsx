@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MenuList from "../components/MenuList";
 import SearchBar from "../components/SearchBar";
+import CartIcon from "@/components/CartIcon";
 
 const DUMMY_MENU_DATA = [
   {
@@ -69,6 +70,7 @@ function MenuPage() {
         <h2 className="text-2xl font-bold mb-4">เมนูสำหรับทดสอบ</h2>
         <MenuList items={menuItems} />
       </div>
+      <CartIcon />
     </div>
   );
 }

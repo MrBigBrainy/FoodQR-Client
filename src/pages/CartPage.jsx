@@ -1,12 +1,33 @@
-import EmptyCart from "@/components/EmptyCart";
-import { motion, easeInOut } from 'motion/react';
-import CartAction from "@/components/CartAction";
+import EmptyCart from "../components/EmptyCart";
+import { motion, easeInOut } from "motion/react";
+import CartAction from "../components/CartAction";
+import useCartStore from "../stores/cartStore";
+import CartCard from "../components/CartCard";
+import CartOrder from "@/components/CartOrder";
 
 function CartPage() {
-  return (<motion.div initial={{ x: "100%" }} animate={{ x: 0 }} transition={{ duration: 0.3, ease: easeInOut }}>
-    <CartAction />
-    <EmptyCart />
-  </motion.div>)
+  const items = useCartStore((state) => state.items);
+  const totalCartItems = useCartStore((state) => state.totalCartItems);
+
+  if (totalCartItems === 0) {
+    return <EmptyCart />;
+  }
+  return (
+    <motion.div
+      initial={{ x: "100%" }}
+      animate={{ x: 0 }}
+      transition={{ duration: 0.3, ease: easeInOut }}
+      className="pb-24"
+    >
+      <CartAction />
+      <div className="lg:col-span-2 space-y-4">
+        {items?.map((item) => (
+          <CartCard key={item.id} item={item} />
+        ))}
+      </div>
+      <CartOrder />
+    </motion.div>
+  );
 }
 
 export default CartPage;
