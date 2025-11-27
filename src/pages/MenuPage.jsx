@@ -3,6 +3,7 @@ import MenuList from "../components/MenuList";
 import SearchBar from "../components/SearchBar";
 import useMenuStore from "../stores/useMenuStore";
 import { getStoreMenu } from "@/api/store.api";
+import CartIcon from "@/components/CartIcon";
 
 
 function MenuPage() {
@@ -34,6 +35,7 @@ function MenuPage() {
         <h2 className="text-2xl font-bold mb-4">เมนูสำหรับทดสอบ</h2>
         <MenuList items={menu} />
       </div>
+      <CartIcon />
     </div>
   );
 }

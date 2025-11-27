@@ -1,5 +1,4 @@
 import { create } from "zustand";
-
 const calculatesTotalAmount = (items) => {
   return items.reduce((total, item) => total + item.price * item.amount, 0);
 };
@@ -15,60 +14,106 @@ const defaultCartState = {
 
 const useCartStore = create((set, get) => ({
   ...defaultCartState,
+
   addItem: (item) =>
     set((state) => {
-      const existingCartItem = state.items.findIndex(
+      const existingCartItemIndex = state.items.findIndex(
         (cartItem) => cartItem.id === item.id
       );
 
-      const existingItem = state.items[existingCartItem];
+      let updatedItems;
 
-      let updateItems;
-      if (existingItem) {
-        const updateItem = {
+      if (existingCartItemIndex > -1) {
+        const existingItem = state.items[existingCartItemIndex];
+
+        const updatedItem = {
           ...existingItem,
           amount: existingItem.amount + item.amount,
         };
-        updateItems = [...state.items];
-        updateItems[existingCartItem] = updateItem;
+
+        updatedItems = [...state.items];
+        updatedItems[existingCartItemIndex] = updatedItem;
       } else {
-        updateItems = state.items.concat(item);
+        updatedItems = state.items.concat(item);
       }
 
-      const updatedTotalAmount = calculatesTotalAmount(updateItems);
-      const updateTotalItems = calculatesTotalItems(updateItems);
+      const updatedTotalAmount = calculatesTotalAmount(updatedItems);
+      const updatedTotalItems = calculatesTotalItems(updatedItems);
+
       return {
-        items: updateItems,
+        items: updatedItems,
         totalAmount: updatedTotalAmount,
-        totalCartItems: updateTotalItems,
+        totalCartItems: updatedTotalItems,
       };
     }),
   decreaseItem: (id) =>
     set((state) => {
-      const existingCartItem = state.items.findIndex((item) => item.id === id);
-      const existingItem = state.items[existingCartItem];
+      const existingCartItemIndex = state.items.findIndex(
+        (item) => item.id === id
+      );
+      const existingItem = state.items[existingCartItemIndex];
 
       if (!existingItem) return state;
 
       let updatedItems;
 
       if (existingItem.amount === 1) {
-        updatedItem = state.items.filter((item) => item.id !== id);
+        updatedItems = state.items.filter((item) => item.id !== id);
       } else {
-        let updatedItems = {
+        const updatedItem = {
           ...existingItem,
           amount: existingItem.amount - 1,
         };
+
         updatedItems = [...state.items];
-        updatedItems[existingCartItem] = updatedItem;
+        updatedItems[existingCartItemIndex] = updatedItem;
       }
 
-      const updatedTotalAmount = calculatesTotalAmount(updateItems);
-      const updateTotalItems = calculatesTotalItems(updateItems);
+      const updatedTotalAmount = calculatesTotalAmount(updatedItems);
+      const updatedTotalItems = calculatesTotalItems(updatedItems);
+
       return {
         items: updatedItems,
         totalAmount: updatedTotalAmount,
-        totalCartItems: updateTotalItems,
+        totalCartItems: updatedTotalItems,
+      };
+    }),
+
+  removeItem: (id) =>
+    set((state) => {
+      const existingItem = state.items.find((item) => item.id === id);
+      if (!existingItem) return state;
+
+      const updatedItems = state.items.filter((item) => item.id !== id);
+
+      const updatedTotalAmount = calculatesTotalAmount(updatedItems);
+      const updatedTotalItems = calculatesTotalItems(updatedItems);
+
+      return {
+        items: updatedItems,
+        totalAmount: updatedTotalAmount,
+        totalCartItems: updatedTotalItems,
+      };
+    }),
+
+  updateNote: (id, note) =>
+    set((state) => {
+      const existingCartItemIndex = state.items.findIndex(
+        (item) => item.id === id
+      );
+      if (existingCartItemIndex === -1) return state;
+
+      const existingItem = state.items[existingCartItemIndex];
+      const updatedItem = {
+        ...existingItem,
+        note: note,
+      };
+
+      const updatedItems = [...state.items];
+      updatedItems[existingCartItemIndex] = updatedItem;
+
+      return {
+        items: updatedItems,
       };
     }),
 }));
