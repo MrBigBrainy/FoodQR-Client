@@ -74,6 +74,10 @@ const AdminDashboard = () => {
                         <DoughnutChart data={doughnutData} title={"ยอดผู้ใช้บริการ"} />
                     </div>
 
+                    <div className="lg:col-span-3 bg-white p-6 rounded-xl shadow-lg w-full">
+                        <DoughnutChart data={doughnutData} title={"ยอดผู้ใช้บริการ"} />
+                    </div>
+
                 </div>
             </main>
         </div>

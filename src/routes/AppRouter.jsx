@@ -9,6 +9,8 @@ import UserLayout from "../layouts/UserLayout";
 import AdminPage from "../pages/AdminPage";
 import AdminDashboard from "../pages/AdminDashbord";
 import AdminAddMenu from "../pages/AdminAddMenu";
+import TableAdmin from "../pages/TableAdmin";
+import LoginPage from "../pages/AdminLoginPage";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +28,8 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <AdminDashboard /> },
       { path: "addmenu", element: <AdminAddMenu /> },
+      { path: "table", element: <TableAdmin /> },
+      { path: "login", element: <LoginPage /> },
       { path: '*', element: <AdminDashboard /> }
     ],
   }
