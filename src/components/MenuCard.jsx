@@ -24,7 +24,7 @@ const MenuCard = ({ id, name, price, ImageUrl }) => {
         <img
           src={ImageUrl || "placeholder.jpg"}
           alt={name}
-          className=" w-full h-[200px] object-cover"
+          className=" w-full h-[160px] object-cover"
         />
         <button
           type="button"
