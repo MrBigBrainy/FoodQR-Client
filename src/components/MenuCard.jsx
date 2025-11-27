@@ -10,7 +10,7 @@ const MenuCard = ({ id, name, price, ImageUrl }) => {
     addItem({
       id: id,
       name: name,
-      price: Number(price),
+      price: price,
       amount: 1,
     });
   };
@@ -28,7 +28,7 @@ const MenuCard = ({ id, name, price, ImageUrl }) => {
           <div className="font-semibold text-gray-800 truncate text-base">
             {name || "ชื่อเมนู"}
           </div>
-          <div className="text-sm font-bold text-red-600">{price}</div>
+          <div className="text-sm font-bold text-red-600"> ฿{price}</div>
         </div>
         <button
           type="button"

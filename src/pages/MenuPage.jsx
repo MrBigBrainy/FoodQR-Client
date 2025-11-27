@@ -66,7 +66,7 @@ function MenuPage() {
   return (
     <div>
       <SearchBar />
-      <div className="p-4 max-w-6xl mx-auto">
+      <div className="p-4 max-w-6xl mx-auto pb-36 pt-50">
         <h2 className="text-2xl font-bold mb-4">เมนูสำหรับทดสอบ</h2>
         <MenuList items={menuItems} />
       </div>
