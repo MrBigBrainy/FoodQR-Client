@@ -17,10 +17,9 @@ function CartPage() {
       initial={{ x: "100%" }}
       animate={{ x: 0 }}
       transition={{ duration: 0.3, ease: easeInOut }}
-      className="pb-24"
     >
       <CartAction />
-      <div className="lg:col-span-2 space-y-4">
+      <div className="lg:col-span-2 space-y-4 pt-50 pb-65">
         {items?.map((item) => (
           <CartCard key={item.id} item={item} />
         ))}

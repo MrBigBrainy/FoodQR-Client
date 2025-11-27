@@ -32,10 +32,20 @@ const MenuActions = () => {
                     <p>เช็คบิล</p>
                 </button>
 
+        <div className="flex space-x-4">
+          <button className="bg-[#C10007] flex gap-2  justify-center items-center text-white font-medium py-2 px-3 rounded-lg shadow-md hover:bg-[#a30006] transition-colors w-full max-w-xs cursor-pointer">
+            <Bell className="w-5 h-5 mr-2" />
+            <p>เรียกพนักงาน</p>
+          </button>
 
-            </div>
+          <button className="bg-[#C10007] flex gap-2 justify-center items-center text-white font-medium py-2 px-3 rounded-lg shadow-md hover:bg-[#a30006] transition-colors w-full max-w-xs cursor-pointer">
+            <Receipt className="w-5 h-5 mr-2" />
+            <p>เช็คบิล</p>
+          </button>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default MenuActions;
