@@ -1,5 +1,5 @@
 import useCartStore from "../stores/cartStore";
-import { motion, easeInOut } from "motion/react"
+import { motion } from "framer-motion"
 
 const MenuCard = ({ id, name, price, ImageUrl }) => {
   const addItem = useCartStore((state) => state.addItem);
@@ -14,7 +14,12 @@ const MenuCard = ({ id, name, price, ImageUrl }) => {
   };
 
   return (
-    <motion.div whileTap={{ scale: 0.7, transition: { type: easeInOut } }} onClick={addToCard} className="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-[1.03] transition duration-200">
+    <motion.div
+      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.03 }}
+      onClick={addToCard}
+      className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer"
+    >
       <div className="relative">
         <img
           src={ImageUrl || "placeholder.jpg"}

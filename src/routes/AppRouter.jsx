@@ -9,8 +9,10 @@ import AuthPage from "../pages/AuthPage";
 import AdminPage from "../pages/AdminPage";
 import AdminDashboard from "../pages/AdminDashbord";
 import AdminAddMenu from "../pages/AdminAddMenu";
+import BillingPage from "../pages/BillingPage";
 
 const router = createBrowserRouter([
+  { path: "/billing", element: <BillingPage /> },
   {
     path: "/",
     element: <UserLayout />,
@@ -20,7 +22,7 @@ const router = createBrowserRouter([
       { path: "/summary", element: <SummaryPage /> },
     ],
   },
-  { path: "auth", element: <AuthPage /> },
+  { path: "/auth", element: <AuthPage /> },
   {
     path: "/admin",
     element: <AdminPage />,
