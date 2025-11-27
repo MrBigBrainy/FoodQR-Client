@@ -8,7 +8,7 @@ const MenuCard = ({ id, name, price, ImageUrl }) => {
     addItem({
       id: id,
       name: name,
-      price: Number(price),
+      price: price,
       amount: 1,
     });
   };

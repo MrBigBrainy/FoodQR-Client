@@ -4,7 +4,7 @@ function SearchBar() {
   return (
     <div>
       {/* search */}
-      <div className="px-3 fixed w-full">
+      <div className="px-3 fixed w-full pt-20 ">
         <div className=" flex items-center border border-gray-300 rounded-xl p-3 bg-white shadow-sm mb-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
