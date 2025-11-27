@@ -32,7 +32,7 @@ const router = createBrowserRouter([
       { path: "login", element: <LoginPage /> },
       { path: '*', element: <AdminDashboard /> }
     ],
-  }
+  },
 ]);
 
 function AppRouter() {
