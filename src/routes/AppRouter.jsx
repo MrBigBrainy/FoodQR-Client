@@ -12,7 +12,7 @@ import AdminAddMenu from "../pages/AdminAddMenu";
 import BillingPage from "../pages/BillingPage";
 
 const router = createBrowserRouter([
-  { path: "/billing", element: <BillingPage /> },
+
   {
     path: "/",
     element: <UserLayout />,
@@ -20,6 +20,7 @@ const router = createBrowserRouter([
       { path: "/", element: <MenuPage /> },
       { path: "/cart", element: <CartPage /> },
       { path: "/summary", element: <SummaryPage /> },
+      { path: "/billing", element: <BillingPage /> },
     ],
   },
   { path: "/auth", element: <AuthPage /> },

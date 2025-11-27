@@ -1,3 +1,4 @@
+import PaymentSummaryCard from "@/components/billing/PaymentSummaryCard"
 import useBillingStore from "@/stores/useBillingStore"
 
 function BillingPage() {
@@ -5,7 +6,10 @@ function BillingPage() {
     const { qrUrl } = useBillingStore.getState()
 
     return (
-        <img src={qrUrl} className="w-[90%] mx-auto" />
+        <>
+            <PaymentSummaryCard />
+            <img src={qrUrl} className="w-[90%] mx-auto" />
+        </>
     )
 }
 

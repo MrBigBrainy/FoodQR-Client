@@ -47,6 +47,7 @@ const PaymentButton = () => {
     return (
         <button
             className="
+            fixed bottom-0 mb-[100px]
         bg-red-700 hover:bg-red-800 
         text-white 
         font-bold 
