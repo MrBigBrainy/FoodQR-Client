@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DataCardAdmin from '../components/DataCardAdmin';
 import LineChart from '../components/LineChart';
 import DoughnutChart from '../components/DoughnutChart';
+import { getSaleToday } from '@/api/admin.api';
 
 
 // ข้อมูลกราฟเส้น
@@ -37,11 +38,30 @@ const doughnutData = {
     ],
 };
 
+// ดึงข้อมูลจาก backend sale to day
 
 
 
 const AdminDashboard = () => {
-    // ... ส่วนของ state และ logic
+    // ดึงข้อมูลจาก backend sale to day
+    const [saleToday, setSaleToday] = useState(0)
+
+    useEffect(() => {
+        const getSaleTodays = async () => {
+            try {
+                const respont = await getSaleToday(); // 🔗 backend
+
+                // เก็บข้อมูลใน state
+                const sum = respont.data.reduce((sum, num) => sum + (num.total), 0);
+                setSaleToday(sum);
+
+            } catch (err) {
+                console.error("❌ ดึงข้อมูลไม่สำเร็จ:", err);
+            }
+        };
+        getSaleTodays();
+    }, []);
+
 
     return (
         <div className="flex bg-gray-50 min-h-screen">
@@ -55,7 +75,7 @@ const AdminDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                     {/* Card 1: ยอดขายวันนี้ */}
 
-                    <DataCardAdmin title={"ยอดขายวันนี้"} count={"฿84,520"} percent={"+12%"} />
+                    <DataCardAdmin title={"ยอดขายวันนี้"} count={`฿${saleToday}`} percent={"+12%"} />
                     <DataCardAdmin title={"จำนวนออเดอร์"} count={"248"} percent={"+12%"} />
                     <DataCardAdmin title={"ลูกค้าทั้งหมด"} count={"654"} percent={"+12%"} />
                     <DataCardAdmin title={"โต๊ะที่ว่าง"} count={"8/12"} percent={"ว่าง"} />
