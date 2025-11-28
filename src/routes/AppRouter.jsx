@@ -29,9 +29,12 @@ const router = createBrowserRouter([
       { index: true, element: <AdminDashboard /> },
       { path: "addmenu", element: <AdminAddMenu /> },
       { path: "table", element: <TableAdmin /> },
-      { path: "login", element: <LoginPage /> },
       { path: '*', element: <AdminDashboard /> }
     ],
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
   },
 ]);
 
