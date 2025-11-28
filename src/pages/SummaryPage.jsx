@@ -2,7 +2,7 @@ import CheckoutSummaryCard from "@/components/CheckoutSummaryCard";
 import DiscountCard from "@/components/DiscountCard";
 import DividedCard from "@/components/DividedCard";
 import PaymentButton from "@/components/PaymentButton";
-import SummaryItemV2 from "@/components/UserSummary";
+import UserSummary from "@/components/UserSummary";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
 
@@ -19,7 +19,7 @@ function SummaryPage() {
       </Link>
       <DiscountCard />
       <DividedCard />
-      <SummaryItemV2 />
+      <UserSummary />
       <CheckoutSummaryCard />
       <PaymentButton />
     </div>

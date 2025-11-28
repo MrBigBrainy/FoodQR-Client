@@ -5,22 +5,14 @@ import useMenuStore from "../stores/useMenuStore";
 import { getStoreMenu } from "@/api/store.api";
 import CartIcon from "@/components/CartIcon";
 
-
 function MenuPage() {
   const menu = useMenuStore((state) => state.menu);
   const { setMenu } = useMenuStore.getState();
 
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setMenu(DUMMY_MENU_DATA);
-  //   }, 500);
-  // }, []);
-
   useEffect(() => {
     async function getStoreMenuFunc() {
       const response = await getStoreMenu(1);
-      console.log(response.data)
+      console.log(response.data);
       setMenu(response.data.menu);
     }
     getStoreMenuFunc();
