@@ -10,8 +10,8 @@ const MenuList = ({ items }) => {
           key={food.id}
           id={food.id}
           name={food.name}
-          price={food.price}
-          ImageUrl={food.ImageUrl}
+          price={food.netPrice}
+          ImageUrl={food.imageUrl}
         />
       ))}
     </div>

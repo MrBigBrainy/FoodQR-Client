@@ -4,15 +4,17 @@ import MenuPage from "../pages/MenuPage";
 import CartPage from "../pages/CartPage";
 import SummaryPage from "../pages/SummaryPage";
 import UserLayout from "../layouts/UserLayout";
-// import AdminPage from "../pages/AdminPage";
+import AuthPage from "../pages/AuthPage";
 
 import AdminPage from "../pages/AdminPage";
 import AdminDashboard from "../pages/AdminDashbord";
 import AdminAddMenu from "../pages/AdminAddMenu";
 import TableAdmin from "../pages/TableAdmin";
 import LoginPage from "../pages/AdminLoginPage";
+import BillingPage from "../pages/BillingPage";
 
 const router = createBrowserRouter([
+  { path: "/billing", element: <BillingPage /> },
   {
     path: "/",
     element: <UserLayout />,
@@ -22,6 +24,7 @@ const router = createBrowserRouter([
       { path: "/summary", element: <SummaryPage /> },
     ],
   },
+  { path: "/auth", element: <AuthPage /> },
   {
     path: "/admin",
     element: <AdminPage />,

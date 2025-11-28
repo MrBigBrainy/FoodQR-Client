@@ -1,8 +1,13 @@
 //หน้าสรุปรายการสั่งอาหาร มีปุ่มเซ็ตบิล
-import React from "react";
+import PaymentButton from "@/components/PaymentButton";
 
 function SummaryPage() {
-  return <div>SummaryPage</div>;
+
+
+
+  return <>
+    <PaymentButton />
+  </>;
 }
 
 export default SummaryPage;
