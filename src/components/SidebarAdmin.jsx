@@ -1,6 +1,10 @@
 import React from 'react'
+import { NavLink } from 'react-router'
 
 function SidebarAdmin() {
+    const active = (isActive) => {
+        return isActive ? "flex items-center p-3 my-2 text-white bg-red-600 rounded-lg shadow-md" : "flex items-center p-3 my-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+    }
     return (
         <div className='flex'>
             <aside className="w-64 bg-white shadow-lg flex flex-col">
@@ -9,36 +13,13 @@ function SidebarAdmin() {
                     <p className="text-sm text-gray-500">ระบบบริหารจัดการร้านอาหาร</p>
                 </div>
                 <nav className="grow p-4">
-                    <a
-                        href="#"
-                        className="flex items-center p-3 my-2 text-white bg-red-600 rounded-lg shadow-md"
-                    >
-                        <span className="mr-3 text-lg">
-                            <i className="fas fa-chart-line"></i> {/* Icon: Dashboard */}
-                        </span>
-                        <span className="font-semibold">Dashboard</span>
-                    </a>
-                    <a
-                        href="#"
-                        className="flex items-center p-3 my-2 text-gray-600 hover:bg-gray-100 rounded-lg"
-                    >
-                        <span className="mr-3 text-lg">
-                            <i className="fas fa-list"></i> {/* Icon: เมนู */}
-                        </span>
-                        <span>จัดการเมนู</span>
-                    </a>
-                    <a
-                        href="#"
-                        className="flex items-center p-3 my-2 text-gray-600 hover:bg-gray-100 rounded-lg"
-                    >
-                        <span className="mr-3 text-lg">
-                            <i className="fas fa-cog"></i> {/* Icon: ตั้งค่า */}
-                        </span>
-                        <span>ตั้งค่า</span>
-                    </a>
+                    <NavLink to="/admin" end className={({ isActive }) => active(isActive)} >Dashbord</NavLink>
+                    <NavLink to="/admin/addmenu" className={({ isActive }) => active(isActive)}>จัดการเมนู</NavLink>
+                    <NavLink to="/admin/table" className={({ isActive }) => active(isActive)}>table</NavLink>
+                    <NavLink to="/admin/login" className={({ isActive }) => active(isActive)}>login</NavLink>
                 </nav>
-            </aside>
-        </div>
+            </aside >
+        </div >
     )
 }
 

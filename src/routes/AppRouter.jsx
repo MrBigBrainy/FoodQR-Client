@@ -9,6 +9,8 @@ import AuthPage from "../pages/AuthPage";
 import AdminPage from "../pages/AdminPage";
 import AdminDashboard from "../pages/AdminDashbord";
 import AdminAddMenu from "../pages/AdminAddMenu";
+import TableAdmin from "../pages/TableAdmin";
+import LoginPage from "../pages/AdminLoginPage";
 import BillingPage from "../pages/BillingPage";
 
 const router = createBrowserRouter([
@@ -29,8 +31,13 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <AdminDashboard /> },
       { path: "addmenu", element: <AdminAddMenu /> },
-      { path: "*", element: <AdminDashboard /> },
+      { path: "table", element: <TableAdmin /> },
+      { path: '*', element: <AdminDashboard /> }
     ],
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
   },
 ]);
 
