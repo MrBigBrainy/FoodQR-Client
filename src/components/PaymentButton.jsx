@@ -1,52 +1,56 @@
-import { QrCode } from 'lucide-react';
-import api from '@/api/axios';
-import useBillingStore from '@/stores/useBillingStore';
-import { useNavigate } from 'react-router';
+import { QrCode } from "lucide-react";
+import api from "@/api/axios";
+import useBillingStore from "@/stores/useBillingStore";
+import { useNavigate } from "react-router";
 
 const PaymentButton = () => {
+  const navigate = useNavigate();
+  const { setBilling } = useBillingStore.getState();
 
-    const navigate = useNavigate()
-    const { setBilling } = useBillingStore.getState()
-
-    Omise.setPublicKey(import.meta.env.VITE_OMISE_PUBLIC_KEY)
-    const createSource = () => {
-        return new Promise((resolve, reject) => {
-            Omise.createSource('promptpay', {
-                amount: (100 * 100),
-                currency: 'THB'
-            }, (statusCode, response) => {
-                if (statusCode !== 200) {
-                    return reject(response)
-                }
-                resolve(response)
-            })
-        })
-    }
-
-    const handlePayment = async () => {
-        try {
-            const omiseResponse = await createSource()
-
-            const response = await api.post('/omise', {
-                source: omiseResponse.id
-            })
-            console.log(response)
-            setBilling({
-                qrUrl: response.data.qrUrl,
-                chargeId: response.data.chargeId,
-            })
-            navigate('/billing')
-        } catch (error) {
-            console.error(error)
+  Omise.setPublicKey(import.meta.env.VITE_OMISE_PUBLIC_KEY);
+  const createSource = () => {
+    return new Promise((resolve, reject) => {
+      Omise.createSource(
+        "promptpay",
+        {
+          amount: 100 * 100,
+          currency: "THB",
+        },
+        (statusCode, response) => {
+          if (statusCode !== 200) {
+            return reject(response);
+          }
+          resolve(response);
         }
+      );
+    });
+  };
+
+  const handlePayment = async () => {
+    try {
+      const omiseResponse = await createSource();
+
+      const response = await api.post("/omise", {
+        source: omiseResponse.id,
+      });
+      console.log(response);
+      setBilling({
+        qrUrl: response.data.qrUrl,
+        chargeId: response.data.chargeId,
+      });
+      navigate("/billing");
+    } catch (error) {
+      console.error(error);
     }
+  };
 
-    const thaiLabel = 'ชำระเงิน';
-    const displayAmount = '฿469.73';
+  const thaiLabel = "ชำระเงิน";
+  const displayAmount = "฿469.73";
 
-    return (
-        <button
-            className="
+  return (
+    <div className="fixed inset-x-0 bottom-0 bg-white p-4 pb-20 shadow-2xl border-t border-gray-100">
+      <button
+        className="
         bg-red-700 hover:bg-red-800 
         text-white 
         font-bold 
@@ -59,15 +63,16 @@ const PaymentButton = () => {
         transition duration-300 ease-in-out 
         cursor-pointer
       "
-            onClick={handlePayment}
-        >
-            <QrCode className="w-6 h-6 mr-3" />
+        onClick={handlePayment}
+      >
+        <QrCode className="w-6 h-6 mr-3" />
 
-            <span className="text-xl">
-                {thaiLabel} {displayAmount}
-            </span>
-        </button>
-    );
-}
+        <span className="text-xl">
+          {thaiLabel} {displayAmount}
+        </span>
+      </button>
+    </div>
+  );
+};
 
 export default PaymentButton;

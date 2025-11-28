@@ -11,7 +11,7 @@ function CartOrder() {
       </div>
       <div className="flex justify-between text-base font-bold mb-4">
         <span className="text-gray-900">ยอดรวมทั้งหมด</span>
-        <span className="text-red-600">฿{totalAmount}</span>
+        <span className="text-red-600">฿ {totalAmount}</span>
       </div>
       <button
         disabled={totalCartItems === 0}

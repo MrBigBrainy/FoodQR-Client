@@ -6,7 +6,7 @@ function Header() {
   const pictureUrl = useUserStore((state) => state.pictureUrl);
   return (
     <motion.header
-      className="w-full fixed top-0 bg-[#C10007] text-white shadow-md z-40 p-3"
+      className="w-full fixed bg-[#C10007] text-white shadow-md z-40 p-3"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.3 }}
@@ -28,5 +28,4 @@ function Header() {
     </motion.header>
   );
 }
-
 export default Header;
