@@ -30,7 +30,7 @@ function UserLayout() {
   }, []);
 
   return (
-    <div>
+    <div className="pt-24 pb-28 min-h-screen bg-gray-50">
       <Header />
       <Outlet />
       <Footer />
