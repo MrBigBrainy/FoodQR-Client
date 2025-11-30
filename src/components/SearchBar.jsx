@@ -1,6 +1,24 @@
 import React from "react";
 
-function SearchBar() {
+function SearchBar({ items }) {
+  const [activeCategory, setActiveCategory] = React.useState("");
+
+  const categories = React.useMemo(() => {
+    if (!items) return [];
+    const uniqueCategories = [
+      ...new Set(items.map((item) => item.category?.name || "อื่นๆ")),
+    ];
+    return uniqueCategories;
+  }, [items]);
+
+  const handleCategoryClick = (category) => {
+    setActiveCategory(category);
+    const element = document.getElementById(`category-${category}`);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div>
       {/* search */}
@@ -26,12 +44,20 @@ function SearchBar() {
             className="w-full text-base focus:outline-none placeholder-gray-500 "
           />
         </div>
-        <div className="flex space-x-3 overflow-x-scroll pb-2 ">
-          <button
-            className={`flex-shrink-0 text-sm font-medium py-2 px-4 rounded-full transition duration-150 whitespace-nowrap bg-gray-200 text-gray-700 hover:bg-gray-300`}
-          >
-            category
-          </button>
+        <div className="flex space-x-3 overflow-x-scroll pb-2 no-scrollbar">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => handleCategoryClick(category)}
+              className={`flex-shrink-0 text-sm font-medium py-2 px-4 rounded-full transition duration-150 whitespace-nowrap ${
+                activeCategory === category
+                  ? "bg-red-700 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              {category}
+            </button>
+          ))}
         </div>
       </div>
     </div>
