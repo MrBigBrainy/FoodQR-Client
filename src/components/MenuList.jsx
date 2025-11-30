@@ -3,6 +3,7 @@
 import MenuCard from "./MenuCard";
 
 const MenuList = ({ items }) => {
+  console.log(items);
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
       {items?.map((food) => (
@@ -11,7 +12,7 @@ const MenuList = ({ items }) => {
           id={food.id}
           name={food.name}
           price={food.netPrice}
-          ImageUrl={food.imageUrl}
+          imageUrl={food.imageUrl}
         />
       ))}
     </div>
