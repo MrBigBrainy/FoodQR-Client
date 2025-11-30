@@ -1,0 +1,84 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "hero": {
+    "type": "image",
+    "url": "https://example.com/qr.png",
+    "size": "full",
+    "aspectRatio": "1:1",
+    "aspectMode": "fit",
+    "backgroundColor": "#FFFFFF"
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "paddingAll": "16px",
+    "spacing": "md",
+    "contents": [
+      {
+        "type": "text",
+        "text": "สแกนหรือกดปุ่มเพื่อสั่งเมนู",
+        "weight": "bold",
+        "size": "md",
+        "wrap": true
+      },
+      {
+        "type": "text",
+        "text": "คุณสามารถสแกน QR ด้านบน หรือกดปุ่มด้านล่างเพื่อเปิดหน้าเว็บสั่งอาหารจากโต๊ะของคุณ",
+        "size": "sm",
+        "color": "#666666",
+        "wrap": true
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "margin": "md",
+        "spacing": "xs",
+        "contents": [
+          {
+            "type": "text",
+            "text": "โต๊ะ: {{tableNumber}}",
+            "size": "sm",
+            "color": "#333333",
+            "wrap": true
+          },
+          {
+            "type": "text",
+            "text": "เมื่อสั่งเรียบร้อย พนักงานจะได้รับออเดอร์จากระบบ POS ทันที",
+            "size": "xs",
+            "color": "#999999",
+            "wrap": true
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "sm",
+    "paddingAll": "16px",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "height": "sm",
+        "action": {
+          "type": "uri",
+          "label": "เปิดหน้าเมนู",
+          "uri": "https://example.com/order"
+        }
+      },
+      {
+        "type": "button",
+        "style": "secondary",
+        "height": "sm",
+        "action": {
+          "type": "uri",
+          "label": "เปิดด้วยเบราว์เซอร์",
+          "uri": "https://example.com/order"
+        }
+      }
+    ]
+  }
+}

@@ -20,11 +20,21 @@ function MenuPage() {
 
   useEffect(() => console.log(menu), [menu]);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+  };
+
+  const filteredMenu = menu.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div>
-      <SearchBar items={menu}/>
+      <SearchBar items={menu} onSearch={handleSearch} />
       <div className="p-4 max-w-6xl mx-auto pb-36 mt-[80px]">
-        <MenuList items={menu} />
+        <MenuList items={filteredMenu} />
       </div>
       {/* <CartIcon /> */}
     </div>

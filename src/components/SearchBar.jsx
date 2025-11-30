@@ -1,6 +1,6 @@
 import React from "react";
 
-function SearchBar({ items }) {
+function SearchBar({ items, onSearch }) {
   const [activeCategory, setActiveCategory] = React.useState("");
 
   const categories = React.useMemo(() => {
@@ -41,7 +41,8 @@ function SearchBar({ items }) {
           <input
             type="text"
             placeholder="ค้นหาเมนูอาหาร..."
-            className="w-full text-base focus:outline-none placeholder-gray-500 "
+            onChange={(e) => onSearch(e.target.value)}
+            className="w-full text-base focus:outline-none placeholder-gray-500 py-2"
           />
         </div>
         <div className="flex space-x-3 overflow-x-scroll pb-2 no-scrollbar">
