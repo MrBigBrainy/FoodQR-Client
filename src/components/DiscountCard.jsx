@@ -1,6 +1,7 @@
-import React from "react";
+import { useState } from "react";
 
 function DiscountCard() {
+    const [discountCode, setDiscountCode] = useState("");
   return (
     <div className="bg-white p-4 rounded-xl shadow-md border border-gray-200 mx-5 my-5 ">
       <div className="flex items-center mb-4">
@@ -15,6 +16,7 @@ function DiscountCard() {
           type="text"
           placeholder="กรอกโค้ดส่วนลดที่นี่"
           className="flex-grow py-2 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-base"
+          
         />
         <button className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 font-semibold text-base whitespace-nowrap">
           ใช้
