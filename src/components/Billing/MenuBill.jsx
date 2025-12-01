@@ -1,105 +1,134 @@
-import React from "react";
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  Font,
-  PDFViewer,
-} from "@react-pdf/renderer";
-
-// 1) Register Google Font (TTF from GitHub)
-Font.register({
-  family: "SarabunThai",
-  fonts: [
-    {
-      src: "https://github.com/google/fonts/raw/main/ofl/sarabun/Sarabun-Regular.ttf",
-    },
-    {
-      src: "https://github.com/google/fonts/raw/main/ofl/sarabun/Sarabun-Bold.ttf",
-      fontWeight: "bold",
-    },
-  ],
-});
+// MenuBill.jsx
+import React, { useRef, useEffect } from "react";
+import generatePDF, { Margin } from "react-to-pdf";
+import "./MenuBill.css";
 
 const MenuBill = () => {
-  const storeName = "บาร์ บี ก้อน (Bar B Gon)";
+  const targetRef = useRef(null);
+
+  // -------- STATIC DATA --------
+  const storeName = "Bar B Gon";
   const address = "12/45 ถนนบางนา-ตราด บางนา กรุงเทพฯ 10260";
   const tableNo = "A12";
   const dateTime = "01/12/2025 18:40";
-
   const qrUrl =
     "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://your-domain.com/order?table=A12";
+  // ------------------------------
 
-  const styles = StyleSheet.create({
+  const options = {
+    filename: `table-${tableNo}-qr-slip.pdf`,
+    method: "save", // ถ้าอยากให้เปิดแทนดาวน์โหลด ใช้ "open"
     page: {
-      width: "58mm",
-      padding: 12,
-      fontFamily: "SarabunThai",
-      fontSize: 11,
+      margin: Margin.NONE,
+      format: [60, 140], // mm, แนวสลิปเล็กๆ
+      orientation: "portrait",
     },
-    header: {
-      textAlign: "center",
-      borderBottom: "1pt dashed #666",
-      paddingBottom: 6,
-      marginBottom: 6,
-    },
-    qrBlock: {
-      textAlign: "center",
-      borderBottom: "1pt dashed #666",
-      paddingBottom: 8,
-      marginBottom: 8,
-    },
-    qrImage: {
-      width: 120,
-      height: 120,
-      border: "1pt solid #999",
-      margin: "6px auto 0 auto",
-    },
-    small: {
-      fontSize: 10,
-      color: "#555",
-      marginTop: 6,
-    },
-    tableLarge: {
-      fontSize: 18,
-      fontWeight: "bold",
-      marginTop: 2,
-    },
-    footer: {
-      textAlign: "center",
-      marginTop: 12,
-      fontSize: 10,
-      color: "#666",
-    },
-  });
+  };
 
-  const doc = (
-    <Document>
-      <Page size="A7" style={styles.page}>
-        <View style={styles.header}>
-          <Text>{storeName}</Text>
-          <Text style={{ fontSize: 10, marginTop: 4 }}>{address}</Text>
-          <Text style={{ fontSize: 10, marginTop: 4 }}>{dateTime}</Text>
-        </View>
+  useEffect(() => {
+    if (!targetRef.current) return;
 
-        <View style={styles.qrBlock}>
-          <Text>สแกน QR เพื่อสั่งอาหาร</Text>
-          <Image src={qrUrl} style={styles.qrImage} />
-          <Text style={styles.small}>โต๊ะ</Text>
-          <Text style={styles.tableLarge}>{tableNo}</Text>
-        </View>
+    const id = setTimeout(() => {
+      generatePDF(targetRef, options);
+    }, 300); // หน่วงนิดนึงให้ DOM render เสร็จก่อน
 
-        <View style={styles.footer}>
-          <Text>สำหรับสแกนเพื่อสั่งอาหารและชำระเงิน</Text>
-        </View>
-      </Page>
-    </Document>
+    return () => clearTimeout(id);
+  }, []);
+
+  // inline style ล้วน ปลอดภัยจาก oklch (ตัวนี้เองไม่สร้าง oklch แล้ว)
+  const slipStyle = {
+    width: "230px", // ประมาณ 58mm
+    backgroundColor: "#ffffff",
+    color: "#000000",
+    fontFamily: "monospace",
+    fontSize: "11px",
+    padding: "12px",
+    border: "1px solid #cccccc",
+  };
+
+  const center = { textAlign: "center" };
+
+  const dashed = {
+    borderBottom: "1px dashed #999999",
+    paddingBottom: "8px",
+    marginBottom: "8px",
+  };
+
+  const smallText = { fontSize: "10px" };
+
+  const qrContainer = {
+    display: "flex",
+    justifyContent: "center",
+    marginTop: "8px",
+  };
+
+  const tableNumberText = {
+    fontSize: "18px",
+    fontWeight: "bold",
+    marginTop: "4px",
+  };
+
+  return (
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      {/* ตัวนี้คือ element ที่จะถูกแปลงเป็น PDF */}
+      <div ref={targetRef} style={slipStyle}>
+        {/* HEADER */}
+        <div style={{ ...center, ...dashed }}>
+          <div style={{ fontSize: "13px", fontWeight: "bold" }}>
+            {storeName}
+          </div>
+          <div
+            style={{
+              ...smallText,
+              marginTop: "4px",
+              lineHeight: "14px",
+            }}
+          >
+            {address}
+          </div>
+          <div style={{ ...smallText, marginTop: "6px" }}>{dateTime}</div>
+        </div>
+
+        {/* QR SECTION */}
+        <div style={{ ...center, ...dashed, paddingTop: "8px" }}>
+          <div style={{ fontWeight: "bold", marginBottom: "6px" }}>
+            สแกน QR เพื่อสั่งอาหาร
+          </div>
+
+          <div style={qrContainer}>
+            <img
+              src={qrUrl}
+              alt="QR Code"
+              style={{
+                width: "140px",
+                height: "140px",
+                objectFit: "contain",
+                border: "1px solid #999999",
+                padding: "4px",
+              }}
+            />
+          </div>
+
+          <div style={{ marginTop: "8px" }}>
+            <div style={{ ...smallText, color: "#555555" }}>โต๊ะ</div>
+            <div style={tableNumberText}>{tableNo}</div>
+          </div>
+        </div>
+
+        {/* FOOTER */}
+        <div
+          style={{
+            ...center,
+            fontSize: "10px",
+            marginTop: "10px",
+            color: "#555555",
+          }}
+        >
+          ใช้สำหรับสแกนเพื่อสั่งอาหารและชำระเงิน
+        </div>
+      </div>
+    </div>
   );
-
-  return <PDFViewer width="100%" height="600px">{doc}</PDFViewer>;
 };
 
 export default MenuBill;
