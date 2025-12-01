@@ -97,24 +97,46 @@ function DiscountCard() {
           )}
         </div>
         <motion.button
+          layout
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleApplyDiscount}
           disabled={isApplying}
-          className="bg-gradient-to-r from-red-600 to-red-500 text-white py-3 px-6 rounded-xl hover:from-red-700 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-red-500/50 font-bold text-base whitespace-nowrap shadow-lg shadow-red-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          transition={{ 
+            layout: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
+            scale: { duration: 0.2 }
+          }}
+          className="bg-gradient-to-r from-red-600 to-red-500 text-white py-3 px-6 rounded-xl hover:from-red-700 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-red-500/50 font-bold text-base shadow-lg shadow-red-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-w-[80px]"
         >
-          {isApplying ? (
-            <>
+          <AnimatePresence mode="wait" initial={false}>
+            {isApplying ? (
               <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
-              />
-              <span>กำลังตรวจสอบ...</span>
-            </>
-          ) : (
-            "ใช้"
-          )}
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+                className="flex items-center gap-2"
+              >
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                />
+                <span>กำลังตรวจสอบ...</span>
+              </motion.div>
+            ) : (
+              <motion.span
+                key="apply"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+              >
+                ใช้
+              </motion.span>
+            )}
+          </AnimatePresence>
         </motion.button>
       </motion.div>
 
