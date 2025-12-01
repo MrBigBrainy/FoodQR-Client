@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 
 * {
-  font-family: "Anuphan"
+  font-family: "Anuphan";
 }
 
 #root,
@@ -13,7 +13,7 @@ body {
 }
 
 .active {
-  color: #C10007
+  color: #c10007;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -129,7 +129,7 @@ body {
 @import "tw-animate-css";
 
 * {
-  font-family: "Anuphan"
+  font-family: "Anuphan";
 }
 
 #root,
@@ -140,7 +140,7 @@ body {
 }
 
 .active {
-  color: #C10007
+  color: #c10007;
 }
 
 @custom-variant dark (&:is(.dark *));
