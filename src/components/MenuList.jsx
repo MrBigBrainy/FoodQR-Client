@@ -20,7 +20,7 @@ const MenuList = ({ items }) => {
           <div 
             key={categoryName} 
             id={`category-${categoryName}`}
-            className="scroll-mt-48"
+            className="scroll-mt-40"
           >
             <h3 className="text-xl font-bold mb-4 text-gray-800 border-l-4 border-red-600 pl-3">
               {categoryName}
