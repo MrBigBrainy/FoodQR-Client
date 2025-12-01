@@ -2,6 +2,7 @@ import LoginForm from '@/components/LoginForm';
 import RegisterForm from '@/components/RegisterForm';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Coffee } from 'lucide-react';
 
 const AdminLoginPage = () => {
     const [activeTab, setActiveTab] = useState("login");
@@ -28,9 +29,7 @@ const AdminLoginPage = () => {
                         transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
                         className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-2xl shadow-2xl mb-4 rotate-3 hover:rotate-6 transition-transform duration-300"
                     >
-                        <span className="text-red-600 text-4xl">
-                            <i className="fas fa-fish"></i>
-                        </span>
+                        <Coffee className="text-red-600 w-10 h-10" strokeWidth={2.5} />
                     </motion.div>
                     <h1 className="text-4xl font-bold text-white mb-2 tracking-tight drop-shadow-md">Admin Portal</h1>
                     <p className="text-red-100 text-sm font-medium tracking-wide uppercase opacity-90">FoodQR Restaurant System</p>
