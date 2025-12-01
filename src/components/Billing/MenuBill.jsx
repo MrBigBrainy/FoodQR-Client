@@ -12,11 +12,11 @@ const MenuBill = () => {
 
   const pdfConfig = {
     filename: `menu-${tableName}.pdf`,
-    method: "save",
+    method: "open",
     resolution: Resolution.HIGH,
     page: {
       margin: Margin.SMALL,
-      format: "a7",
+      format: [60,120],
       orientation: "portrait",
     },
     canvas: {
