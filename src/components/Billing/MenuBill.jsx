@@ -53,7 +53,7 @@ const MenuBill = () => {
       <div
         ref={targetRef}
         className="
-          bg-white text-black border border-black rounded
+          bg-white text-black rounded
           px-4 py-3 w-[260px]
           text-sm
         "
@@ -69,24 +69,24 @@ const MenuBill = () => {
         </header>
 
         {/* Row: โต๊ะ */}
-        <div className="flex items-center justify-between pt-3 text-sm">
-          <span>โต๊ะ / Table</span>
-          <span className="text-xl font-bold">{tableName}</span>
+        <div className="text-center pt-3 text-sm pb-4 border-b border-black">
+          <p>โต๊ะ / Table</p>
+          <p className="text-xl font-bold">{tableName}</p>
         </div>
 
         {/* QR Section */}
-        <section className="flex flex-col items-center mt-4 mb-3">
+        <section className="flex flex-col items-center mt-4 pb-4 border-dashed border-b border-black">
           <div className="text-xs font-medium mb-2 text-center leading-snug">
-            สแกนเพื่อเปิดเมนู
+            สแกนเพื่อเปิดเมนูและสั่งอาหาร
             <br />
-            Scan to view menu
+            Scan to view and order menu
           </div>
           <QRCodeCanvas value={qrMenuUrl} size={140} />
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-dashed border-black pt-2 mt-2 text-[10px] text-center">
-          © Bar B Gon — Thank you
+        <footer className=" pt-2 mt-2 text-[10px] text-center">
+          © Bar B Gon — Thanks you
         </footer>
       </div>
     </div>

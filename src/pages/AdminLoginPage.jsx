@@ -33,7 +33,7 @@ const AdminLoginPage = () => {
                         </span>
                     </motion.div>
                     <h1 className="text-4xl font-bold text-white mb-2 tracking-tight drop-shadow-md">Admin Portal</h1>
-                    <p className="text-red-100 text-sm font-medium tracking-wide uppercase opacity-90">Nanino Sushi Restaurant System</p>
+                    <p className="text-red-100 text-sm font-medium tracking-wide uppercase opacity-90">FoodQR Restaurant System</p>
                 </div>
 
                 {/* Glassmorphism Card */}
@@ -76,7 +76,7 @@ const AdminLoginPage = () => {
                 </div>
 
                 <footer className="mt-8 text-center text-white/60 text-xs font-medium">
-                    © 2024 Nanino Sushi. All rights reserved.
+                    © 2024 FoodQR. All rights reserved.
                 </footer>
             </motion.div>
         </div>

@@ -36,7 +36,7 @@ function LoginForm() {
                         <input 
                             {...register("username", { required: true })} 
                             id="username"
-                            placeholder="Username" 
+                            placeholder="ชื่อผู้ใช้" 
                             className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all duration-200 text-gray-800 placeholder-gray-400 font-medium" 
                         />
                     </div>
@@ -54,7 +54,7 @@ function LoginForm() {
                         <input 
                             {...register("password", { required: true })} 
                             id="password"
-                            placeholder="Password" 
+                            placeholder="รหัสผ่าน" 
                             type={showPassword ? "text" : "password"}
                             className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all duration-200 text-gray-800 placeholder-gray-400 font-medium" 
                         />

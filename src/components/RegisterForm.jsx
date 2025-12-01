@@ -37,7 +37,7 @@ function RegisterForm() {
                         <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors">
                             <User size={20} />
                         </div>
-                        <input {...register("name", { required: true })} placeholder="Full Name" className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 font-medium" />
+                        <input {...register("name", { required: true })} placeholder="ชื่อ-นามสกุล" className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 font-medium" />
                     </div>
                 </div>
 
@@ -48,7 +48,7 @@ function RegisterForm() {
                         <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors">
                             <UserPlus size={20} />
                         </div>
-                        <input {...register("username", { required: true })} placeholder="Username" className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 font-medium" />
+                        <input {...register("username", { required: true })} placeholder="ชื่อผู้ใช้" className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 font-medium" />
                     </div>
                 </div>
 
@@ -59,7 +59,7 @@ function RegisterForm() {
                         <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors">
                             <Phone size={20} />
                         </div>
-                        <input {...register("phone", { required: true })} placeholder="Phone Number" className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 font-medium" />
+                        <input {...register("phone", { required: true })} placeholder="เบอร์โทรศัพท์" className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 font-medium" />
                     </div>
                 </div>
 
@@ -73,7 +73,7 @@ function RegisterForm() {
                         <input 
                             {...register("password", { required: true })} 
                             type={showPassword ? "text" : "password"}
-                            placeholder="Password" 
+                            placeholder="รหัสผ่าน" 
                             className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 font-medium" 
                         />
                         <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1">
@@ -92,7 +92,7 @@ function RegisterForm() {
                         <input 
                             {...register("confirmPassword", { required: true })} 
                             type={showConfirmPassword ? "text" : "password"}
-                            placeholder="Confirm Password" 
+                            placeholder="ยืนยันรหัสผ่าน" 
                             className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 font-medium" 
                         />
                         <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1">
@@ -111,7 +111,7 @@ function RegisterForm() {
                         <input 
                             {...register("KeyCode", { required: true })} 
                             type={showKeyCode ? "text" : "password"}
-                            placeholder="Admin Key Code" 
+                            placeholder="รหัสสมัคร Admin" 
                             className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 font-medium" 
                         />
                         <button type="button" onClick={() => setShowKeyCode(!showKeyCode)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1">
