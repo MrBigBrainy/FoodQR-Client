@@ -4,10 +4,10 @@ import { ShoppingCartIcon, HouseIcon, WalletIcon } from "lucide-react";
 import { motion } from "motion/react";
 
 function Footer() {
-  const { storeId, tableId } = useParams();
+  const { storeId, tableId, orderId } = useParams();
   const totalCartItems = useCartStore((state) => state.totalCartItems);
 
-  const baseUrl = `/store/${storeId}/table/${tableId}`;
+  const baseUrl = `/store/${storeId}/table/${tableId}/order/${orderId}`;
 
   const navItems = [
     { to: baseUrl, icon: HouseIcon, label: "เมนู", end: true },

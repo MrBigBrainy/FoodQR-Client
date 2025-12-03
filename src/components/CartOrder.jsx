@@ -11,7 +11,7 @@ function CartOrder() {
     try {
       cart.items.forEach(async (item) => {
         const response = await api.post("/userOrder/createOrder", {
-         menuId: item.id, quantity: item.amount, note: item.note, lineId: lineId
+         menuId: item.id, quantity: item.amount, note: item.note, lineId: lineId, orderId: 1
       });
       })
       

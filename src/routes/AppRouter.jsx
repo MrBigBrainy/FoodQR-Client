@@ -16,7 +16,7 @@ import MenuBill from "../components/Billing/MenuBill";
 const router = createBrowserRouter([
   // { path: "/billing", element: <BillingPage /> },
  {
-  path: "/store/:storeId/table/:tableId",
+  path: "/store/:storeId/table/:tableId/order/:orderId",
   element: <UserLayout />,
   children: [
     { index: true, element: <MenuPage /> },   

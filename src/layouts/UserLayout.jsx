@@ -12,7 +12,7 @@ import useMenuStore from "../stores/useMenuStore";
 
 
 function UserLayout() {
-  const { storeId, tableId } = useParams();
+  const { storeId, tableId, orderId} = useParams();
   const [loading, setLoading] = useState(true);
   const { setUserStore } = useUserStore.getState();
   const { setMenu } = useMenuStore.getState();
