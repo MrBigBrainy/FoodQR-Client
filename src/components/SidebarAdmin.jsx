@@ -15,7 +15,7 @@ function SidebarAdmin() {
                 <nav className="grow p-4">
                     <NavLink to="/admin" end className={({ isActive }) => active(isActive)} >Dashbord</NavLink>
                     <NavLink to="/admin/addmenu" className={({ isActive }) => active(isActive)}>จัดการเมนู</NavLink>
-                    <NavLink to="/admin/table" className={({ isActive }) => active(isActive)}>table</NavLink>
+                    <NavLink to="/admin/table" className={({ isActive }) => active(isActive)}>จัดการโต๊ะ</NavLink>
                     <NavLink to="/admin/login" className={({ isActive }) => active(isActive)}>login</NavLink>
                 </nav>
             </aside >
