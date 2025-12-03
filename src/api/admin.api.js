@@ -6,7 +6,8 @@ export async function getSaleToday() {
 
 // Table Type APIs
 export async function getTableTypes(storeId) {
-    return api.get(`/admin/table-types?storeId=${storeId}`)
+    return api.get(`/admin/table-types`)
+    // return api.get(`/admin/table-types?storeId=${storeId}`)
 
 }
 

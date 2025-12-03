@@ -4,7 +4,7 @@ import { getTableTypes, createTable, getTables, deleteTable, getZones, createTab
 
 function TableAdmin() {
     const { register, handleSubmit, formState: { errors }, reset, watch } = useForm({
-        defaultValues: {
+            defaultValues: {
             tableName: "",
             tableTypeId: "",
             zoneId: "",
@@ -34,21 +34,28 @@ function TableAdmin() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [tableTypesRes, zonesRes, tablesRes] = await Promise.all([
-                    getTableTypes(storeId),
-                    getZones(storeId),
-                    getTables(storeId)
-                ]);
-                setTableTypes(tableTypesRes.data || []);
-                console.log("tableTypes.data", tableTypesRes.data);
-                setZones(zonesRes.data || []);
-                setTables(tablesRes.data || []);
+                // const [tableTypesRes, zonesRes, tablesRes] = await Promise.all([
+                //     // getTableTypes(storeId),
+                //     // getZones(storeId),
+                //     // getTables(storeId)
+                //     // getTableTypes(1),
+                //     // getZones(1),
+                //     // getTables(1)
+                // ]);
+                const tableTypes = await getTableTypes();
+                console.log(tableTypes.data.tableTypes)
+                setTableTypes(tableTypes.data.tableTypes || []);
+                // console.log("tableTypes.data", tableTypesRes.data);
+                // setZones(zonesRes.data || []);
+                // setTables(tablesRes.data || []);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         };
         fetchData();
     }, [storeId]);
+
+    useEffect(() => console.log(tableTypes), [tableTypes])
 
     const onSubmit = async (data) => {
         setLoading(true);
@@ -109,8 +116,9 @@ function TableAdmin() {
             console.log("Table type created:", response.data);
             
             // Refresh table types list
-            const tableTypesRes = await getTableTypes(storeId);
-            setTableTypes(tableTypesRes.data || []);
+            // const tableTypesRes = await getTableTypes(storeId);
+            const tableTypes = await getTableTypes();
+            setTableTypes(tableTypes || []);
             
             // Reset form and close
             resetTableType();
@@ -253,7 +261,7 @@ function TableAdmin() {
                             <div className="mt-4 border-t pt-4">
                                 <p className="text-sm font-medium text-gray-700 mb-2">ประเภทโต๊ะที่มีอยู่:</p>
                                 <div className="space-y-2 max-h-40 overflow-y-auto">
-                                    {tableTypes.map((type) => (
+                                    {tableTypes?.map((type) => (
                                         <div key={type.id} className="flex justify-between items-center p-2 bg-gray-50 rounded">
                                             <span className="text-sm text-gray-700">
                                                 {type.nameType} ({type.minSeat}-{type.maxSeat} ที่นั่ง)
@@ -305,7 +313,7 @@ function TableAdmin() {
                                         className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-800 appearance-none bg-white"
                                     >
                                         <option value="">เลือกประเภทโต๊ะ</option>
-                                        {tableTypes.map((type) => (
+                                        {tableTypes?.map((type) => (
                                             <option key={type.id} value={type.id}>
                                                 {type.nameType} ({type.minSeat}-{type.maxSeat} ที่นั่ง)
                                             </option>
