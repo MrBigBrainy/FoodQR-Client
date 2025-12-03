@@ -12,6 +12,8 @@ import AdminAddMenu from "../pages/AdminAddMenu";
 import TableAdmin from "../pages/TableAdmin";
 import LoginPage from "../pages/AdminLoginPage";
 import MenuBill from "../components/Billing/MenuBill";
+import SummaryOfFood from "@/pages/SummaryOfFood";
+import Billing from "@/pages/Billing";
 
 const router = createBrowserRouter([
   // { path: "/billing", element: <BillingPage /> },
@@ -22,10 +24,12 @@ const router = createBrowserRouter([
       { path: "/", element: <MenuPage /> },
       { path: "/cart", element: <CartPage /> },
       { path: "/summary", element: <SummaryPage /> },
+      { path: "/summaryFood", element: <SummaryOfFood /> },
+      { path: "/billing", element: <Billing /> },
     ],
   },
   { path: "/auth", element: <AuthPage /> },
-   { path: "/menu-billing", element: <MenuBill /> },
+  { path: "/menu-billing", element: <MenuBill /> },
   {
     path: "/admin",
     element: <AdminPage />,

@@ -27,6 +27,7 @@ const PaymentButton = () => {
   };
 
   const handlePayment = async () => {
+    console.log('--')
     try {
       const omiseResponse = await createSource();
 
