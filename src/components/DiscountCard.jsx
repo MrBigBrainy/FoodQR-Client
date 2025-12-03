@@ -102,7 +102,7 @@ function DiscountCard() {
           whileTap={{ scale: 0.95 }}
           onClick={handleApplyDiscount}
           disabled={isApplying}
-          transition={{ 
+          transition={{
             layout: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
             scale: { duration: 0.2 }
           }}
@@ -149,11 +149,10 @@ function DiscountCard() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className={`flex items-center gap-2 p-3 rounded-xl font-medium text-sm ${
-              message.type === "success"
+            className={`flex items-center gap-2 p-3 rounded-xl font-medium text-sm ${message.type === "success"
                 ? "bg-green-50 text-green-700 border border-green-200"
                 : "bg-red-50 text-red-700 border border-red-200"
-            }`}
+              }`}
           >
             {message.type === "success" ? (
               <motion.div
