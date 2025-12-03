@@ -1,37 +1,52 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Percent, CheckCircle2, XCircle, Sparkles } from "lucide-react";
+import api from "../api/axios";
+import useCartStore from "../stores/cartStore";
 
 function DiscountCard() {
-  const [discountCode, setDiscountCode] = useState("");
-  const [message, setMessage] = useState(null); // { type: 'success' | 'error', text: string }
+  const {
+    discountCode,
+    setDiscountCode,
+    discountMessage: message,
+    setDiscountMessage: setMessage,
+    setDiscount,
+    setDiscountType
+  } = useCartStore();
+  
   const [isApplying, setIsApplying] = useState(false);
 
-  const handleApplyDiscount = () => {
+  const handleUseDiscount = async () => {
     if (!discountCode.trim()) {
       setMessage({ type: "error", text: "กรุณากรอกโค้ดส่วนลด" });
-      setTimeout(() => setMessage(null), 3000);
       return;
     }
 
+    setMessage(null);
     setIsApplying(true);
-
-    // Mock validation - SAVE10 is valid
-    setTimeout(() => {
-      if (discountCode.toUpperCase() === "SAVE10") {
+    try {
+      const result = await api.post(`/discount/validate`, { discountCode, storeId: 1 });
+      console.log(result);
+      
+      if (result.data.status === "success") {
         setMessage({ type: "success", text: "ใช้โค้ดส่วนลดสำเร็จ! ลด 10%" });
-        setDiscountCode("");
+        // Assuming the API returns discount details, update the store
+        // setDiscount(result.data.discount);
+        // setDiscountType(result.data.type); 
       } else {
         setMessage({ type: "error", text: "โค้ดส่วนลดไม่ถูกต้อง" });
       }
+    } catch (error) {
+      console.error(error);
+      setMessage({ type: "error", text: "เกิดข้อผิดพลาดในการตรวจสอบโค้ด" });
+    } finally {
       setIsApplying(false);
-      setTimeout(() => setMessage(null), 3000);
-    }, 800);
+    } 
   };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-      handleApplyDiscount();
+      handleUseDiscount();
     }
   };
 
@@ -84,7 +99,7 @@ function DiscountCard() {
             onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
             onKeyPress={handleKeyPress}
             disabled={isApplying}
-            className="w-full py-3 px-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 text-base font-medium transition-all duration-200 bg-white disabled:bg-gray-50 disabled:cursor-not-allowed uppercase placeholder:normal-case"
+            className="w-full py-2 px-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 text-sm font-medium transition-all duration-200 bg-white disabled:bg-gray-50 disabled:cursor-not-allowed uppercase placeholder:normal-case"
           />
           {discountCode && (
             <motion.div
@@ -100,13 +115,13 @@ function DiscountCard() {
           layout
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={handleApplyDiscount}
+          onClick={handleUseDiscount}
           disabled={isApplying}
           transition={{ 
             layout: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
             scale: { duration: 0.2 }
           }}
-          className="bg-gradient-to-r from-red-600 to-red-500 text-white py-3 px-4 sm:px-6 rounded-xl hover:from-red-700 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-red-500/50 font-bold text-sm sm:text-base shadow-lg shadow-red-500/30 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-w-[100px] sm:min-w-[120px] whitespace-nowrap"
+          className="bg-gradient-to-r from-red-600 to-red-500 text-white py-2 px-4 sm:px-5 rounded-xl hover:from-red-700 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-red-500/50 font-bold text-xs sm:text-sm shadow-lg shadow-red-500/30 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-w-[80px] sm:min-w-[100px] whitespace-nowrap"
         >
           <AnimatePresence mode="wait" initial={false}>
             {isApplying ? (
@@ -176,19 +191,6 @@ function DiscountCard() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Hint text */}
-      {!message && (
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-xs text-gray-400 font-medium mt-2 flex items-center gap-1"
-        >
-          <span className="inline-block w-1 h-1 bg-gray-400 rounded-full" />
-          ลองใช้โค้ด <span className="font-bold text-red-500">SAVE10</span> เพื่อรับส่วนลด
-        </motion.p>
-      )}
     </motion.div>
   );
 }

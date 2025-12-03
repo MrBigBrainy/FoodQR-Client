@@ -15,15 +15,15 @@ import MenuBill from "../components/Billing/MenuBill";
 
 const router = createBrowserRouter([
   // { path: "/billing", element: <BillingPage /> },
-  {
-    path: "/",
-    element: <UserLayout />,
-    children: [
-      { path: "/", element: <MenuPage /> },
-      { path: "/cart", element: <CartPage /> },
-      { path: "/summary", element: <SummaryPage /> },
-    ],
-  },
+ {
+  path: "/store/:storeId/table/:tableId",
+  element: <UserLayout />,
+  children: [
+    { index: true, element: <MenuPage /> },   
+    { path: "cart", element: <CartPage /> },
+    { path: "summary", element: <SummaryPage /> },
+  ],
+},
   { path: "/auth", element: <AuthPage /> },
    { path: "/menu-billing", element: <MenuBill /> },
   {

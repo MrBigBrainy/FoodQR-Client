@@ -13,19 +13,20 @@ function CartPage() {
     return <EmptyCart />;
   }
   return (
-    <motion.div
-      initial={{ x: "100%" }}
-      animate={{ x: 0 }}
-      transition={{ duration: 0.3, ease: easeInOut }}
-    >
+    <>
       <CartAction />
-      <div className="lg:col-span-2 space-y-4 pb-65 mx-5 my-5">
+      <motion.div
+        initial={{ x: "100%" }}
+        animate={{ x: 0 }}
+        transition={{ duration: 0.3, ease: easeInOut }}
+        className="lg:col-span-2 space-y-4 pb-64 mx-4 my-5"
+      >
         {items?.map((item) => (
           <CartCard key={item.id} item={item} />
         ))}
-      </div>
+      </motion.div>
       <CartOrder />
-    </motion.div>
+    </>
   );
 }
 
