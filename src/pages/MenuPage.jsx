@@ -26,32 +26,32 @@ function MenuPage() {
     setSearchTerm(term);
   };
 
-  const filteredMenu = menu.filter((item) =>
+  const filteredMenu = menu?.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="min-h-screen bg-gray-50">
       <SearchBar items={menu} onSearch={handleSearch} />
-      
+
       <div className="max-w-6xl mx-auto pb-36 px-4">
-        {filteredMenu.length > 0 ? (
+        {filteredMenu?.length > 0 ? (
           <MenuList items={filteredMenu} />
         ) : (
           <div className="flex flex-col items-center justify-center py-20 text-center animate-fade-in">
             <div className="bg-white p-6 rounded-full shadow-sm mb-4">
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                className="h-12 w-12 text-gray-300" 
-                fill="none" 
-                viewBox="0 0 24 24" 
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-12 w-12 text-gray-300"
+                fill="none"
+                viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={1.5} 
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" 
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
             </div>

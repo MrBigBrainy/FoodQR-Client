@@ -1,105 +1,96 @@
-import React from "react";
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  Font,
-  PDFViewer,
-} from "@react-pdf/renderer";
-
-// 1) Register Google Font (TTF from GitHub)
-Font.register({
-  family: "SarabunThai",
-  fonts: [
-    {
-      src: "https://github.com/google/fonts/raw/main/ofl/sarabun/Sarabun-Regular.ttf",
-    },
-    {
-      src: "https://github.com/google/fonts/raw/main/ofl/sarabun/Sarabun-Bold.ttf",
-      fontWeight: "bold",
-    },
-  ],
-});
+// MenuBill.jsx
+import { useRef, useEffect } from "react";
+import html2canvas from "html2canvas-pro";
+import jsPDF from "jspdf";
+import { QRCodeCanvas } from "qrcode.react";
 
 const MenuBill = () => {
-  const storeName = "บาร์ บี ก้อน (Bar B Gon)";
-  const address = "12/45 ถนนบางนา-ตราด บางนา กรุงเทพฯ 10260";
-  const tableNo = "A12";
-  const dateTime = "01/12/2025 18:40";
+  const targetRef = useRef(null);
 
-  const qrUrl =
-    "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://your-domain.com/order?table=A12";
+  const tableName = "A3";
+  const qrMenuUrl = `https://barbgon.app/menu/${tableName}`;
 
-  const styles = StyleSheet.create({
-    page: {
-      width: "58mm",
-      padding: 12,
-      fontFamily: "SarabunThai",
-      fontSize: 11,
-    },
-    header: {
-      textAlign: "center",
-      borderBottom: "1pt dashed #666",
-      paddingBottom: 6,
-      marginBottom: 6,
-    },
-    qrBlock: {
-      textAlign: "center",
-      borderBottom: "1pt dashed #666",
-      paddingBottom: 8,
-      marginBottom: 8,
-    },
-    qrImage: {
-      width: 120,
-      height: 120,
-      border: "1pt solid #999",
-      margin: "6px auto 0 auto",
-    },
-    small: {
-      fontSize: 10,
-      color: "#555",
-      marginTop: 6,
-    },
-    tableLarge: {
-      fontSize: 18,
-      fontWeight: "bold",
-      marginTop: 2,
-    },
-    footer: {
-      textAlign: "center",
-      marginTop: 12,
-      fontSize: 10,
-      color: "#666",
-    },
-  });
+  useEffect(() => {
+    if (!targetRef.current) return;
 
-  const doc = (
-    <Document>
-      <Page size="A7" style={styles.page}>
-        <View style={styles.header}>
-          <Text>{storeName}</Text>
-          <Text style={{ fontSize: 10, marginTop: 4 }}>{address}</Text>
-          <Text style={{ fontSize: 10, marginTop: 4 }}>{dateTime}</Text>
-        </View>
+    const generatePdf = async () => {
+      // รอให้ DOM/QR render เสร็จก่อนนิดนึง
+      await new Promise((r) => setTimeout(r, 500));
 
-        <View style={styles.qrBlock}>
-          <Text>สแกน QR เพื่อสั่งอาหาร</Text>
-          <Image src={qrUrl} style={styles.qrImage} />
-          <Text style={styles.small}>โต๊ะ</Text>
-          <Text style={styles.tableLarge}>{tableNo}</Text>
-        </View>
+      const canvas = await html2canvas(targetRef.current, {
+        scale: 2, // ให้คมขึ้น
+      });
 
-        <View style={styles.footer}>
-          <Text>สำหรับสแกนเพื่อสั่งอาหารและชำระเงิน</Text>
-        </View>
-      </Page>
-    </Document>
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+
+      // PDF ขนาด 60x120 mm (สลิปตั้ง)
+      const pdf = new jsPDF("p", "mm", [120, 60]);
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      // fit กว้าง แล้วคำนวณสูงตามสัดส่วน
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      // วางกลางหน้าแนวตั้ง (ถ้าอยากชิดบนก็ใช้ y = 0)
+      const x = 0;
+      const y = (pageHeight - imgHeight) / 2;
+
+      pdf.addImage(imgData, "JPEG", x, y, imgWidth, imgHeight);
+
+      // เปิดในแท็บใหม่ (เหมือน method: "open")
+      pdf.output("dataurlnewwindow");
+      // หรือถ้าอยากให้ดาวน์โหลดใช้:
+      // pdf.save(`menu-${tableName}.pdf`);
+    };
+
+    generatePdf();
+  }, [tableName]);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+      {/* ส่วนที่ html2canvas จะ capture */}
+      <div
+        ref={targetRef}
+        className="
+          bg-white text-black rounded
+          px-4 py-3 w-[260px]
+          text-sm
+        "
+        style={{
+          fontFamily:
+            '"Sarabun", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+        }}
+      >
+        {/* Header */}
+        <header className="pb-4 border-b border-black text-center">
+          <div className="text-base font-semibold">Bar B Gon</div>
+          <div className="text-xs">Japanese Restaurant &amp; Bar</div>
+        </header>
+
+        {/* Row: โต๊ะ */}
+        <div className="text-center pt-3 text-sm pb-4 border-b border-black">
+          <p>โต๊ะ / Table</p>
+          <p className="text-xl font-bold">{tableName}</p>
+        </div>
+
+        {/* QR Section */}
+        <section className="flex flex-col items-center mt-4 pb-4 border-dashed border-b border-black">
+          <div className="text-xs font-medium mb-2 text-center leading-snug">
+            สแกนเพื่อเปิดเมนูและสั่งอาหาร
+            <br />
+            Scan to view and order menu
+          </div>
+          <QRCodeCanvas value={qrMenuUrl} size={140} />
+        </section>
+
+        {/* Footer */}
+        <footer className=" pt-2 mt-2 text-[10px] text-center">
+          © Bar B Gon — Thanks you
+        </footer>
+      </div>
+    </div>
   );
-
-  return <PDFViewer width="100%" height="600px">{doc}</PDFViewer>;
 };
 
 export default MenuBill;
