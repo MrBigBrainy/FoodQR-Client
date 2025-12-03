@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Users } from "lucide-react";
+import { motion } from "motion/react";
 
 function DividedCard() {
   const [selected, setSelected] = useState("pay-all");
@@ -52,12 +53,17 @@ function DividedCard() {
               <div
                 className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                   selected === option.id
-                    ? "border-blue-500"
+                    ? "border-red-500"
                     : "border-gray-400"
                 }`}
               >
                 {selected === option.id && (
-                  <div className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="w-2.5 h-2.5 rounded-full bg-red-500" 
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  />
                 )}
               </div>
               <div>

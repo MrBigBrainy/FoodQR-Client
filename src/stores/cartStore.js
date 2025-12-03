@@ -10,10 +10,18 @@ const defaultCartState = {
   items: [],
   totalAmount: 0,
   totalCartItems: 0,
+  discountCode: "",
+  discountType: "percent", // 'percent' | 'bath'
+  discountMessage: null, // { type: 'success' | 'error', text: string }
 };
 
 const useCartStore = create((set, get) => ({
   ...defaultCartState,
+
+  setDiscountCode: (code) => set({ discountCode: code }),
+  setDiscountMessage: (message) => set({ discountMessage: message }),
+  setDiscount: (discount) => set({ discount }),
+  setDiscountType: (type) => set({ discountType: type }),
 
   addItem: (item) =>
     set((state) => {

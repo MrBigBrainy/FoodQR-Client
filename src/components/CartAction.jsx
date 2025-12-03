@@ -1,16 +1,17 @@
 import React from "react";
 import { ArrowLeft, Bell, Receipt } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 //onclick bg-color #FF6900
 const MenuActions = () => {
+  const { storeId, tableId } = useParams();
   const handleBackClick = () => console.log("Go back to menu clicked");
   const handleCallStaffClick = () => console.log("Call staff clicked");
   const handleCheckBillClick = () => console.log("Check bill clicked");
   //test
   return (
-    <div className="bg-white p-4 max-w-lg mx-auto  pt-25 ">
+    <div className="bg-white p-4 max-w-lg mx-auto  pt-4 ">
       <Link
-        to="/"
+        to={`/store/${storeId}/table/${tableId}`}
         className="flex items-center text-gray-700 cursor-pointer mb-5 w-[90%]"
         // onClick={handleBackClick}
       >

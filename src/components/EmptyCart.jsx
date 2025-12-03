@@ -55,10 +55,10 @@ const EmptyCart = () => {
                 transition={{ delay: 0.2, duration: 0.5 }}
                 className="text-center max-w-md"
             >
-                <h2 className="text-3xl font-bold text-gray-800 mb-3 tracking-tight">
+                <h2 className="text-xl font-bold text-gray-800 mb-2 tracking-tight">
                     ตะกร้าของคุณว่างเปล่า
                 </h2>
-                <p className="text-gray-500 text-lg mb-8 leading-relaxed">
+                <p className="text-gray-500 text-sm mb-6 leading-relaxed">
                     ดูเหมือนว่าคุณยังไม่ได้เลือกเมนูอาหารเลย <br/>
                     ลองดูเมนูแนะนำของเราสิ!
                 </p>
@@ -67,10 +67,10 @@ const EmptyCart = () => {
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="group relative inline-flex items-center justify-center gap-2 bg-[#C10007] text-white font-semibold py-4 px-10 rounded-full shadow-lg hover:bg-[#a30006] hover:shadow-xl transition-all duration-300"
+                        className="group relative inline-flex items-center justify-center gap-2 bg-[#C10007] text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-[#a30006] hover:shadow-xl transition-all duration-300 text-sm"
                     >
                         <span>เลือกเมนูอาหาร</span>
-                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </motion.button>
                 </Link>
             </motion.div>
