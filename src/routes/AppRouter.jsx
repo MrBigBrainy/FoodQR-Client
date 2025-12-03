@@ -11,6 +11,8 @@ import AdminDashboard from "../pages/AdminDashbord";
 import AdminAddMenu from "../pages/AdminAddMenu";
 import TableAdmin from "../pages/TableAdmin";
 import LoginPage from "../pages/AdminLoginPage";
+import BillingPage from "../pages/BillingPage";
+import SuperAdminPage from "@/pages/superAdmin/SuperAdminPage";
 import MenuBill from "../components/Billing/MenuBill";
 import SummaryOfFood from "@/pages/SummaryOfFood";
 import Billing from "@/pages/Billing";
@@ -27,7 +29,7 @@ const router = createBrowserRouter([
   ],
 },
   { path: "/auth", element: <AuthPage /> },
-  { path: "/menu-billing", element: <MenuBill /> },
+  { path: "/superAdmin", element: <SuperAdminPage /> },
   {
     path: "/admin",
     element: <AdminPage />,
