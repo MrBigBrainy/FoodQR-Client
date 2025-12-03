@@ -20,14 +20,51 @@ function MenuPage() {
 
   useEffect(() => console.log(menu), [menu]);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+  };
+
+  const filteredMenu = menu?.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div>
-      <SearchBar />
-      <div className="p-4 max-w-6xl mx-auto pb-36 pt-50">
-        <h2 className="text-2xl font-bold mb-4">เมนูสำหรับทดสอบ</h2>
-        <MenuList items={menu} />
+    <div className="min-h-screen bg-gray-50">
+      <SearchBar items={menu} onSearch={handleSearch} />
+
+      <div className="max-w-6xl mx-auto pb-36 px-4">
+        {filteredMenu?.length > 0 ? (
+          <MenuList items={filteredMenu} />
+        ) : (
+          <div className="flex flex-col items-center justify-center py-20 text-center animate-fade-in">
+            <div className="bg-white p-6 rounded-full shadow-sm mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-12 w-12 text-gray-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">
+              ไม่พบเมนูที่ค้นหา
+            </h3>
+            <p className="text-gray-500 text-sm">
+              ลองค้นหาด้วยคำค้นอื่น หรือเลือกดูเมนูจากหมวดหมู่
+            </p>
+          </div>
+        )}
       </div>
-      <CartIcon />
+      {/* <CartIcon /> */}
     </div>
   );
 }

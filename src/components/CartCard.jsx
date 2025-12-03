@@ -52,7 +52,7 @@ function CartCard({ item }) {
   };
 
   const onAdd = () => {
-    addItem({ id: item.id, name: item.name, price: item.price, amount: 1 });
+    addItem({ id: item.id, name: item.name, price: item.price, amount: 1, imageUrl: item.imageUrl });
   };
 
   const onDelete = () => {
@@ -67,7 +67,7 @@ function CartCard({ item }) {
     <div className="flex w-full bg-white p-4 rounded-xl shadow-md border border-gray-200">
       <div className="flex-shrink-0 w-24 h-24 mr-4">
         <img
-          src={item.ImageUrl || "placeholder.jpg"}
+          src={item.imageUrl}
           alt={item.name}
           className="w-full h-full object-cover rounded-lg"
         />

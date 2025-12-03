@@ -15,7 +15,7 @@ import BillingPage from "../pages/BillingPage";
 import SuperAdminPage from "@/pages/superAdmin/SuperAdminPage";
 
 const router = createBrowserRouter([
-  { path: "/billing", element: <BillingPage /> },
+  // { path: "/billing", element: <BillingPage /> },
   {
     path: "/",
     element: <UserLayout />,

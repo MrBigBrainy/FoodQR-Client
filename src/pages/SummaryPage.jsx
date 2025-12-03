@@ -5,10 +5,14 @@ import PaymentButton from "@/components/PaymentButton";
 import UserSummary from "@/components/UserSummary";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
+import { easeInOut, motion} from "motion/react";
 
 function SummaryPage() {
   return (
-    <div className="pt-25">
+    <motion.div className="pt-5"
+      initial={{ x: "100%" }}
+      animate={{ x: 0 }}
+      transition={{ duration: 0.3, ease: easeInOut }}>
       <Link
         to="/cart"
         className="flex items-center text-gray-700 cursor-pointer mb-5 w-[90%] mx-5"
@@ -22,7 +26,7 @@ function SummaryPage() {
       <UserSummary />
       <CheckoutSummaryCard />
       <PaymentButton />
-    </div>
+    </motion.div>
   );
 }
 
