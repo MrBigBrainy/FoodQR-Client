@@ -1,15 +1,18 @@
-import { NavLink } from "react-router";
+import { NavLink, useParams } from "react-router";
 import useCartStore from "../stores/cartStore";
 import { ShoppingCartIcon, HouseIcon, WalletIcon } from "lucide-react";
 import { motion } from "motion/react";
 
 function Footer() {
+  const { storeId, tableId, orderId } = useParams();
   const totalCartItems = useCartStore((state) => state.totalCartItems);
 
+  const baseUrl = `/store/${storeId}/table/${tableId}/order/${orderId}`;
+
   const navItems = [
-    { to: "/", icon: HouseIcon, label: "เมนู" },
-    { to: "/cart", icon: ShoppingCartIcon, label: "ตะกร้า", badge: totalCartItems },
-    { to: "/summary", icon: WalletIcon, label: "ชำระเงิน" },
+    { to: baseUrl, icon: HouseIcon, label: "เมนู", end: true },
+    { to: `${baseUrl}/cart`, icon: ShoppingCartIcon, label: "ตะกร้า", badge: totalCartItems },
+    { to: `${baseUrl}/summary`, icon: WalletIcon, label: "ชำระเงิน" },
   ];
 
   return (
@@ -29,6 +32,7 @@ function Footer() {
             <NavLink
               key={item.to}
               to={item.to}
+              end={item.end}
               className={({ isActive }) =>
                 `relative flex-1 flex flex-col items-center justify-center p-3 rounded-full transition-all duration-300 ${
                   isActive ? "text-[#C10007]" : "text-gray-400 hover:text-gray-600"

@@ -8,7 +8,7 @@ function CheckoutSummaryCard() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white p-6 rounded-2xl shadow-xl border border-gray-100 mx-5 my-5 mb-50 relative overflow-hidden"
+      className="bg-white p-6 rounded-2xl shadow-xl border border-gray-100 mx-5 my-5 mb-24 relative overflow-hidden"
     >
       {/* Decorative background elements */}
       <div className="absolute top-0 right-0 w-40 h-40 bg-red-50 rounded-full blur-3xl -z-10 opacity-60" />

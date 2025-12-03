@@ -13,18 +13,21 @@ import TableAdmin from "../pages/TableAdmin";
 import LoginPage from "../pages/AdminLoginPage";
 import BillingPage from "../pages/BillingPage";
 import SuperAdminPage from "@/pages/superAdmin/SuperAdminPage";
+import MenuBill from "../components/Billing/MenuBill";
+import SummaryOfFood from "@/pages/SummaryOfFood";
+import Billing from "@/pages/Billing";
 
 const router = createBrowserRouter([
   // { path: "/billing", element: <BillingPage /> },
-  {
-    path: "/",
-    element: <UserLayout />,
-    children: [
-      { path: "/", element: <MenuPage /> },
-      { path: "/cart", element: <CartPage /> },
-      { path: "/summary", element: <SummaryPage /> },
-    ],
-  },
+ {
+  path: "/store/:storeId/table/:tableId/order/:orderId",
+  element: <UserLayout />,
+  children: [
+    { index: true, element: <MenuPage /> },   
+    { path: "cart", element: <CartPage /> },
+    { path: "summary", element: <SummaryPage /> },
+  ],
+},
   { path: "/auth", element: <AuthPage /> },
   { path: "/superAdmin", element: <SuperAdminPage /> },
   {

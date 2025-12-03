@@ -27,6 +27,7 @@ const PaymentButton = () => {
   };
 
   const handlePayment = async () => {
+    console.log('--')
     try {
       const omiseResponse = await createSource();
 
@@ -54,7 +55,7 @@ const PaymentButton = () => {
         bg-red-700 hover:bg-red-800 
         text-white 
         font-bold 
-        py-4 px-6 
+        py-3 px-4 
         rounded-md 
         flex items-center justify-center 
         w-[90%]
@@ -65,9 +66,9 @@ const PaymentButton = () => {
       "
         onClick={handlePayment}
       >
-        <QrCode className="w-6 h-6 mr-3" />
+        <QrCode className="w-5 h-5 mr-3" />
 
-        <span className="text-xl">
+        <span className="text-lg">
           {thaiLabel} {displayAmount}
         </span>
       </button>
