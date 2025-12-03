@@ -9,7 +9,7 @@ import { easeInOut, motion} from "motion/react";
 
 function SummaryPage() {
   return (
-    <motion.div className="pt-25"
+    <motion.div className="pt-5"
       initial={{ x: "100%" }}
       animate={{ x: 0 }}
       transition={{ duration: 0.3, ease: easeInOut }}>

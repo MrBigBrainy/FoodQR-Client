@@ -48,7 +48,7 @@ const PaymentButton = () => {
   const displayAmount = "฿469.73";
 
   return (
-    <div className="fixed inset-x-0 bottom-0 bg-white p-4 pb-20 shadow-2xl border-t border-gray-100">
+    <div className="w-full mt-6 mb-8">
       <button
         className="
         bg-red-700 hover:bg-red-800 

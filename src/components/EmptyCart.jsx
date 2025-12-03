@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 
 const EmptyCart = () => {
     return (
-        <div className="flex flex-col items-center justify-center h-screen pb-16 px-4">
+        <div className="flex flex-col items-center justify-center min-h-[60vh] h-full pb-16 px-4">
             <motion.div
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
