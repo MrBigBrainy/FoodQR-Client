@@ -134,7 +134,6 @@ function CartCard({ item }) {
           </div>
         </div>
       </div>
-
       <div>{NoteUpdate()} </div>
     </div>
   );

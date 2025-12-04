@@ -12,6 +12,7 @@ import AdminAddMenu from "../pages/AdminAddMenu";
 import TableAdmin from "../pages/TableAdmin";
 import LoginPage from "../pages/AdminLoginPage";
 import BillingPage from "../pages/BillingPage";
+import AdminDiscount from "@/pages/AdminDiscount";
 
 const router = createBrowserRouter([
   { path: "/billing", element: <BillingPage /> },
@@ -32,7 +33,8 @@ const router = createBrowserRouter([
       { index: true, element: <AdminDashboard /> },
       { path: "addmenu", element: <AdminAddMenu /> },
       { path: "table", element: <TableAdmin /> },
-      { path: '*', element: <AdminDashboard /> }
+      { path: "discount", element: <AdminDiscount /> },
+      { path: "*", element: <AdminDashboard /> },
     ],
   },
   {
