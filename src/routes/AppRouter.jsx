@@ -16,6 +16,7 @@ import SuperAdminPage from "@/pages/superAdmin/SuperAdminPage";
 import MenuBill from "../components/Billing/MenuBill";
 import SummaryOfFood from "@/pages/SummaryOfFood";
 import Billing from "@/pages/Billing";
+import CoffeeLoader from "@/components/loader/coffeeLoader";
 
 const router = createBrowserRouter([
   // { path: "/billing", element: <BillingPage /> },
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
   ],
 },
   { path: "/auth", element: <AuthPage /> },
+  { path: "/test", element: <CoffeeLoader /> },
   { path: "/superAdmin", element: <SuperAdminPage /> },
   {
     path: "/admin",
