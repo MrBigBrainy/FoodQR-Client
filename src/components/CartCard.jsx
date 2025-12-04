@@ -52,7 +52,7 @@ function CartCard({ item }) {
   };
 
   const onAdd = () => {
-    addItem({ id: item.id, name: item.name, price: item.price, amount: 1 });
+    addItem({ id: item.id, name: item.name, price: item.price, amount: 1, imageUrl: item.imageUrl });
   };
 
   const onDelete = () => {
@@ -64,6 +64,7 @@ function CartCard({ item }) {
   };
 
   return (
+<<<<<<< HEAD
     <div className=" w-full  bg-white p-4 rounded-xl shadow-md border border-gray-200">
       <div className="flex w-full p-4 rounded-xl ">
         <div className="flex-shrink-0 w-24 h-24 mr-4">
@@ -85,6 +86,35 @@ function CartCard({ item }) {
             <button
               onClick={onRemove}
               className="text-gray-400 hover:text-red-600 transition flex-shrink-0"
+=======
+    <div className="flex w-full bg-white p-4 rounded-xl shadow-md border border-gray-200">
+      <div className="flex-shrink-0 w-24 h-24 mr-4">
+        <img
+          src={item.imageUrl}
+          alt={item.name}
+          className="w-full h-full object-cover rounded-lg"
+        />
+      </div>
+      <div className="flex flex-col flex-grow justify-between">
+        <div className="flex justify-between items-start">
+          <div className="pr-4">
+            <h4 className="text-base font-semibold text-gray-800">
+              {item.name}
+            </h4>
+            {/* ค่อยละกัน */}
+            <p className="text-xs text-blue-500 mt-0.5">สถานะ: พร้อมส่ง</p>
+          </div>
+          <button
+            onClick={onRemove}
+            className="text-gray-400 hover:text-red-600 transition flex-shrink-0"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+>>>>>>> dev
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

@@ -1,46 +1,81 @@
 import React, { useState } from "react";
-
-// ตัวเลือกการจ่ายเงิน
-const paymentOptions = [
-  "จ่ายรวม (ไม่แยกบิล)",
-  "หารเท่า (ต่อคน)",
-  "แยกตามรายการ",
-];
+import { Users } from "lucide-react";
+import { motion } from "motion/react";
 
 function DividedCard() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(paymentOptions[0]);
+  const [selected, setSelected] = useState("pay-all");
 
-  const handleSelect = (option) => {
-    setSelected(option);
-    setIsOpen(false);
-  };
+  const options = [
+    {
+      id: "pay-all",
+      title: "หารเท่า (จ่ายรวม)",
+      subtitle: "ชำระเงินพร้อมกันทั้งหมด",
+      price: "฿374.50",
+    },
+    {
+      id: "split-item",
+      title: "หารแยก (ตามรายการ)",
+      subtitle: "แบ่งจ่ายตามรายการที่สั่ง",
+      price: null,
+    },
+    {
+      id: "split-equal",
+      title: "หารเท่า (แบ่งเท่า ๆ กัน)",
+      subtitle: "แบ่งจ่ายเท่า ๆ กัน",
+      price: null,
+    },
+  ];
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-md border border-gray-200 mx-5 my-5">
-      <h3 className="text-lg font-bold mb-4">เลือกวิธีการชำระเงิน</h3>
+    <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 mx-5 my-5">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
+          <Users className="w-5 h-5 text-red-500" />
+        </div>
+        <div>
+          <h3 className="text-base font-bold text-gray-900">รูปแบบการชำระเงิน</h3>
+          <p className="text-xs text-gray-500">เลือกวิธีการจ่ายเงิน</p>
+        </div>
+      </div>
 
-      <div className="relative">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="w-full py-2 px-3 border border-gray-400 rounded-md bg-gray-100 flex justify-between items-center"
-        >
-          {selected}
-          <span className="text-xl">{isOpen ? "▲" : "▼"}</span>
-        </button>
-        {isOpen && (
-          <div className="absolute z-10 mt-1 w-full bg-white border border-gray-400 rounded-md shadow-lg">
-            {paymentOptions.map((option) => (
+      <div className="space-y-3">
+        {options.map((option) => (
+          <div
+            key={option.id}
+            onClick={() => setSelected(option.id)}
+            className={`relative p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer flex items-center justify-between ${
+              selected === option.id
+                ? "border-red-500 bg-red-50/30"
+                : "border-gray-200 hover:border-gray-300"
+            }`}
+          >
+            <div className="flex items-center gap-3">
               <div
-                key={option}
-                onClick={() => handleSelect(option)}
-                className="px-3 py-2 cursor-pointer hover:bg-blue-100"
+                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                  selected === option.id
+                    ? "border-red-500"
+                    : "border-gray-400"
+                }`}
               >
-                {option}
+                {selected === option.id && (
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="w-2.5 h-2.5 rounded-full bg-red-500" 
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  />
+                )}
               </div>
-            ))}
+              <div>
+                <h4 className="font-bold text-gray-800 text-sm">{option.title}</h4>
+                <p className="text-xs text-gray-500">{option.subtitle}</p>
+              </div>
+            </div>
+            {option.price && (
+              <span className="font-bold text-gray-900">{option.price}</span>
+            )}
           </div>
-        )}
+        ))}
       </div>
     </div>
   );

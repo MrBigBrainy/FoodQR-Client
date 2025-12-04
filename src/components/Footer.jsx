@@ -1,55 +1,81 @@
-import { NavLink } from "react-router";
+import { NavLink, useParams } from "react-router";
 import useCartStore from "../stores/cartStore";
-import { ShoppingCartIcon } from "lucide-react";
-import { HouseIcon } from "lucide-react";
-import { WalletIcon } from "lucide-react";
+import { ShoppingCartIcon, HouseIcon, WalletIcon } from "lucide-react";
 import { motion } from "motion/react";
 
 function Footer() {
+  const { storeId, tableId, orderId } = useParams();
   const totalCartItems = useCartStore((state) => state.totalCartItems);
 
+  const baseUrl = `/store/${storeId}/table/${tableId}/order/${orderId}`;
+
+  const navItems = [
+    { to: baseUrl, icon: HouseIcon, label: "เมนู", end: true },
+    { to: `${baseUrl}/cart`, icon: ShoppingCartIcon, label: "ตะกร้า", badge: totalCartItems },
+    { to: `${baseUrl}/summary`, icon: WalletIcon, label: "ชำระเงิน" },
+  ];
+
   return (
-    <motion.footer initial={{ y: 100 }} animate={{ y: 0 }} transition={{ duration: 0.3 }} className="fixed bottom-0 left-0 right-0 w-full bg-white shadow-xl border-t border-gray-200 z-50">
-      <div className="flex justify-around items-center h-16 max-w-lg mx-auto">
-        <NavLink
-          to="/"
-          className="text-xs font-medium text-gray-500 hover:text-red-700 transition duration-150 p-2"
-        >
-          <motion.div className="flex flex-col gap-2 items-center justify-center " whileTap={{ scale: 0.85 }}>
-            <HouseIcon />
-            <span>เมนู</span>
-          </motion.div>
-        </NavLink>
-        <NavLink
-          to="/cart"
-          className="flex flex-col gap-2 items-center justify-center text-xs font-medium text-gray-500 hover:text-red-700 transition duration-150 p-2"
-        >
-          <motion.div className="flex flex-col gap-2 items-center justify-center " whileTap={{ scale: 0.85 }}>
-            <ShoppingCartIcon />
-
-            <span>ตะกร้า</span>
-            <span
-              className="absolute  
-                 transform translate-x-1/2 -translate-y-5
-                 bg-red-700 text-white 
-                 rounded-full text-xs font-bold 
-                 w-4 h-4 flex items-center justify-center 
-                 leading-none p-1"
+    <motion.footer 
+      initial={{ y: 100, opacity: 0 }} 
+      animate={{ y: 0, opacity: 1 }} 
+      transition={{ 
+        type: "spring",
+        stiffness: 260,
+        damping: 20
+      }} 
+      className="fixed bottom-6 left-4 right-4 z-50"
+    >
+      <div className="bg-white/90 backdrop-blur-md shadow-2xl rounded-full border border-white/20 max-w-md mx-auto px-2 py-2">
+        <div className="flex justify-around items-center relative">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) =>
+                `relative flex-1 flex flex-col items-center justify-center p-3 rounded-full transition-all duration-300 ${
+                  isActive ? "text-[#C10007]" : "text-gray-400 hover:text-gray-600"
+                }`
+              }
             >
-              {totalCartItems}
-            </span>
-          </motion.div>
-
-        </NavLink>
-        <NavLink
-          to="/summary"
-          className="flex flex-col gap-2 items-center justify-center text-xs font-medium text-gray-500 hover:text-red-700 transition duration-150 p-2"
-        >
-          <motion.div className="flex flex-col gap-2 items-center justify-center " whileTap={{ scale: 0.85 }}>
-            <WalletIcon />
-            <span>ชำระเงิน</span>
-          </motion.div>
-        </NavLink>
+              {({ isActive }) => (
+                <>
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeTab"
+                      className="absolute inset-0 bg-red-50 rounded-full -z-10"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                  
+                  <motion.div
+                    whileTap={{ scale: 0.9 }}
+                    animate={{ scale: isActive ? 1.1 : 1 }}
+                    className="relative"
+                  >
+                    <item.icon className={`w-6 h-6 ${isActive ? "stroke-[2.5px]" : "stroke-2"}`} />
+                    
+                    {item.badge > 0 && (
+                      <motion.span
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        key={item.badge}
+                        className="absolute -top-2 -right-2 bg-[#C10007] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-sm border-2 border-white"
+                      >
+                        {item.badge}
+                      </motion.span>
+                    )}
+                  </motion.div>
+                  
+                  <span className={`text-[10px] font-medium mt-1 ${isActive ? "font-bold" : ""}`}>
+                    {item.label}
+                  </span>
+                </>
+              )}
+            </NavLink>
+          ))}
+        </div>
       </div>
     </motion.footer>
   );
