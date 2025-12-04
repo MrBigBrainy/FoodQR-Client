@@ -1,0 +1,129 @@
+import React, { useState } from 'react'
+import { useForm } from "react-hook-form";
+import { useDropzone } from "react-dropzone";
+import AddDropZone from './AddDropZone';
+
+function AddmenuForm({ onSubmit, onClose }) {
+    const { register, handleSubmit, watch, reset } = useForm();
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    // ✅ คำนวณราคาสุทธิอัตโนมัติ
+    const price = watch("price") || 0;
+    const discount = watch("discount") || 0;
+    const netPrice = price - discount;
+
+    const handleFileSelect = (file) => {
+        console.log("📸 ได้ไฟล์:", file);
+        setSelectedFile(file);
+    };
+
+    const handleFormSubmit = (data) => {
+        const payload = {
+            ...data,
+            price: +data.price,
+            discount: +data.discount,
+            netPrice: netPrice,
+            categoryId: +data.categoryId,
+            menuTypeId: +data.menuTypeId,
+        };
+
+        console.log("📦 ส่งข้อมูล:", payload);
+        if (onSubmit) onSubmit(payload);
+        reset(); // เคลียร์ฟอร์ม
+        if (onClose) onClose();
+    };
+
+    return (
+        <form
+            onSubmit={handleSubmit(handleFormSubmit)}
+        // className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 w-full max-w-lg mx-auto"
+        >
+            <h2 className="text-xl font-semibold text-gray-800 mb-5 text-center">
+                เพิ่มเมนูใหม่
+            </h2>
+
+            {/* ชื่อเมนู */}
+            <div>
+                <label className="block text-gray-600 text-sm mb-1">ชื่อเมนู</label>
+                <input
+                    type="text"
+                    placeholder="ระบุชื่อเมนู"
+                    {...register("name", { required: true })}
+                    className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+                />
+            </div>
+
+            {/* ราคา & ราคาลด */}
+            <div className="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <label className="block text-gray-600 text-sm mb-1">ราคา (฿)</label>
+                    <input
+                        type="number"
+                        placeholder="0"
+                        {...register("price", { required: true, valueAsNumber: true })}
+                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-red-400"
+                    />
+                </div>
+                <div>
+                    <label className="block text-gray-600 text-sm mb-1">ราคาลด (฿)</label>
+                    <input
+                        type="number"
+                        placeholder="0"
+                        {...register("discount", { valueAsNumber: true })}
+                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-red-400"
+                    />
+                </div>
+            </div>
+
+            {/* หมวดหมู่ */}
+            <div className="mt-4">
+                <label className="block text-gray-600 text-sm mb-1">หมวดหมู่</label>
+                <select
+                    {...register("categoryId", { required: true })}
+                    className="w-full p-3 border rounded-lg bg-white focus:ring-2 focus:ring-red-400"
+                >
+                    <option value="1">อาหารจานหลัก</option>
+                    <option value="2">ของหวาน</option>
+                    <option value="3">เครื่องดื่ม</option>
+                </select>
+            </div>
+
+            {/* คำอธิบาย */}
+            <div className="mt-4">
+                <label className="block text-gray-600 text-sm mb-1">คำอธิบาย</label>
+                <textarea
+                    placeholder="อธิบายเกี่ยวกับเมนูนี้"
+                    {...register("detail")}
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-red-400"
+                ></textarea>
+            </div>
+
+            {/* URL รูปภาพ */}
+            <div className="mt-4">
+                <label className="block text-gray-600 text-sm mb-1">URL รูปภาพ</label>
+                <AddDropZone onFileSelect={handleFileSelect} />
+
+            </div>
+
+            {/* ปุ่ม */}
+            <div className="flex justify-end gap-3 mt-6">
+                <button
+                    type="button"
+                    onClick={onClose}
+                    className="w-1/2 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium"
+                >
+                    ยกเลิก
+                </button>
+                <button
+                    type="submit"
+                    className="w-1/2 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium"
+                >
+                    เพิ่มเมนู
+                </button>
+            </div>
+        </form>
+    );
+}
+
+
+export default AddmenuForm
