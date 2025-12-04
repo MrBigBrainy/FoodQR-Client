@@ -1,15 +1,16 @@
 import useCartStore from "../stores/cartStore";
 import { motion } from "framer-motion"
 
-const MenuCard = ({ id, name, price, ImageUrl }) => {
+const MenuCard = ({ id, name, price, imageUrl }) => {
   const addItem = useCartStore((state) => state.addItem);
 
   const addToCard = () => {
     addItem({
-      id: id,
-      name: name,
-      price: price,
+      id,
+      name,
+      price,
       amount: 1,
+      imageUrl 
     });
   };
 
@@ -22,7 +23,7 @@ const MenuCard = ({ id, name, price, ImageUrl }) => {
     >
       <div className="relative">
         <img
-          src={ImageUrl || "placeholder.jpg"}
+          src={imageUrl}
           alt={name}
           className=" w-full h-[160px] object-cover"
         />

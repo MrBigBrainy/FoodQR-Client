@@ -10,20 +10,19 @@ import AdminPage from '../pages/AdminPage';
 import AdminDashboard from '../pages/AdminDashbord';
 import AdminAddMenu from '../pages/AdminAddMenu';
 import TableAdmin from '../pages/TableAdmin';
-import AdminShopSettingPage from '../pages/AdminShopSettingPage';
 import LoginPage from '../pages/AdminLoginPage';
 import BillingPage from '../pages/BillingPage';
 import SuperAdminPage from '@/pages/superAdmin/SuperAdminPage';
 
 const router = createBrowserRouter([
-  { path: '/billing', element: <BillingPage /> },
+  // { path: "/billing", element: <BillingPage /> },
   {
-    path: '/',
+    path: '/store/:storeId/table/:tableId/order/:orderId',
     element: <UserLayout />,
     children: [
-      { path: '/', element: <MenuPage /> },
-      { path: '/cart', element: <CartPage /> },
-      { path: '/summary', element: <SummaryPage /> },
+      { index: true, element: <MenuPage /> },
+      { path: 'cart', element: <CartPage /> },
+      { path: 'summary', element: <SummaryPage /> },
     ],
   },
   { path: '/auth', element: <AuthPage /> },
@@ -35,9 +34,7 @@ const router = createBrowserRouter([
       { index: true, element: <AdminDashboard /> },
       { path: 'addmenu', element: <AdminAddMenu /> },
       { path: 'table', element: <TableAdmin /> },
-      { path: 'ตั้งค่าร้าน', element: <AdminShopSettingPage /> },
       { path: '*', element: <AdminDashboard /> },
-      
     ],
   },
   {

@@ -27,6 +27,7 @@ const PaymentButton = () => {
   };
 
   const handlePayment = async () => {
+    console.log('--')
     try {
       const omiseResponse = await createSource();
 
@@ -48,13 +49,13 @@ const PaymentButton = () => {
   const displayAmount = "฿469.73";
 
   return (
-    <div className="fixed inset-x-0 bottom-0 bg-white p-4 pb-20 shadow-2xl border-t border-gray-100">
+    <div className="w-full mt-6 mb-8">
       <button
         className="
         bg-red-700 hover:bg-red-800 
         text-white 
         font-bold 
-        py-4 px-6 
+        py-3 px-4 
         rounded-md 
         flex items-center justify-center 
         w-[90%]
@@ -65,9 +66,9 @@ const PaymentButton = () => {
       "
         onClick={handlePayment}
       >
-        <QrCode className="w-6 h-6 mr-3" />
+        <QrCode className="w-5 h-5 mr-3" />
 
-        <span className="text-xl">
+        <span className="text-lg">
           {thaiLabel} {displayAmount}
         </span>
       </button>

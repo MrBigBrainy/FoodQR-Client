@@ -1,5 +1,5 @@
 
-import Login from "@/components/auth/Login";
+import Login from "@/components/Auth/Login";
 
 function AuthPage() {
     return (

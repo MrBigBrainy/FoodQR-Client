@@ -1,28 +1,86 @@
 import React from "react";
+import { motion } from "motion/react";
+import { Receipt, Sparkles } from "lucide-react";
 
 function CheckoutSummaryCard() {
   return (
-    <div className="bg-white p-4 rounded-xl shadow-md border border-gray-200 mx-5 my-5 mb-50">
-      <h3 className="text-lg font-bold text-gray-800 mb-4">สรุปยอด</h3>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="bg-white p-6 rounded-2xl shadow-xl border border-gray-100 mx-5 my-5 mb-24 relative overflow-hidden"
+    >
+      {/* Decorative background elements */}
+      <div className="absolute top-0 right-0 w-40 h-40 bg-red-50 rounded-full blur-3xl -z-10 opacity-60" />
+      <div className="absolute bottom-0 left-0 w-32 h-32 bg-orange-50 rounded-full blur-2xl -z-10 opacity-60" />
 
-      <div className="flex justify-between items-center py-1 text-base text-gray-700">
-        <span>ยอดรวม</span>
-        <span>50</span>
+      <div className="flex items-center gap-3 mb-6">
+        <motion.div 
+          whileHover={{ rotate: 15, scale: 1.1 }}
+          className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 text-white flex items-center justify-center shadow-lg shadow-red-500/30"
+        >
+          <Receipt size={20} strokeWidth={2.5} />
+        </motion.div>
+        <div>
+          <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+            สรุปยอดคำสั่งซื้อ
+            <Sparkles className="text-orange-400 w-4 h-4" />
+          </h3>
+          <p className="text-xs text-gray-500 font-medium">รายละเอียดการชำระเงิน</p>
+        </div>
       </div>
-      <div className="flex justify-between items-center py-1 text-base font-semibold text-red-600">
-        <span>ส่วนลดเมนู</span>
-        <span>-20</span>
+
+      <div className="space-y-3">
+        <SummaryRow label="ยอดรวม" value="50" delay={0.1} />
+        <SummaryRow label="ส่วนลดเมนู" value="-20" isDiscount delay={0.2} />
+        <SummaryRow label="ภาษี (7%)" value="7" delay={0.3} />
       </div>
-      <div className="flex justify-between items-center py-1 text-base text-gray-700">
-        <span>ภาษี </span>
-        <span>7</span>
+
+      <motion.div
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={{ scaleX: 1, opacity: 1 }}
+        transition={{ delay: 0.4, duration: 0.5 }}
+        className="my-4 border-t-2 border-dashed border-gray-100"
+      />
+
+      <div className="flex justify-between items-center pt-1">
+        <span className="text-base font-bold text-gray-700">ยอดรวมทั้งหมด</span>
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+          className="flex items-baseline gap-1"
+        >
+          <span className="text-sm font-semibold text-red-500">฿</span>
+          <span className="text-2xl font-extrabold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-orange-600">
+            50
+          </span>
+        </motion.div>
       </div>
-      <hr className="my-3 border-gray-200" />
-      <div className="flex justify-between items-center py-1 text-xl font-bold text-gray-800">
-        <span>ยอดรวมทั้งหมด</span>
-        <span>50</span>
-      </div>
-    </div>
+    </motion.div>
+  );
+}
+
+function SummaryRow({ label, value, isDiscount, delay }) {
+  // Format value to handle negative numbers nicely with the currency symbol
+  const formattedValue = value.toString().startsWith("-") 
+    ? `-฿${value.toString().substring(1)}` 
+    : `฿${value}`;
+
+  return (
+    <motion.div
+      initial={{ x: -20, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ delay }}
+      className={`flex justify-between items-center text-sm ${
+        isDiscount ? "text-red-500 font-medium" : "text-gray-600 font-medium"
+      }`}
+    >
+      <span>{label}</span>
+      <span className={isDiscount ? "text-red-500" : "text-gray-800"}>
+        {formattedValue}
+      </span>
+    </motion.div>
   );
 }
 
