@@ -45,6 +45,11 @@ function TableAdmin() {
                 const tableTypes = await getTableTypes();
                 console.log(tableTypes.data.tableTypes)
                 setTableTypes(tableTypes.data.tableTypes || []);
+
+
+                const tables = await getTables();
+                console.log(tables.data.tables)
+                setTables(tables.data.tables || []);
                 // console.log("tableTypes.data", tableTypesRes.data);
                 // setZones(zonesRes.data || []);
                 // setTables(tablesRes.data || []);
@@ -55,7 +60,10 @@ function TableAdmin() {
         fetchData();
     }, [storeId]);
 
-    useEffect(() => console.log(tableTypes), [tableTypes])
+    useEffect(() => {
+        console.log("tableTypes", tableTypes);
+        console.log("tables", tables)
+    }, [tableTypes, tables])
 
     const onSubmit = async (data) => {
         setLoading(true);
