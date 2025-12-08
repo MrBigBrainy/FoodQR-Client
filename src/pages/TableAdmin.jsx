@@ -27,6 +27,11 @@ function TableAdmin() {
     // Modal states
     const [isAddTableModalOpen, setIsAddTableModalOpen] = useState(false);
     const [isManageTableTypesModalOpen, setIsManageTableTypesModalOpen] = useState(false);
+    
+    // Open Order Modal State
+    const [isOpenOrderModalOpen, setIsOpenOrderModalOpen] = useState(false);
+    const [selectedTableForOrder, setSelectedTableForOrder] = useState(null);
+    const [customerCount, setCustomerCount] = useState(1);
 
     const [tableTypes, setTableTypes] = useState([]);
     const [zones, setZones] = useState([]);
@@ -130,6 +135,41 @@ function TableAdmin() {
 
     const getSelectedTableType = (tableTypeId) => {
         return tableTypes.find(type => type.id === parseInt(tableTypeId));
+    };
+
+    // Open Order Handlers
+    const handleOpenOrderClick = (table) => {
+        setSelectedTableForOrder(table);
+        setCustomerCount(1); // Default to 1 customer
+        setIsOpenOrderModalOpen(true);
+    };
+
+    const handleConfirmOpenOrder = async () => {
+        if (!selectedTableForOrder) return;
+
+        try {
+            // TODO: Call API to open table/create order
+            console.log(`Opening table ${selectedTableForOrder.tableName} with ${customerCount} customers`);
+            
+            // Mock success
+            alert(`เปิดโต๊ะ ${selectedTableForOrder.tableName} สำหรับ ${customerCount} ท่าน เรียบร้อยแล้ว`);
+            setIsOpenOrderModalOpen(false);
+            setSelectedTableForOrder(null);
+            
+            // Refresh tables (if status changes)
+            // const tablesRes = await getTables(storeId);
+            // setTables(tablesRes.data.tables || []);
+        } catch (error) {
+            console.error("Error opening table:", error);
+            alert("เกิดข้อผิดพลาดในการเปิดโต๊ะ");
+        }
+    };
+
+    const adjustCustomerCount = (amount) => {
+        setCustomerCount(prev => {
+            const newValue = prev + amount;
+            return newValue < 1 ? 1 : newValue;
+        });
     };
 
     return (
@@ -250,7 +290,7 @@ function TableAdmin() {
                                     </div>
 
                                     <button
-                                        onClick={() => alert(`เปิดออเดอร์สำหรับโต๊ะ ${table.tableName}`)}
+                                        onClick={() => handleOpenOrderClick(table)}
                                         className="w-full mt-3 bg-red-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors shadow-sm flex items-center justify-center gap-2"
                                     >
                                         <i className="fas fa-clipboard-list"></i>
@@ -476,6 +516,54 @@ function TableAdmin() {
                             </div>
                         </div>
                     )}
+                </div>
+            </Modal>
+
+            {/* Open Order Modal */}
+            <Modal
+                isOpen={isOpenOrderModalOpen}
+                onClose={() => setIsOpenOrderModalOpen(false)}
+                title={`เปิดโต๊ะ: ${selectedTableForOrder?.tableName}`}
+            >
+                <div className="space-y-6 text-center">
+                    <div className="py-4">
+                        <label className="block text-gray-700 text-lg font-medium mb-4">
+                            จำนวนลูกค้า
+                        </label>
+                        <div className="flex items-center justify-center gap-6">
+                            <button
+                                onClick={() => adjustCustomerCount(-1)}
+                                className="w-12 h-12 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center justify-center text-xl font-bold transition-colors"
+                            >
+                                <i className="fas fa-minus"></i>
+                            </button>
+                            <span className="text-4xl font-bold text-gray-800 w-16">
+                                {customerCount}
+                            </span>
+                            <button
+                                onClick={() => adjustCustomerCount(1)}
+                                className="w-12 h-12 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center justify-center text-xl font-bold transition-colors"
+                            >
+                                <i className="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <p className="text-gray-500 mt-2">คน</p>
+                    </div>
+
+                    <div className="flex gap-3">
+                        <button
+                            onClick={() => setIsOpenOrderModalOpen(false)}
+                            className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                        >
+                            ยกเลิก
+                        </button>
+                        <button
+                            onClick={handleConfirmOpenOrder}
+                            className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors shadow-lg"
+                        >
+                            เปิดโต๊ะ
+                        </button>
+                    </div>
                 </div>
             </Modal>
         </div>
