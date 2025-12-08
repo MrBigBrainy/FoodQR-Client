@@ -244,19 +244,21 @@ function TableAdmin() {
                                     key={table.id}
                                     className={`relative group p-4 border rounded-xl transition-all duration-200 hover:shadow-md ${
                                         table.status === 'in_use' 
-                                            ? 'border-green-200 bg-green-50' 
+                                            ? 'border-red-200 bg-red-50' 
                                             : table.status === 'call_staff'
                                             ? 'border-yellow-200 bg-yellow-50'
                                             : table.status === 'pay_bill'
                                             ? 'border-blue-200 bg-blue-50'
+                                            : table.status === 'available'
+                                            ? 'border-green-200 bg-green-50'
                                             : 'border-gray-200 bg-white hover:border-red-200'
                                     }`}
                                 >
                                     <div className="flex justify-between items-start mb-3">
                                         <div className="bg-white p-2 rounded-lg shadow-sm">
                                             <i className={`fas fa-chair text-xl ${
-                                                table.status === 'in_use' ? 'text-green-500' : 
-                                                table.status === 'available' ? 'text-gray-400' : 'text-gray-600'
+                                                table.status === 'in_use' ? 'text-red-500' : 
+                                                table.status === 'available' ? 'text-green-500' : 'text-gray-600'
                                             }`}></i>
                                         </div>
                                         <button
@@ -281,17 +283,20 @@ function TableAdmin() {
                                     <div className="mt-2">
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                                             table.status === 'in_use'
-                                                ? 'bg-green-100 text-green-800'
+                                                ? 'bg-red-100 text-red-800'
                                                 : table.status === 'call_staff'
                                                 ? 'bg-yellow-100 text-yellow-800'
                                                 : table.status === 'pay_bill'
                                                 ? 'bg-blue-100 text-blue-800'
+                                                : table.status === 'available'
+                                                ? 'bg-green-100 text-green-800'
                                                 : 'bg-gray-100 text-gray-800'
                                         }`}>
                                             <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${
-                                                table.status === 'in_use' ? 'bg-green-500' :
+                                                table.status === 'in_use' ? 'bg-red-500' :
                                                 table.status === 'call_staff' ? 'bg-yellow-500' :
                                                 table.status === 'pay_bill' ? 'bg-blue-500' :
+                                                table.status === 'available' ? 'bg-green-500' :
                                                 'bg-gray-400'
                                             }`}></span>
                                             {table.status === 'in_use' && 'มีลูกค้า'}
@@ -303,7 +308,11 @@ function TableAdmin() {
 
                                     <button
                                         onClick={() => handleOpenOrderClick(table)}
-                                        className="w-full mt-3 bg-red-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors shadow-sm flex items-center justify-center gap-2"
+                                        className={`w-full mt-3 text-white py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center justify-center gap-2 ${
+                                            table.status === 'in_use' 
+                                            ? 'bg-red-600 hover:bg-red-700' 
+                                            : 'bg-green-600 hover:bg-green-700'
+                                        }`}
                                     >
                                         <i className="fas fa-clipboard-list"></i>
                                         เปิดออเดอร์
@@ -571,7 +580,7 @@ function TableAdmin() {
                         </button>
                         <button
                             onClick={handleConfirmOpenOrder}
-                            className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors shadow-lg"
+                            className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors shadow-lg"
                         >
                             เปิดโต๊ะ
                         </button>
