@@ -34,7 +34,7 @@ const router = createBrowserRouter([
   { path: "/test", element: <CoffeeLoader /> },
   { path: "/superAdmin", element: <SuperAdminPage /> },
   {
-    path: "/admin",
+    path: "/admin/store/:storeId",
     element: <AdminPage />,
     children: [
       { index: true, element: <AdminDashboard /> },
