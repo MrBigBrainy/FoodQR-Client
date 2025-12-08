@@ -1,9 +1,14 @@
 import CreateDiscountForm from "@/components/discountAdmin/CreateDiscountForm";
 import DiscountData from "@/components/discountAdmin/DiscountData";
 import DiscountList from "@/components/discountAdmin/DiscountList";
-import React from "react";
+import React, { useState } from "react";
 
 function AdminDiscount() {
+  const [refreshKey, setRefreshKey] = useState(0);
+  const handleCouponCreated = () => {
+    setRefreshKey((prev) => prev + 1);
+    alert("✅ สร้างคูปองสำเร็จ! กำลังอัปเดตรายการ...");
+  };
   return (
     <div className="p-4 md:p-8 pt-10 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
@@ -17,15 +22,15 @@ function AdminDiscount() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-10">
-        <div className="md:col-span-1">
-          <CreateDiscountForm />
+      <div className="grid grid-cols-1 md:grid-cols-7 gap-8 pt-10">
+        <div className="md:col-span-3">
+          <CreateDiscountForm onCouponCreated={handleCouponCreated} />
         </div>
-        <div className="md:col-span-2 space-y-8">
+        <div className="md:col-span-4 space-y-8">
           <div className="flex flex-col lg:flex-row gap-4">
             <DiscountData />
           </div>
-          <DiscountList />
+          <DiscountList key={refreshKey} />
         </div>
       </div>
     </div>
