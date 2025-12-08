@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { getTableTypes, createTable, getTables, deleteTable, getZones, createTableType } from '@/api/admin.api';
 import Modal from '@/components/Modal';
+import { createOrder } from '@/api/order.api';
+import { useParams } from 'react-router';
+import { updateTableStatus } from '@/api/table.api';
 
 function TableAdmin() {
+    const {storeId} = useParams();
     const { register, handleSubmit, formState: { errors }, reset, watch } = useForm({
             defaultValues: {
             tableName: "",
@@ -37,7 +41,6 @@ function TableAdmin() {
     const [zones, setZones] = useState([]);
     const [tables, setTables] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [storeId, setStoreId] = useState(1); // TODO: Get from auth context or localStorage
 
     // Fetch table types and zones on component mount
     useEffect(() => {
@@ -148,17 +151,25 @@ function TableAdmin() {
         if (!selectedTableForOrder) return;
 
         try {
-            // TODO: Call API to open table/create order
+            const orderData = {
+                storeId: storeId,
+                customerCount: customerCount,
+                tableId: selectedTableForOrder.id,
+            }
+            await createOrder(orderData)
+
+            const tableStatusData = {
+                storeId: storeId,
+                tableId: selectedTableForOrder.id,
+                status: "in_use"
+            }
+            await updateTableStatus(tableStatusData)
             console.log(`Opening table ${selectedTableForOrder.tableName} with ${customerCount} customers`);
             
-            // Mock success
             alert(`เปิดโต๊ะ ${selectedTableForOrder.tableName} สำหรับ ${customerCount} ท่าน เรียบร้อยแล้ว`);
             setIsOpenOrderModalOpen(false);
             setSelectedTableForOrder(null);
             
-            // Refresh tables (if status changes)
-            // const tablesRes = await getTables(storeId);
-            // setTables(tablesRes.data.tables || []);
         } catch (error) {
             console.error("Error opening table:", error);
             alert("เกิดข้อผิดพลาดในการเปิดโต๊ะ");
@@ -223,7 +234,8 @@ function TableAdmin() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                        {tables.map((table) => {
+                            {tables.map((table) => {
+                            console.log(table);
                             const tableType = tableTypes.find(type => type.id === table.tableTypeId);
                             const zone = zones.find(z => z.id === table.zoneId);
                             
