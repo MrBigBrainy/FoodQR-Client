@@ -8,7 +8,7 @@ const MenuBill = () => {
   const targetRef = useRef(null);
 
   const tableName = "A3";
-  const qrMenuUrl = `https://barbgon.app/menu/${tableName}`;
+  const qrMenuUrl = `http://localhost:5173/store/1/table/1/order/1`;
 
   useEffect(() => {
     if (!targetRef.current) return;
@@ -64,7 +64,7 @@ const MenuBill = () => {
       >
         {/* Header */}
         <header className="pb-4 border-b border-black text-center">
-          <div className="text-base font-semibold">Bar B Gon</div>
+          <div className="text-base font-semibold">Minna no Sushi</div>
           <div className="text-xs">Japanese Restaurant &amp; Bar</div>
         </header>
 
@@ -86,7 +86,7 @@ const MenuBill = () => {
 
         {/* Footer */}
         <footer className=" pt-2 mt-2 text-[10px] text-center">
-          © Bar B Gon — Thanks you
+          © Minna no Sushi — Thanks you
         </footer>
       </div>
     </div>
