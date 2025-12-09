@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router';
+import { NavLink, useParams } from 'react-router';
 import {
   SettingsIcon,
   MenuIcon,
@@ -26,7 +26,8 @@ function SidebarAdmin() {
   };
 
   // ✅ ดึงค่าจาก localStorage
-  const storeId = localStorage.getItem('storeId');
+  const params = useParams();
+  const storeId = params.storeId || localStorage.getItem('storeId');
   const tableId = localStorage.getItem('tableId');
   const orderId = localStorage.getItem('orderId');
   return (
@@ -46,44 +47,44 @@ function SidebarAdmin() {
               <CircleArrowLeftIcon /> กลับหน้าเมนู
             </NavLink>
             <NavLink
-              to="/admin"
+              to={`/admin/store/${storeId}`}
               end
               className={({ isActive }) => active(isActive)}
             >
               <HouseIcon /> Dashbord
             </NavLink>
             <NavLink
-              to="/admin/kitchen"
+              to={`/admin/store/${storeId}/kitchen`}
               className={({ isActive }) => active(isActive)}
             >
               <ChefHatIcon /> จัดการครัว
             </NavLink>
             <NavLink
-              to="/admin/table"
+              to={`/admin/store/${storeId}/table`}
               className={({ isActive }) => active(isActive)}
             >
               <TableIcon /> จัดการโต๊ะ
             </NavLink>
             <NavLink
-              to="/admin/addmenu"
+              to={`/admin/store/${storeId}/addmenu`}
               className={({ isActive }) => active(isActive)}
             >
               <MenuIcon /> จัดการเมนู
             </NavLink>
             <NavLink
-              to="/admin/billing"
+              to={`/admin/store/${storeId}/billing`}
               className={({ isActive }) => active(isActive)}
             >
               <BanknoteIcon /> จัดการการบิล
             </NavLink>
             <NavLink
-              to="/admin/discount"
+              to={`/admin/store/${storeId}/discount`}
               className={({ isActive }) => active(isActive)}
             >
               <PercentIcon /> จัดการส่วนลด
             </NavLink>
             <NavLink
-              to="/admin/ตั้งค่าร้าน"
+              to={`/admin/store/${storeId}/ตั้งค่าร้าน`}
               className={({ isActive }) => active(isActive)}
             >
               <StoreIcon /> ตั้งค่าร้าน
