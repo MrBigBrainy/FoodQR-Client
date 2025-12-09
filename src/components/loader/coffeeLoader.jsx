@@ -1,48 +1,45 @@
-// คุณต้องเพิ่มโค้ด CSS ส่วนนี้ (หรือไฟล์ CSS ทั้งหมดในส่วนที่ 2)
-// ลงในไฟล์ CSS ทั่วไปของโปรเจกต์ของคุณ (เช่น globals.css) 
-// เพื่อให้แอนิเมชัน filling และ steaming ทำงาน
-
-
+import React from 'react';
 
 const CoffeeLoader = ({ scale = 0.5 }) => {
   return (
-    // Body replacement: full screen, flex center, background color
     <div className="flex items-center justify-center p-4">
-      
-      {/* .cup Container: ใช้คลาส Tailwind และ Custom Class (.cup) สำหรับแอนิเมชัน */}
       <div 
-        className="cup relative w-[220px] h-[180px] border-[8px] border-[#ffefdb] rounded-[10px_10px_60px_75px]"
+        className="cup relative w-[220px] h-[180px] border-[8px] border-red-100 rounded-[10px_10px_60px_75px]"
         style={{
-          boxShadow: '0 0 0 12px #352a22', // ใช้ inline style สำหรับ box-shadow ที่ซับซ้อน
+          boxShadow: '0 0 0 12px #dc2626', // Red-600
           transform: `scale(${scale})`,
-          transformOrigin: 'center center'
-          // background: 'url(./coffee.png) repeat-x 0 130px', // Background ถูกจัดการโดยคลาส .cup ใน external CSS
+          transformOrigin: 'center center',
+          backgroundColor: '#fff'
         }}
       >
+        {/* Liquid Animation (handled by CSS .cup class, but we override color here if needed via class) */}
+        <div className="absolute inset-0 overflow-hidden rounded-[2px_2px_50px_65px]">
+            <div className="absolute bottom-0 left-0 w-full h-full bg-red-600 opacity-80 animate-pulse"></div>
+        </div>
+
+        {/* Steam */}
+        <span 
+          className="steam" 
+          style={{ 
+            top: '-70px', left: '65px', height: '30px', background: 'rgba(220, 38, 38, 0.2)', animationDelay: '.2s' 
+          }}
+        ></span>
+        <span 
+          className="steam" 
+          style={{ 
+            top: '-120px', left: '95px', height: '50px', background: 'rgba(220, 38, 38, 0.4)', animationDelay: '.6s' 
+          }}
+        ></span>
+        <span 
+          className="steam" 
+          style={{ 
+            top: '-90px', left: '125px', height: '40px', background: 'rgba(220, 38, 38, 0.3)', animationDelay: '1s' 
+          }}
+        ></span>
         
-        {/* .steam: ใช้คลาส Tailwind สำหรับโครงสร้าง และ Custom Class (.steam) สำหรับแอนิเมชันและตำแหน่ง */}
-        <span 
-          className="steam" 
-          style={{ 
-            top: '-70px', left: '65px', height: '30px', background: 'rgba(142, 90, 52, 0.14)', animationDelay: '.2s' 
-          }}
-        ></span>
-        <span 
-          className="steam" 
-          style={{ 
-            top: '-120px', left: '95px', height: '50px', background: 'rgba(142, 90, 52, 0.33)', animationDelay: '.6s' 
-          }}
-        ></span>
-        <span 
-          className="steam" 
-          style={{ 
-            top: '-90px', left: '125px', height: '40px', background: 'rgba(142, 90, 52, 0.2)', animationDelay: '1s' 
-          }}
-        ></span>
-        
-        {/* .cup-handle: ใช้คลาส Tailwind และ Inline Style สำหรับรูปทรง */}
+        {/* Handle */}
         <div 
-          className="absolute w-[65px] h-[120px] border-[12px] border-[#352a22] rounded-[20px_10px_50px_20px]"
+          className="absolute w-[65px] h-[120px] border-[12px] border-red-600 rounded-[20px_10px_50px_20px]"
           style={{
             top: '10px',
             right: '-74px',
