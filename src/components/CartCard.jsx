@@ -1,11 +1,13 @@
 import useCartStore from "../stores/cartStore";
 import React, { useState } from "react";
+import { motion } from "motion/react";
+import { Trash2, Plus, Minus, Edit3 } from "lucide-react";
 
 function CartCard({ item }) {
   const { removeItem, addItem, decreaseItem, updateNote } =
     useCartStore.getState();
 
-  const totalPrice = "฿" + item.price * item.amount;
+  const totalPrice = "฿" + (item.price * item.amount).toLocaleString();
 
   const [isEditingNote, setIsEditingNote] = useState(false);
   const [currentNote, setCurrentNote] = useState(item.note || "");
@@ -13,43 +15,6 @@ function CartCard({ item }) {
   const handleNoteSave = () => {
     updateNote(item.id, currentNote.trim());
     setIsEditingNote(false);
-  };
-
-  const NoteUpdate = () => {
-    if (isEditingNote || currentNote) {
-      return (
-        <div className="mt-2 w-full">
-          {isEditingNote ? (
-            <input
-              type="text"
-              value={currentNote}
-              onChange={(e) => setCurrentNote(e.target.value)}
-              onBlur={handleNoteSave}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleNoteSave();
-              }}
-              className="w-full text-sm p-1 border border-indigo-300 rounded focus:ring-indigo-500"
-            />
-          ) : (
-            <p
-              className="text-xs text-gray-600 cursor-pointer hover:text-indigo-600"
-              onClick={() => setIsEditingNote(true)}
-            >
-              หมายเหตุ: {currentNote}
-            </p>
-          )}
-        </div>
-      );
-    }
-
-    return (
-      <button
-        onClick={() => setIsEditingNote(true)}
-        className="text-xs text-indigo-500 hover:underline"
-      >
-        + เพิ่มหมายเหตุ
-      </button>
-    );
   };
 
   const onAdd = () => {
@@ -71,82 +36,112 @@ function CartCard({ item }) {
   };
 
   return (
-    <div className="w-full bg-white p-4 rounded-xl shadow-md border border-gray-200">
-      <div className="flex w-full p-4 rounded-xl">
-        <div className="flex-shrink-0 w-24 h-24 mr-4">
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, x: -100 }}
+      className="w-full bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden"
+    >
+      <div className="flex gap-4">
+        {/* Image */}
+        <div className="flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden bg-gray-100 shadow-inner">
           <img
-            src={item.ImageUrl || "placeholder.jpg"}
+            src={item.imageUrl || "https://placehold.co/100x100?text=No+Image"}
             alt={item.name}
-            className="w-full h-full object-cover rounded-lg"
+            className="w-full h-full object-cover"
           />
         </div>
 
-        <div className="flex flex-col flex-grow justify-between">
+        {/* Content */}
+        <div className="flex flex-col flex-grow justify-between py-1">
           <div className="flex justify-between items-start">
-            <div className="pr-4">
-              <h4 className="text-base font-semibold text-gray-800">
+            <div>
+              <h4 className="text-base font-bold text-gray-800 line-clamp-1">
                 {item.name}
               </h4>
-              <p className="text-xs text-blue-500 mt-0.5">สถานะ: พร้อมส่ง</p>
+              <p className="text-sm font-semibold text-red-600">
+                ฿{item.price.toLocaleString()}
+              </p>
             </div>
-
             <button
               onClick={onRemove}
-              className="text-gray-400 hover:text-red-600 transition flex-shrink-0"
+              className="text-gray-400 hover:text-red-500 transition p-1 rounded-full hover:bg-red-50"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <Trash2 size={18} />
             </button>
           </div>
 
-          <div className="flex justify-between items-end mt-2">
-            <div className="flex flex-col text-sm space-y-0.5">
-              <p className="text-base font-bold text-red-600">฿ {item.price}</p>
+          {/* Controls & Total */}
+          <div className="flex justify-between items-end mt-3">
+            {/* Quantity Controls */}
+            <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-1">
+              <button
+                onClick={onDelete}
+                className="w-7 h-7 flex items-center justify-center bg-white rounded-md text-gray-600 shadow-sm hover:text-red-600 active:scale-95 transition"
+              >
+                <Minus size={14} />
+              </button>
+              <span className="text-sm font-bold text-gray-800 w-4 text-center">
+                {item.amount}
+              </span>
+              <button
+                onClick={onAdd}
+                className="w-7 h-7 flex items-center justify-center bg-red-600 rounded-md text-white shadow-sm hover:bg-red-700 active:scale-95 transition"
+              >
+                <Plus size={14} />
+              </button>
             </div>
 
-            <div className="flex flex-col items-end space-y-1">
-              <div className="text-base font-bold text-red-600">
-                รวม: {totalPrice}
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={onDelete}
-                  className="w-6 h-6 bg-gray-200 rounded-full text-gray-700 hover:bg-gray-300"
-                >
-                  -
-                </button>
-
-                <span className="text-sm font-medium w-4 text-center">
-                  {item.amount}
-                </span>
-
-                <button
-                  onClick={onAdd}
-                  className="w-6 h-6 bg-red-500 text-white rounded-full hover:bg-red-600"
-                >
-                  +
-                </button>
-              </div>
+            {/* Total Price */}
+            <div className="text-right">
+              <p className="text-xs text-gray-500 mb-0.5">รวม</p>
+              <p className="text-lg font-bold text-gray-900">{totalPrice}</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div>{NoteUpdate()}</div>
-    </div>
+      {/* Note Section */}
+      <div className="mt-3 pt-3 border-t border-gray-50">
+        {isEditingNote ? (
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={currentNote}
+              onChange={(e) => setCurrentNote(e.target.value)}
+              onBlur={handleNoteSave}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleNoteSave();
+              }}
+              placeholder="ระบุรายละเอียดเพิ่มเติม..."
+              autoFocus
+              className="flex-1 text-sm p-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition"
+            />
+            <button
+              onClick={handleNoteSave}
+              className="px-3 py-1 bg-gray-900 text-white text-xs rounded-lg font-medium"
+            >
+              บันทึก
+            </button>
+          </div>
+        ) : (
+          <div
+            onClick={() => setIsEditingNote(true)}
+            className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-700 cursor-pointer group transition-colors"
+          >
+            <Edit3 size={12} className="group-hover:text-red-500" />
+            {currentNote ? (
+              <span className="text-gray-700 font-medium bg-yellow-50 px-2 py-0.5 rounded text-ellipsis line-clamp-1">
+                Note: {currentNote}
+              </span>
+            ) : (
+              <span>เพิ่มหมายเหตุถึงร้านค้า...</span>
+            )}
+          </div>
+        )}
+      </div>
+    </motion.div>
   );
 }
 
