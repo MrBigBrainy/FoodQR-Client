@@ -20,6 +20,10 @@ export async function getTables(storeId) {
     return api.get(`/admin/tables?storeId=${storeId}`);
 }
 
+export async function getAllTables() {
+    return api.get(`/admin/tables`);
+}
+
 export async function createTable(data) {
     return api.post(`/admin/tables`, data);
 }
