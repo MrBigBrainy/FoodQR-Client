@@ -173,3 +173,43 @@ body {
     scrollbar-width: none;
   }
 }
+
+.cup {
+    background: url('/coffee.png');
+    background-repeat: repeat-x;
+    background-position: 0 130px;
+    animation: filling 4s infinite;
+}
+@keyframes filling {
+    0%, 100% {
+        background-position: 0 130px;
+    }
+    50% {
+        background-position: 600px -70px;
+    }
+}
+.cup .steam {
+    position: absolute;
+    border-radius: 10px 2px;
+    width: 8px;
+    animation: steaming 2s infinite;
+}
+@keyframes steaming {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+        filter: blur(.8px);
+        transform: translateY(-10px);
+    }
+}
+.cup .steam:nth-child(1) {
+    top: -70px; left: 65px; height: 30px; background: rgba(142, 90, 52, 0.14); animation-delay: .2s;
+}
+.cup .steam:nth-child(2) {
+    top: -120px; left: 95px; height: 50px; background: rgba(142, 90, 52, 0.33); animation-delay: .6s;
+}
+.cup .steam:nth-child(3) {
+    top: -90px; left: 125px; height: 40px; background: rgba(142, 90, 52, 0.2); animation-delay: 1s;
+}
