@@ -25,7 +25,7 @@ function LoginForm() {
       const res = await loginAdmin(data);
       console.log(res.data);
       toast.success('เข้าสู่ระบบสำเร็จ!');
-      navigate('/admin');
+      navigate('/admin/store/1');
     } catch (error) {
       toast.error('Username หรือ รหัสผ่านไม่ถูกต้อง');
     }
