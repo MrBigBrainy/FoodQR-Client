@@ -1,11 +1,43 @@
-import React from "react";
-import { createBrowserRouter, RouterProvider } from "react-router";
-import MenuPage from "../pages/MenuPage";
-import CartPage from "../pages/CartPage";
-import SummaryPage from "../pages/SummaryPage";
-import UserLayout from "../layouts/UserLayout";
-import AuthPage from "../pages/AuthPage";
+import React from 'react';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router';
+import MenuPage from '../pages/MenuPage';
+import CartPage from '../pages/CartPage';
+import SummaryPage from '../pages/SummaryPage';
+import UserLayout from '../layouts/UserLayout';
+import AuthPage from '../pages/AuthPage';
 
+import AdminPage from '../pages/AdminPage';
+import AdminDashboard from '../pages/AdminDashbord';
+import AdminAddMenu from '../pages/AdminAddMenu';
+import TableAdmin from '../pages/TableAdmin';
+import LoginPage from '../pages/AdminLoginPage';
+import BillingPage from '../pages/BillingPage';
+import SuperAdminPage from '@/pages/superAdmin/SuperAdminPage';
+import AdminShopSettingPage from '@/pages/AdminShopSettingPage';
+
+const router = createBrowserRouter([
+  // { path: "/billing", element: <BillingPage /> },
+  { path: '/', element: <Navigate to="/login" replace /> },
+  {
+    path: '/store/:storeId/table/:tableId/order/:orderId',
+    element: <UserLayout />,
+    children: [
+      { index: true, element: <MenuPage /> },
+      { path: 'cart', element: <CartPage /> },
+      { path: 'summary', element: <SummaryPage /> },
+    ],
+  },
+  { path: '/auth', element: <AuthPage /> },
+  { path: '/superAdmin', element: <SuperAdminPage /> },
+  {
+    path: '/admin/store/:storeId',
+    element: <AdminPage />,
+    children: [
+      { index: true, element: <AdminDashboard /> },
+      { path: 'addmenu', element: <AdminAddMenu /> },
+      { path: 'table', element: <TableAdmin /> },
+      { path: 'ตั้งค่าร้าน', element: <AdminShopSettingPage /> },
+      { path: '*', element: <AdminDashboard /> },
 import AdminPage from "../pages/AdminPage";
 import AdminDashboard from "../pages/AdminDashbord";
 import AdminAddMenu from "../pages/AdminAddMenu";
@@ -45,7 +77,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/login",
+    path: '/login',
     element: <LoginPage />,
   },
 ]);
