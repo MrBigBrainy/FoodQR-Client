@@ -3,7 +3,10 @@ import DataCardAdmin from '../components/DataCardAdmin';
 import LineChart from '../components/LineChart';
 import DoughnutChart from '../components/DoughnutChart';
 import { getSaleToday } from '@/api/admin.api';
+import { io } from 'socket.io-client';
 
+// socket เลือกรับจาก backend
+const socket = io("http://localhost:3000");
 
 // ข้อมูลกราฟเส้น
 const lineData = {
@@ -45,21 +48,32 @@ const doughnutData = {
 const AdminDashboard = () => {
     // ดึงข้อมูลจาก backend sale to day
     const [saleToday, setSaleToday] = useState(0)
+    const [orderToday, setOrderToday] = useState(0)
 
     useEffect(() => {
-        const getSaleTodays = async () => {
+        const getDataTodays = async () => {
             try {
-                const respont = await getSaleToday(); // 🔗 backend
-
-                // เก็บข้อมูลใน state
-                const sum = respont.data.reduce((sum, num) => sum + (num.total), 0);
-                setSaleToday(sum);
-
+                const response = await getSaleToday(); // 🔗 ดึงจาก backend
+                console.log(response)
+                const sumTotal = response.data.reduce((sum, num) => sum + (num.total || 0), 0);
+                const sumOrder = response.data.length
+                setSaleToday(sumTotal);
+                setOrderToday(sumOrder)
             } catch (err) {
                 console.error("❌ ดึงข้อมูลไม่สำเร็จ:", err);
             }
         };
-        getSaleTodays();
+        getDataTodays();
+
+        socket.on("updateSale", (data) => {
+            if (data.saleToday !== undefined) {
+                setSaleToday(data.saleToday);
+                setOrderToday(data.sumOrder)
+            }
+        });
+        return () => {
+            socket.off("updateSale");
+        };
     }, []);
 
 
@@ -76,7 +90,7 @@ const AdminDashboard = () => {
                     {/* Card 1: ยอดขายวันนี้ */}
 
                     <DataCardAdmin title={"ยอดขายวันนี้"} count={`฿${saleToday}`} percent={"+12%"} />
-                    <DataCardAdmin title={"จำนวนออเดอร์"} count={"248"} percent={"+12%"} />
+                    <DataCardAdmin title={"จำนวนออเดอร์"} count={`${orderToday}`} percent={"+12%"} />
                     <DataCardAdmin title={"ลูกค้าทั้งหมด"} count={"654"} percent={"+12%"} />
                     <DataCardAdmin title={"โต๊ะที่ว่าง"} count={"8/12"} percent={"ว่าง"} />
                 </div>
