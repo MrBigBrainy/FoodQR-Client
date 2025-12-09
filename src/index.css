@@ -175,7 +175,7 @@ body {
 }
 
 .cup {
-    background: url('./coffee.png');
+    background: url('/coffee.png');
     background-repeat: repeat-x;
     background-position: 0 130px;
     animation: filling 4s infinite;

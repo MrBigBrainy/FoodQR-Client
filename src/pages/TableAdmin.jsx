@@ -5,6 +5,7 @@ import Modal from '@/components/Modal';
 import { createOrder } from '@/api/order.api';
 import { useParams } from 'react-router';
 import { updateTableStatus } from '@/api/table.api';
+import CoffeeLoader from '@/components/loader/coffeeLoader';
 
 function TableAdmin() {
     const {storeId} = useParams();
@@ -45,6 +46,7 @@ function TableAdmin() {
     // Fetch table types and zones on component mount
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
                 const tableTypesRes = await getTableTypes();
                 setTableTypes(tableTypesRes.data.tableTypes || []);
@@ -57,6 +59,8 @@ function TableAdmin() {
                 // setZones(zonesRes.data || []);
             } catch (error) {
                 console.error("Error fetching data:", error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchData();
@@ -221,7 +225,11 @@ function TableAdmin() {
                     </span>
                 </div>
                 
-                {tables.length === 0 ? (
+                {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <CoffeeLoader scale={0.5} />
+                    </div>
+                ) : tables.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-64 text-gray-400 border-2 border-dashed border-gray-200 rounded-xl">
                         <i className="fas fa-chair text-5xl mb-4 opacity-50"></i>
                         <p className="text-lg font-medium">ยังไม่มีโต๊ะในระบบ</p>

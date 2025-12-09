@@ -1,21 +1,21 @@
-import React from 'react';
-
 // คุณต้องเพิ่มโค้ด CSS ส่วนนี้ (หรือไฟล์ CSS ทั้งหมดในส่วนที่ 2)
 // ลงในไฟล์ CSS ทั่วไปของโปรเจกต์ของคุณ (เช่น globals.css) 
 // เพื่อให้แอนิเมชัน filling และ steaming ทำงาน
 
 
 
-const CoffeeLoader = () => {
+const CoffeeLoader = ({ scale = 0.5 }) => {
   return (
     // Body replacement: full screen, flex center, background color
-    <div className="flex h-screen w-screen items-center justify-center bg-[#ffefdb]">
+    <div className="flex items-center justify-center p-4">
       
       {/* .cup Container: ใช้คลาส Tailwind และ Custom Class (.cup) สำหรับแอนิเมชัน */}
       <div 
         className="cup relative w-[220px] h-[180px] border-[8px] border-[#ffefdb] rounded-[10px_10px_60px_75px]"
         style={{
           boxShadow: '0 0 0 12px #352a22', // ใช้ inline style สำหรับ box-shadow ที่ซับซ้อน
+          transform: `scale(${scale})`,
+          transformOrigin: 'center center'
           // background: 'url(./coffee.png) repeat-x 0 130px', // Background ถูกจัดการโดยคลาส .cup ใน external CSS
         }}
       >
