@@ -18,26 +18,26 @@ function UserLayout() {
   const { setMenu } = useMenuStore.getState();
   const [error, setError] = useState(null);
 
-  // useEffect(() => {
-  //   if (!storeId || !tableId) return;
+  useEffect(() => {
+    if (!storeId || !tableId) return;
     
 
-  //   const startLiff = async () => {
-  //     try {
-  //       await initLiff();
-  //       const profileData = await getProfile();
-  //       console.log("profile Data", profileData);
-  //       setUserStore(profileData);
-  //     } catch (err) {
-  //       console.error(err);
-  //       setError("Cannot init LIFF");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+    const startLiff = async () => {
+      try {
+        await initLiff();
+        const profileData = await getProfile();
+        console.log("profile Data", profileData);
+        setUserStore(profileData);
+      } catch (err) {
+        console.error(err);
+        setError("Cannot init LIFF");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   startLiff();
-  // }, []);
+    startLiff();
+  }, []);
 
   useEffect(() => {
     socket.emit("joinTable", { storeId, tableId });
