@@ -60,6 +60,10 @@ function TableAdmin() {
     const [selectedTableForOrder, setSelectedTableForOrder] = useState(null);
     const [customerCount, setCustomerCount] = useState(1);
 
+    // Delete Modal State
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [tableToDelete, setTableToDelete] = useState(null);
+
     const [tableTypes, setTableTypes] = useState([]);
     const [zones, setZones] = useState([]);
     const [tables, setTables] = useState([]);
@@ -131,20 +135,25 @@ function TableAdmin() {
         }
     };
 
-    const handleDeleteTable = async (tableId) => {
-        if (!window.confirm("คุณแน่ใจหรือไม่ว่าต้องการลบโต๊ะนี้?")) {
-            return;
-        }
-        
+    const handleDeleteTable = (table) => {
+        setTableToDelete(table);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDeleteTable = async () => {
+        if (!tableToDelete) return;
+
         try {
-            await deleteTable(tableId);
+            await deleteTable(tableToDelete.id);
             // Refresh tables list
             const tablesRes = await getTables(storeId);
             setTables(tablesRes.data.tables || []);
-            alert("ลบโต๊ะสำเร็จ!");
+            toast.success("ลบโต๊ะสำเร็จ!");
+            setIsDeleteModalOpen(false);
+            setTableToDelete(null);
         } catch (error) {
             console.error("Error deleting table:", error);
-            alert("เกิดข้อผิดพลาดในการลบโต๊ะ");
+            toast.error("เกิดข้อผิดพลาดในการลบโต๊ะ");
         }
     };
 
@@ -393,7 +402,7 @@ function TableAdmin() {
                                                 {getStatusIcon(table.status)}
                                             </div>
                                             <button
-                                                onClick={() => handleDeleteTable(table.id)}
+                                                onClick={() => handleDeleteTable(table)}
                                                 className="opacity-0 group-hover:opacity-100 transition-all text-gray-400 hover:text-red-500 p-1.5 hover:bg-white rounded-lg"
                                                 title="ลบโต๊ะ"
                                             >
@@ -759,6 +768,55 @@ function TableAdmin() {
                         >
                             <span>ยืนยันเปิดโต๊ะ</span>
                             <CheckCircle2 size={18} className="text-white" />
+                        </motion.button>
+                    </div>
+                </div>
+            </Modal>
+            
+            {/* Delete Confirmation Modal */}
+            <Modal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                title=""
+                backdropClassName="bg-black/40 backdrop-blur-md"
+                modalClassName="max-w-sm bg-white/95 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden border border-white/50"
+            >
+                <div className="pt-2 pb-6 px-4">
+                    {/* Header Section */}
+                    <div className="text-center mb-6 relative">
+                        <div className="w-20 h-20 mx-auto bg-gradient-to-tr from-red-50 to-white rounded-full flex items-center justify-center mb-4 shadow-lg shadow-red-100/50 border border-red-50 relative z-10">
+                            <Trash2 className="text-red-500 drop-shadow-sm" size={32} strokeWidth={2} />
+                        </div>
+                        {/* Decorative background blur behind icon */}
+                        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-24 bg-red-500/10 rounded-full blur-2xl -z-0"></div>
+                        
+                        <h3 className="text-2xl font-black text-gray-800 tracking-tight mb-2">
+                            ยืนยันการลบ
+                        </h3>
+                        <p className="text-gray-500 text-sm font-medium leading-relaxed">
+                            คุณต้องการลบโต๊ะ <span className="text-red-600 font-bold">"{tableToDelete?.tableName}"</span> ใช่หรือไม่?<br/>
+                            การกระทำนี้ไม่สามารถย้อนกลับได้
+                        </p>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="grid grid-cols-2 gap-3">
+                        <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => setIsDeleteModalOpen(false)}
+                            className="px-4 py-3.5 rounded-xl font-bold text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors text-sm"
+                        >
+                            ยกเลิก
+                        </motion.button>
+                        <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={confirmDeleteTable}
+                            className="px-4 py-3.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-xl font-bold shadow-lg shadow-red-200 hover:shadow-xl hover:from-red-700 hover:to-red-600 transition-all flex items-center justify-center gap-2 text-sm"
+                        >
+                            <span>ลบโต๊ะ</span>
+                            <Trash2 size={18} className="text-white" />
                         </motion.button>
                     </div>
                 </div>
