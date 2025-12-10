@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useForm, Controller } from 'react-hook-form';
 import { getTableTypes, createTable, getTables, deleteTable, createTableType } from '@/api/admin.api';
 import Modal from '@/components/Modal';
+import CustomSelect from '@/components/CustomSelect';
 import { createOrder } from '@/api/order.api';
 import { useParams } from 'react-router';
 import { updateTableStatus } from '@/api/table.api';
 import CoffeeLoader from '@/components/loader/coffeeLoader';
 import { motion, AnimatePresence } from 'motion/react';
+import { socket } from '@/lib/socket';
 import { 
   Plus, 
   Settings, 
@@ -22,12 +25,13 @@ import {
   Info,
   Minus,
   XCircle,
-  LogOut
+  LogOut,
+  ChevronDown
 } from 'lucide-react';
 
 function TableAdmin() {
     const {storeId} = useParams();
-    const { register, handleSubmit, formState: { errors }, reset, watch } = useForm({
+    const { register, handleSubmit, control, formState: { errors }, reset, watch } = useForm({
             defaultValues: {
             tableName: "",
             tableTypeId: "",
@@ -56,6 +60,10 @@ function TableAdmin() {
     const [selectedTableForOrder, setSelectedTableForOrder] = useState(null);
     const [customerCount, setCustomerCount] = useState(1);
 
+    // Delete Modal State
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [tableToDelete, setTableToDelete] = useState(null);
+
     const [tableTypes, setTableTypes] = useState([]);
     const [zones, setZones] = useState([]);
     const [tables, setTables] = useState([]);
@@ -80,6 +88,24 @@ function TableAdmin() {
         fetchData();
     }, [storeId]);
 
+    useEffect(() => console.log(tables), [tables]);
+
+    useEffect(() => {
+
+        console.log("start socket tableStatusUpdated")
+        socket.on('tableStatusUpdated', (updatedTable) => {
+            console.log("event tableStatusUpdated start")
+            console.log("updated Table", updatedTable)
+    setTables((prev) =>
+      prev.map(o => o.id === updatedTable.tableId ? { ...o, status: updatedTable.status } : o)
+    );
+    console.log("event tableStatusUpdated end")
+  });
+
+  return () => socket.off('tableStatusUpdated');
+}, []);
+
+
     const onSubmit = async (data) => {
         setLoading(true);
         try {
@@ -100,7 +126,7 @@ function TableAdmin() {
             // Reset form and close modal
             reset();
             setIsAddTableModalOpen(false);
-            alert("สร้างโต๊ะสำเร็จ!");
+            toast.success("สร้างโต๊ะสำเร็จ!");
         } catch (error) {
             console.error("Error creating table:", error);
             alert("เกิดข้อผิดพลาดในการสร้างโต๊ะ");
@@ -109,20 +135,25 @@ function TableAdmin() {
         }
     };
 
-    const handleDeleteTable = async (tableId) => {
-        if (!window.confirm("คุณแน่ใจหรือไม่ว่าต้องการลบโต๊ะนี้?")) {
-            return;
-        }
-        
+    const handleDeleteTable = (table) => {
+        setTableToDelete(table);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDeleteTable = async () => {
+        if (!tableToDelete) return;
+
         try {
-            await deleteTable(tableId);
+            await deleteTable(tableToDelete.id);
             // Refresh tables list
             const tablesRes = await getTables(storeId);
             setTables(tablesRes.data.tables || []);
-            alert("ลบโต๊ะสำเร็จ!");
+            toast.success("ลบโต๊ะสำเร็จ!");
+            setIsDeleteModalOpen(false);
+            setTableToDelete(null);
         } catch (error) {
             console.error("Error deleting table:", error);
-            alert("เกิดข้อผิดพลาดในการลบโต๊ะ");
+            toast.error("เกิดข้อผิดพลาดในการลบโต๊ะ");
         }
     };
 
@@ -199,7 +230,8 @@ function TableAdmin() {
                 customerCount: customerCount,
                 tableId: selectedTableForOrder.id,
             }
-            await createOrder(orderData)
+            const orderDataResult = await createOrder(orderData)
+            console.log("orderDataResult", orderDataResult)
 
             const tableStatusData = {
                 storeId: storeId,
@@ -207,15 +239,19 @@ function TableAdmin() {
                 status: "in_use"
             }
             await updateTableStatus(tableStatusData)
-            console.log(`Opening table ${selectedTableForOrder.tableName} with ${customerCount} customers`);
+
             
-            alert(`เปิดโต๊ะ ${selectedTableForOrder.tableName} สำหรับ ${customerCount} ท่าน เรียบร้อยแล้ว`);
+            // Open billing page in new tab
+            const orderId = orderDataResult.data.orderId;
+            window.open(`/store/${storeId}/table/${encodeURIComponent(selectedTableForOrder.tableName)}/${selectedTableForOrder.id}/order/${orderId}/bill`, '_blank');
+
+            toast.success(`เปิดโต๊ะ ${selectedTableForOrder.tableName} สำหรับ ${customerCount} ท่าน เรียบร้อยแล้ว`);
             setIsOpenOrderModalOpen(false);
             setSelectedTableForOrder(null);
             
             // Refresh tables to show new status
-            const tablesRes = await getTables(storeId);
-            setTables(tablesRes.data.tables || []);
+            // const tablesRes = await getTables(storeId);
+            // setTables(tablesRes.data.tables || []);
             
         } catch (error) {
             console.error("Error opening table:", error);
@@ -368,7 +404,7 @@ function TableAdmin() {
                                                 {getStatusIcon(table.status)}
                                             </div>
                                             <button
-                                                onClick={() => handleDeleteTable(table.id)}
+                                                onClick={() => handleDeleteTable(table)}
                                                 className="opacity-0 group-hover:opacity-100 transition-all text-gray-400 hover:text-red-500 p-1.5 hover:bg-white rounded-lg"
                                                 title="ลบโต๊ะ"
                                             >
@@ -456,30 +492,32 @@ function TableAdmin() {
                         <label className="block text-gray-700 text-sm font-bold mb-2">
                             ประเภทโต๊ะ <span className="text-red-500">*</span>
                         </label>
-                        <div className="relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10">
-                                <Users size={18} />
-                            </span>
-                            <select
-                                {...register("tableTypeId", { required: "กรุณาเลือกประเภทโต๊ะ" })}
-                                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 appearance-none bg-gray-50 focus:bg-white"
-                            >
-                                <option value="">เลือกประเภทโต๊ะ</option>
-                                {tableTypes?.map((type) => (
-                                    <option key={type.id} value={type.id}>
-                                        {type.nameType} ({type.minSeat}-{type.maxSeat} ที่นั่ง)
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                            <Controller
+                                name="tableTypeId"
+                                control={control}
+                                rules={{ required: "กรุณาเลือกประเภทโต๊ะ" }}
+                                render={({ field }) => (
+                                    <CustomSelect
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        options={tableTypes.map(type => ({
+                                            value: type.id,
+                                            label: `${type.nameType} (${type.minSeat}-${type.maxSeat} ที่นั่ง)`
+                                        }))}
+                                        placeholder="เลือกประเภทโต๊ะ"
+                                        icon={Users}
+                                        error={errors.tableTypeId}
+                                    />
+                                )}
+                            />
                         {errors.tableTypeId && (
                             <p className="text-red-500 text-xs mt-1 font-medium">{errors.tableTypeId.message}</p>
                         )}
                         {/* Display seat range for selected table type */}
                         {selectedTableTypeId && getSelectedTableType(selectedTableTypeId) && (
-                            <p className="text-sm text-gray-500 mt-2 flex items-center gap-1 bg-blue-50 p-2 rounded-lg border border-blue-100">
-                                <Info size={14} className="text-blue-500" />
-                                <span className="text-blue-700 font-medium">จำนวนที่นั่ง:</span> {getSelectedTableType(selectedTableTypeId).minSeat} - {getSelectedTableType(selectedTableTypeId).maxSeat} ที่นั่ง
+                            <p className="text-sm text-gray-500 mt-2 flex items-center gap-1 bg-red-50 p-2 rounded-lg border border-red-100">
+                                <Info size={14} className="text-red-500" />
+                                <span className="text-red-700 font-medium">จำนวนที่นั่ง:</span> {getSelectedTableType(selectedTableTypeId).minSeat} - {getSelectedTableType(selectedTableTypeId).maxSeat} ที่นั่ง
                             </p>
                         )}
                     </div>
@@ -489,22 +527,22 @@ function TableAdmin() {
                         <label className="block text-gray-700 text-sm font-bold mb-2">
                             โซน (ไม่บังคับ)
                         </label>
-                        <div className="relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10">
-                                <MapPin size={18} />
-                            </span>
-                            <select
-                                {...register("zoneId")}
-                                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 appearance-none bg-gray-50 focus:bg-white"
-                            >
-                                <option value="">ไม่ระบุโซน</option>
-                                {zones.map((zone) => (
-                                    <option key={zone.id} value={zone.id}>
-                                        {zone.zoneName}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                            <Controller
+                                name="zoneId"
+                                control={control}
+                                render={({ field }) => (
+                                    <CustomSelect
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        options={zones.map(zone => ({
+                                            value: zone.id,
+                                            label: zone.zoneName
+                                        }))}
+                                        placeholder="ไม่ระบุโซน"
+                                        icon={MapPin}
+                                    />
+                                )}
+                            />
                     </div>
 
                     {/* Submit Button */}
@@ -539,7 +577,7 @@ function TableAdmin() {
                                     {...registerTableType("nameType", { required: "กรุณากรอกชื่อประเภทโต๊ะ" })}
                                     type="text"
                                     placeholder="เช่น โต๊ะคู่, โต๊ะใหญ่"
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
+                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
                                 />
                             </div>
                             {errorsTableType.nameType && (
@@ -566,7 +604,7 @@ function TableAdmin() {
                                         type="number"
                                         min="1"
                                         placeholder="เช่น 2"
-                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
+                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
                                     />
                                 </div>
                                 {errorsTableType.minSeat && (
@@ -599,7 +637,7 @@ function TableAdmin() {
                                         type="number"
                                         min="1"
                                         placeholder="เช่น 4"
-                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
+                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
                                     />
                                 </div>
                                 {errorsTableType.maxSeat && (
@@ -612,7 +650,7 @@ function TableAdmin() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:shadow-none mt-2"
+                            className="w-full bg-red-600 text-white py-3 rounded-xl font-bold text-lg hover:bg-red-700 transition-all shadow-lg shadow-red-200 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:shadow-none mt-2"
                         >
                             {loading ? "กำลังสร้าง..." : "สร้างประเภทโต๊ะ"}
                         </button>
@@ -624,11 +662,11 @@ function TableAdmin() {
                             <p className="text-sm font-bold text-gray-700 mb-3">ประเภทโต๊ะที่มีอยู่:</p>
                             <div className="space-y-2 max-h-40 overflow-y-auto custom-scrollbar pr-2">
                                 {tableTypes?.map((type) => (
-                                    <div key={type.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl border border-gray-100 hover:bg-white hover:border-blue-100 transition-colors">
+                                    <div key={type.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl border border-gray-100 hover:bg-white hover:border-red-100 transition-colors">
                                         <span className="text-sm font-semibold text-gray-700">
                                             {type.nameType}
                                         </span>
-                                        <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">
+                                        <span className="text-xs font-medium text-red-600 bg-red-50 px-2.5 py-1 rounded-lg">
                                             {type.minSeat}-{type.maxSeat} ที่นั่ง
                                         </span>
                                     </div>
@@ -643,48 +681,145 @@ function TableAdmin() {
             <Modal
                 isOpen={isOpenOrderModalOpen}
                 onClose={() => setIsOpenOrderModalOpen(false)}
-                title={`เปิดโต๊ะ: ${selectedTableForOrder?.tableName}`}
+                title=""
+                backdropClassName="bg-black/40 backdrop-blur-md"
+                modalClassName="max-w-sm bg-white/95 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden border border-white/50"
             >
-                <div className="space-y-6 text-center">
-                    <div className="py-6 bg-gray-50 rounded-2xl border border-gray-100">
-                        <label className="block text-gray-600 text-lg font-bold mb-4">
-                            จำนวนลูกค้า
-                        </label>
-                        <div className="flex items-center justify-center gap-6">
-                            <motion.button
-                                whileTap={{ scale: 0.9 }}
-                                onClick={() => adjustCustomerCount(-1)}
-                                className="w-14 h-14 rounded-full bg-white border border-gray-200 text-gray-600 hover:border-red-500 hover:text-red-500 flex items-center justify-center text-xl font-bold transition-all shadow-sm"
-                            >
-                                <Minus size={24} />
-                            </motion.button>
-                            <span className="text-5xl font-black text-gray-800 w-20 tabular-nums">
-                                {customerCount}
-                            </span>
-                            <motion.button
-                                whileTap={{ scale: 0.9 }}
-                                onClick={() => adjustCustomerCount(1)}
-                                className="w-14 h-14 rounded-full bg-red-600 text-white hover:bg-red-700 flex items-center justify-center text-xl font-bold transition-all shadow-md shadow-red-200"
-                            >
-                                <Plus size={24} />
-                            </motion.button>
+                <div className="pt-2 pb-6 px-4">
+                    {/* Header Section */}
+                    <div className="text-center mb-8 relative">
+                        <div className="w-20 h-20 mx-auto bg-gradient-to-tr from-red-50 to-white rounded-full flex items-center justify-center mb-4 shadow-lg shadow-red-100/50 border border-red-50 relative z-10">
+                            <UtensilsCrossed className="text-red-500 drop-shadow-sm" size={32} strokeWidth={2} />
                         </div>
-                        <p className="text-gray-400 mt-3 font-medium">ท่าน</p>
+                        {/* Decorative background blur behind icon */}
+                        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-24 bg-red-500/10 rounded-full blur-2xl -z-0"></div>
+                        
+                        <h3 className="text-2xl font-black text-gray-800 tracking-tight mb-1">
+                            เปิดโต๊ะ {selectedTableForOrder?.tableName}
+                        </h3>
+                        <p className="text-gray-500 text-sm font-medium">
+                            ระบุจำนวนลูกค้าที่จะใช้บริการ
+                        </p>
                     </div>
 
-                    <div className="flex gap-3">
-                        <button
+                    {/* Counter Section */}
+                    <div className="bg-gray-50/80 rounded-2xl p-6 border border-gray-100 mb-8 relative overflow-hidden group">
+                        {/* Subtle pattern */}
+                        <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#ef4444_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        
+                        <div className="flex items-center justify-between relative z-10">
+                            <motion.button
+                                whileHover={{ scale: 1.1, backgroundColor: "#fff" }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={() => adjustCustomerCount(-1)}
+                                className="w-12 h-12 rounded-xl bg-white border border-gray-200 text-gray-400 hover:border-red-200 hover:text-red-500 hover:shadow-lg hover:shadow-red-50 flex items-center justify-center transition-all duration-300"
+                            >
+                                <Minus size={22} strokeWidth={2.5} />
+                            </motion.button>
+                            
+                            <div className="text-center relative">
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value={customerCount}
+                                    onChange={(e) => {
+                                        const val = e.target.value;
+                                        if (val === '') {
+                                            setCustomerCount('');
+                                        } else {
+                                            const num = parseInt(val);
+                                            if (!isNaN(num) && num >= 1) setCustomerCount(num);
+                                        }
+                                    }}
+                                    onBlur={() => {
+                                        if (customerCount === '' || customerCount < 1) setCustomerCount(1);
+                                    }}
+                                    className="block w-32 text-6xl font-black text-gray-800 text-center bg-transparent border-b-2 border-gray-200 focus:border-red-500 focus:outline-none p-0 pb-2 tabular-nums leading-none tracking-tighter appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none transition-colors"
+                                />
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2 block">
+                                    ท่าน
+                                </span>
+                            </div>
+
+                            <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={() => adjustCustomerCount(1)}
+                                className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-200 hover:shadow-red-300 hover:from-red-600 hover:to-red-700 flex items-center justify-center transition-all duration-300"
+                            >
+                                <Plus size={22} strokeWidth={2.5} />
+                            </motion.button>
+                        </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="grid grid-cols-2 gap-3">
+                        <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                             onClick={() => setIsOpenOrderModalOpen(false)}
-                            className="flex-1 px-4 py-3.5 bg-gray-100 text-gray-600 rounded-xl font-bold hover:bg-gray-200 transition-colors"
+                            className="px-4 py-3.5 rounded-xl font-bold text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors text-sm"
                         >
                             ยกเลิก
-                        </button>
-                        <button
+                        </motion.button>
+                        <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                             onClick={handleConfirmOpenOrder}
-                            className="flex-1 px-4 py-3.5 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 transition-all shadow-lg shadow-green-200"
+                            className="px-4 py-3.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-xl font-bold shadow-lg shadow-red-200 hover:shadow-xl hover:from-red-700 hover:to-red-600 transition-all flex items-center justify-center gap-2 text-sm"
                         >
-                            ยืนยันเปิดโต๊ะ
-                        </button>
+                            <span>ยืนยันเปิดโต๊ะ</span>
+                            <CheckCircle2 size={18} className="text-white" />
+                        </motion.button>
+                    </div>
+                </div>
+            </Modal>
+            
+            {/* Delete Confirmation Modal */}
+            <Modal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                title=""
+                backdropClassName="bg-black/40 backdrop-blur-md"
+                modalClassName="max-w-sm bg-white/95 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden border border-white/50"
+            >
+                <div className="pt-2 pb-6 px-4">
+                    {/* Header Section */}
+                    <div className="text-center mb-6 relative">
+                        <div className="w-20 h-20 mx-auto bg-gradient-to-tr from-red-50 to-white rounded-full flex items-center justify-center mb-4 shadow-lg shadow-red-100/50 border border-red-50 relative z-10">
+                            <Trash2 className="text-red-500 drop-shadow-sm" size={32} strokeWidth={2} />
+                        </div>
+                        {/* Decorative background blur behind icon */}
+                        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-24 bg-red-500/10 rounded-full blur-2xl -z-0"></div>
+                        
+                        <h3 className="text-2xl font-black text-gray-800 tracking-tight mb-2">
+                            ยืนยันการลบ
+                        </h3>
+                        <p className="text-gray-500 text-sm font-medium leading-relaxed">
+                            คุณต้องการลบโต๊ะ <span className="text-red-600 font-bold">"{tableToDelete?.tableName}"</span> ใช่หรือไม่?<br/>
+                            การกระทำนี้ไม่สามารถย้อนกลับได้
+                        </p>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="grid grid-cols-2 gap-3">
+                        <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => setIsDeleteModalOpen(false)}
+                            className="px-4 py-3.5 rounded-xl font-bold text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors text-sm"
+                        >
+                            ยกเลิก
+                        </motion.button>
+                        <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={confirmDeleteTable}
+                            className="px-4 py-3.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-xl font-bold shadow-lg shadow-red-200 hover:shadow-xl hover:from-red-700 hover:to-red-600 transition-all flex items-center justify-center gap-2 text-sm"
+                        >
+                            <span>ลบโต๊ะ</span>
+                            <Trash2 size={18} className="text-white" />
+                        </motion.button>
                     </div>
                 </div>
             </Modal>

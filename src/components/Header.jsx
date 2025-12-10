@@ -7,7 +7,7 @@ function Header() {
   
   return (
     <motion.header
-      className="w-full fixed top-0 left-0 right-0 bg-[#C10007] text-white shadow-lg z-40 rounded-b-3xl px-6 py-4"
+      className="w-full fixed top-0 left-0 right-0 bg-gradient-to-r from-[#C10007] to-[#8B0000] text-white shadow-xl z-40 rounded-b-3xl px-6 py-4"
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ 
@@ -23,10 +23,13 @@ function Header() {
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <h1 className="font-bold text-2xl tracking-tight">Minna no Sushi</h1>
-          <div className="flex items-center gap-2 opacity-90">
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-            <p className="text-sm font-medium">โต๊ะ 22</p>
+          <h1 className="font-bold text-2xl tracking-tight drop-shadow-md">Minna no Sushi</h1>
+          <div className="flex items-center gap-2 mt-1 px-3 py-1 bg-white/20 backdrop-blur-md rounded-full border border-white/30 w-fit">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 shadow-sm"></span>
+            </span>
+            <p className="text-xs font-semibold text-white tracking-wide shadow-sm">โต๊ะ 22</p>
           </div>
         </motion.div>
 

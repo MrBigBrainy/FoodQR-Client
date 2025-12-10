@@ -18,26 +18,26 @@ function UserLayout() {
   const { setMenu } = useMenuStore.getState();
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (!storeId || !tableId) return;
+  // useEffect(() => {
+  //   if (!storeId || !tableId) return;
     
 
-    const startLiff = async () => {
-      try {
-        await initLiff();
-        const profileData = await getProfile();
-        console.log("profile Data", profileData);
-        setUserStore(profileData);
-      } catch (err) {
-        console.error(err);
-        setError("Cannot init LIFF");
-      } finally {
-        setLoading(false);
-      }
-    };
+  //   const startLiff = async () => {
+  //     try {
+  //       await initLiff();
+  //       const profileData = await getProfile();
+  //       console.log("profile Data", profileData);
+  //       setUserStore(profileData);
+  //     } catch (err) {
+  //       console.error(err);
+  //       setError("Cannot init LIFF");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    startLiff();
-  }, []);
+  //   startLiff();
+  // }, []);
 
   useEffect(() => {
     socket.emit("joinTable", { storeId, tableId });
@@ -49,9 +49,16 @@ function UserLayout() {
 
     useEffect(() => {
       async function getStoreMenuFunc() {
-        const response = await getStoreMenu(storeId);
-        console.log(response.data);
-        setMenu(response.data.menu);
+        useMenuStore.getState().setLoading(true);
+        try {
+          const response = await getStoreMenu(storeId);
+          console.log(response.data);
+          setMenu(response.data.menu);
+        } catch (error) {
+          console.error("Failed to fetch menu:", error);
+        } finally {
+          useMenuStore.getState().setLoading(false);
+        }
       }
       getStoreMenuFunc();
     }, []);

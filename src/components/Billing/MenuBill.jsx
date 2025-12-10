@@ -1,5 +1,5 @@
-// MenuBill.jsx
 import { useRef, useEffect } from "react";
+import { useParams } from "react-router";
 import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 import { QRCodeCanvas } from "qrcode.react";
@@ -7,8 +7,8 @@ import { QRCodeCanvas } from "qrcode.react";
 const MenuBill = () => {
   const targetRef = useRef(null);
 
-  const tableName = "A3";
-  const qrMenuUrl = `http://localhost:5173/store/1/table/1/order/1`;
+  const { storeId, tableName, tableId, orderId } = useParams();
+  const qrMenuUrl = `https://food-qr-client-01.vercel.app/store/${storeId}/table/${tableName}/${tableId}/order/${orderId}/menu-qr`;
 
   useEffect(() => {
     if (!targetRef.current) return;

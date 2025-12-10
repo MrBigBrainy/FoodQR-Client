@@ -3,6 +3,7 @@ import MenuList from "../components/MenuList";
 import SearchBar from "../components/SearchBar";
 import useMenuStore from "../stores/useMenuStore";
 import CartIcon from "@/components/CartIcon";
+import CoffeeLoader from "../components/loader/coffeeLoader";
 
 function MenuPage() {
   const menu = useMenuStore((state) => state.menu);
@@ -26,7 +27,13 @@ function MenuPage() {
       <SearchBar items={menu} onSearch={handleSearch} />
 
       <div className="max-w-6xl mx-auto pb-36 px-4">
-        {filteredMenu?.length > 0 ? (
+        {useMenuStore((state) => state.loading) ? (
+          <div className="flex justify-center items-center min-h-[50vh]">
+            <div className="bg-white/80 backdrop-blur-sm p-8 rounded-full shadow-lg border border-white/50">
+              <CoffeeLoader scale={0.4} />
+            </div>
+          </div>
+        ) : filteredMenu?.length > 0 ? (
           <MenuList items={filteredMenu} />
         ) : (
           <div className="flex flex-col items-center justify-center py-20 text-center animate-fade-in">
