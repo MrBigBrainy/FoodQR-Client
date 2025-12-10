@@ -230,7 +230,8 @@ function TableAdmin() {
                 customerCount: customerCount,
                 tableId: selectedTableForOrder.id,
             }
-            await createOrder(orderData)
+            const orderDataResult = await createOrder(orderData)
+            console.log("orderDataResult", orderDataResult)
 
             const tableStatusData = {
                 storeId: storeId,
