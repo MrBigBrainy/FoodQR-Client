@@ -24,7 +24,7 @@ const router = createBrowserRouter([
   { path: "/store/:storeId/table/:tableName/:tableId/order/:orderId/bill", element: <MenuBill /> },
   { path: '/', element: <Navigate to="/login" replace /> },
   {
-    path: '/store/:storeId/table/:tableName/:tableId/order/:orderId/menu-qr',
+    path: '/menu-qr',
     element: <UserLayout />,
     children: [
       { index: true, element: <MenuPage /> },
