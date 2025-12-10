@@ -22,7 +22,8 @@ import {
   Info,
   Minus,
   XCircle,
-  LogOut
+  LogOut,
+  ChevronDown
 } from 'lucide-react';
 
 function TableAdmin() {
@@ -462,7 +463,7 @@ function TableAdmin() {
                             </span>
                             <select
                                 {...register("tableTypeId", { required: "กรุณาเลือกประเภทโต๊ะ" })}
-                                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 appearance-none bg-gray-50 focus:bg-white"
+                                className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 appearance-none bg-gray-50 focus:bg-white"
                             >
                                 <option value="">เลือกประเภทโต๊ะ</option>
                                 {tableTypes?.map((type) => (
@@ -471,15 +472,18 @@ function TableAdmin() {
                                     </option>
                                 ))}
                             </select>
+                            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+                                <ChevronDown size={18} />
+                            </span>
                         </div>
                         {errors.tableTypeId && (
                             <p className="text-red-500 text-xs mt-1 font-medium">{errors.tableTypeId.message}</p>
                         )}
                         {/* Display seat range for selected table type */}
                         {selectedTableTypeId && getSelectedTableType(selectedTableTypeId) && (
-                            <p className="text-sm text-gray-500 mt-2 flex items-center gap-1 bg-blue-50 p-2 rounded-lg border border-blue-100">
-                                <Info size={14} className="text-blue-500" />
-                                <span className="text-blue-700 font-medium">จำนวนที่นั่ง:</span> {getSelectedTableType(selectedTableTypeId).minSeat} - {getSelectedTableType(selectedTableTypeId).maxSeat} ที่นั่ง
+                            <p className="text-sm text-gray-500 mt-2 flex items-center gap-1 bg-red-50 p-2 rounded-lg border border-red-100">
+                                <Info size={14} className="text-red-500" />
+                                <span className="text-red-700 font-medium">จำนวนที่นั่ง:</span> {getSelectedTableType(selectedTableTypeId).minSeat} - {getSelectedTableType(selectedTableTypeId).maxSeat} ที่นั่ง
                             </p>
                         )}
                     </div>
@@ -495,7 +499,7 @@ function TableAdmin() {
                             </span>
                             <select
                                 {...register("zoneId")}
-                                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 appearance-none bg-gray-50 focus:bg-white"
+                                className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 appearance-none bg-gray-50 focus:bg-white"
                             >
                                 <option value="">ไม่ระบุโซน</option>
                                 {zones.map((zone) => (
@@ -504,6 +508,9 @@ function TableAdmin() {
                                     </option>
                                 ))}
                             </select>
+                            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+                                <ChevronDown size={18} />
+                            </span>
                         </div>
                     </div>
 
@@ -539,7 +546,7 @@ function TableAdmin() {
                                     {...registerTableType("nameType", { required: "กรุณากรอกชื่อประเภทโต๊ะ" })}
                                     type="text"
                                     placeholder="เช่น โต๊ะคู่, โต๊ะใหญ่"
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
+                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
                                 />
                             </div>
                             {errorsTableType.nameType && (
@@ -566,7 +573,7 @@ function TableAdmin() {
                                         type="number"
                                         min="1"
                                         placeholder="เช่น 2"
-                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
+                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
                                     />
                                 </div>
                                 {errorsTableType.minSeat && (
@@ -599,7 +606,7 @@ function TableAdmin() {
                                         type="number"
                                         min="1"
                                         placeholder="เช่น 4"
-                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
+                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
                                     />
                                 </div>
                                 {errorsTableType.maxSeat && (
@@ -612,7 +619,7 @@ function TableAdmin() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:shadow-none mt-2"
+                            className="w-full bg-red-600 text-white py-3 rounded-xl font-bold text-lg hover:bg-red-700 transition-all shadow-lg shadow-red-200 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:shadow-none mt-2"
                         >
                             {loading ? "กำลังสร้าง..." : "สร้างประเภทโต๊ะ"}
                         </button>
@@ -624,11 +631,11 @@ function TableAdmin() {
                             <p className="text-sm font-bold text-gray-700 mb-3">ประเภทโต๊ะที่มีอยู่:</p>
                             <div className="space-y-2 max-h-40 overflow-y-auto custom-scrollbar pr-2">
                                 {tableTypes?.map((type) => (
-                                    <div key={type.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl border border-gray-100 hover:bg-white hover:border-blue-100 transition-colors">
+                                    <div key={type.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl border border-gray-100 hover:bg-white hover:border-red-100 transition-colors">
                                         <span className="text-sm font-semibold text-gray-700">
                                             {type.nameType}
                                         </span>
-                                        <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">
+                                        <span className="text-xs font-medium text-red-600 bg-red-50 px-2.5 py-1 rounded-lg">
                                             {type.minSeat}-{type.maxSeat} ที่นั่ง
                                         </span>
                                     </div>
@@ -644,47 +651,60 @@ function TableAdmin() {
                 isOpen={isOpenOrderModalOpen}
                 onClose={() => setIsOpenOrderModalOpen(false)}
                 title={`เปิดโต๊ะ: ${selectedTableForOrder?.tableName}`}
+                backdropClassName="bg-black/30 backdrop-blur-sm"
+                modalClassName="max-w-md"
             >
-                <div className="space-y-6 text-center">
-                    <div className="py-6 bg-gray-50 rounded-2xl border border-gray-100">
-                        <label className="block text-gray-600 text-lg font-bold mb-4">
+                <div className="space-y-8">
+                    <div className="py-8 bg-gradient-to-b from-gray-50 to-white rounded-3xl border border-gray-100 shadow-inner">
+                        <label className="block text-gray-500 text-sm font-bold mb-6 uppercase tracking-wider">
                             จำนวนลูกค้า
                         </label>
-                        <div className="flex items-center justify-center gap-6">
+                        <div className="flex items-center justify-center gap-8">
                             <motion.button
+                                whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => adjustCustomerCount(-1)}
-                                className="w-14 h-14 rounded-full bg-white border border-gray-200 text-gray-600 hover:border-red-500 hover:text-red-500 flex items-center justify-center text-xl font-bold transition-all shadow-sm"
+                                className="w-16 h-16 rounded-2xl bg-white border border-gray-200 text-gray-400 hover:border-red-500 hover:text-red-500 hover:shadow-lg hover:shadow-red-100 flex items-center justify-center transition-all duration-300"
                             >
-                                <Minus size={24} />
+                                <Minus size={28} strokeWidth={2.5} />
                             </motion.button>
-                            <span className="text-5xl font-black text-gray-800 w-20 tabular-nums">
-                                {customerCount}
-                            </span>
+                            
+                            <div className="relative">
+                                <span className="text-7xl font-black text-gray-800 w-24 tabular-nums tracking-tighter leading-none">
+                                    {customerCount}
+                                </span>
+                                <span className="absolute -right-4 top-0 text-xs font-bold text-gray-400 uppercase tracking-wide">ท่าน</span>
+                            </div>
+
                             <motion.button
+                                whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => adjustCustomerCount(1)}
-                                className="w-14 h-14 rounded-full bg-red-600 text-white hover:bg-red-700 flex items-center justify-center text-xl font-bold transition-all shadow-md shadow-red-200"
+                                className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-red-600 text-white hover:shadow-lg hover:shadow-red-200 flex items-center justify-center transition-all duration-300"
                             >
-                                <Plus size={24} />
+                                <Plus size={28} strokeWidth={2.5} />
                             </motion.button>
                         </div>
-                        <p className="text-gray-400 mt-3 font-medium">ท่าน</p>
                     </div>
 
-                    <div className="flex gap-3">
-                        <button
+                    <div className="flex gap-4 pt-2">
+                        <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                             onClick={() => setIsOpenOrderModalOpen(false)}
-                            className="flex-1 px-4 py-3.5 bg-gray-100 text-gray-600 rounded-xl font-bold hover:bg-gray-200 transition-colors"
+                            className="flex-1 px-4 py-4 bg-gray-50 text-gray-600 rounded-2xl font-bold hover:bg-gray-100 transition-colors border border-gray-100"
                         >
                             ยกเลิก
-                        </button>
-                        <button
+                        </motion.button>
+                        <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                             onClick={handleConfirmOpenOrder}
-                            className="flex-1 px-4 py-3.5 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 transition-all shadow-lg shadow-green-200"
+                            className="flex-1 px-4 py-4 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-2xl font-bold hover:shadow-lg hover:shadow-green-200 transition-all flex items-center justify-center gap-2"
                         >
+                            <CheckCircle2 size={20} />
                             ยืนยันเปิดโต๊ะ
-                        </button>
+                        </motion.button>
                     </div>
                 </div>
             </Modal>
