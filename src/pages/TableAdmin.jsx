@@ -242,7 +242,8 @@ function TableAdmin() {
 
             
             // Open billing page in new tab
-            window.open(`/billing?tableName=${encodeURIComponent(selectedTableForOrder.tableName)}`, '_blank');
+            const orderId = orderDataResult.data.orderId;
+            window.open(`/store/${storeId}/table/${encodeURIComponent(selectedTableForOrder.tableName)}/${selectedTableForOrder.id}/order/${orderId}/bill`, '_blank');
 
             toast.success(`เปิดโต๊ะ ${selectedTableForOrder.tableName} สำหรับ ${customerCount} ท่าน เรียบร้อยแล้ว`);
             setIsOpenOrderModalOpen(false);

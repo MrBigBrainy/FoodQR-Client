@@ -21,7 +21,7 @@ import Billing from "@/pages/Billing";
 import CoffeeLoader from "@/components/loader/coffeeLoader";
 
 const router = createBrowserRouter([
-  { path: "/billing", element: <MenuBill /> },
+  { path: "/store/:storeId/table/:tableName/:tableId/order/:orderId/bill", element: <MenuBill /> },
   { path: '/', element: <Navigate to="/login" replace /> },
   {
     path: '/store/:storeId/table/:tableId/order/:orderId',
