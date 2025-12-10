@@ -24,7 +24,7 @@ const router = createBrowserRouter([
   { path: "/store/:storeId/table/:tableName/:tableId/order/:orderId/bill", element: <MenuBill /> },
   { path: '/', element: <Navigate to="/login" replace /> },
   {
-    path: '/store/:storeId/table/:tableId/order/:orderId',
+    path: '/store/:storeId/table/:tableName/:tableId/order/:orderId/menu-qr',
     element: <UserLayout />,
     children: [
       { index: true, element: <MenuPage /> },
@@ -32,6 +32,15 @@ const router = createBrowserRouter([
       { path: 'summary', element: <SummaryPage /> },
     ],
   },
+  // {
+  //   path: '/store/:storeId/table/:tableId/order/:orderId',
+  //   element: <UserLayout />,
+  //   children: [
+  //     { index: true, element: <MenuPage /> },
+  //     { path: 'cart', element: <CartPage /> },
+  //     { path: 'summary', element: <SummaryPage /> },
+  //   ],
+  // },
   { path: '/auth', element: <AuthPage /> },
   { path: '/superAdmin', element: <SuperAdminPage /> },
    { path: "/test", element: <CoffeeLoader /> },
