@@ -6,13 +6,18 @@ import { useEffect, useState } from "react";
 import { initLiff, getProfile } from "@/liff/liff";
 import useUserStore from "@/stores/userStore";
 import { socket } from "@/socket/socket";
-import { useParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import { getStoreMenu } from "@/api/store.api";
 import useMenuStore from "../stores/useMenuStore";
 
 
 function UserLayout() {
-  const { storeId, tableId, orderId} = useParams();
+  const params = useParams();
+  const [searchParams] = useSearchParams();
+
+  const storeId = params.storeId || searchParams.get("storeId");
+  const tableId = params.tableId || searchParams.get("tableId");
+  const orderId = params.orderId || searchParams.get("orderId");
   const [loading, setLoading] = useState(true);
   const { setUserStore } = useUserStore.getState();
   const { setMenu } = useMenuStore.getState();

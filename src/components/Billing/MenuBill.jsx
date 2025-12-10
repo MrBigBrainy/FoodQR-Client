@@ -8,7 +8,7 @@ const MenuBill = () => {
   const targetRef = useRef(null);
 
   const { storeId, tableName, tableId, orderId } = useParams();
-  const qrMenuUrl = `https://food-qr-client-01.vercel.app/store/${storeId}/table/${tableName}/${tableId}/order/${orderId}/menu-qr`;
+  const qrMenuUrl = `https://food-qr-client-01.vercel.app/menu-qr?storeId=${storeId}&tableName=${tableName}&tableId=${tableId}&orderId=${orderId}`;
 
   useEffect(() => {
     if (!targetRef.current) return;
