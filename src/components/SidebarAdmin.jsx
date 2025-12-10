@@ -59,7 +59,7 @@ function SidebarAdmin() {
   ];
 
   return (
-    <aside className="w-72 bg-white h-screen flex flex-col shadow-xl z-50 relative overflow-hidden font-sans border-r border-gray-100">
+    <aside className="w-72 bg-white h-screen flex flex-col shadow-xl z-50 sticky top-0 overflow-hidden font-sans border-r border-gray-100">
       {/* Subtle Background Pattern */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-red-50 rounded-full blur-3xl -z-10 opacity-40 translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 left-0 w-40 h-40 bg-orange-50 rounded-full blur-3xl -z-10 opacity-40 -translate-x-1/2 translate-y-1/2" />
