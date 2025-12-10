@@ -211,6 +211,9 @@ function TableAdmin() {
             await updateTableStatus(tableStatusData)
             console.log(`Opening table ${selectedTableForOrder.tableName} with ${customerCount} customers`);
             
+            // Open billing page in new tab
+            window.open(`/billing?tableName=${encodeURIComponent(selectedTableForOrder.tableName)}`, '_blank');
+
             alert(`เปิดโต๊ะ ${selectedTableForOrder.tableName} สำหรับ ${customerCount} ท่าน เรียบร้อยแล้ว`);
             setIsOpenOrderModalOpen(false);
             setSelectedTableForOrder(null);
