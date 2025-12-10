@@ -32,6 +32,7 @@ export const registerSchema = z
     adminCode: z.string().min(1, 'กรุณากรอกรหัสสมัคร Admin'),
 
     role: z.string().default('admin'),
+    storeId: z.coerce.number().default(1),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ['confirmPassword'],

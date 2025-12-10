@@ -87,13 +87,18 @@ function TableAdmin() {
     useEffect(() => console.log(tables), [tables]);
 
     useEffect(() => {
-  socket.on('statusTableUpdated', (updatedTable) => {
+
+        console.log("start socket tableStatusUpdated")
+        socket.on('tableStatusUpdated', (updatedTable) => {
+            console.log("event tableStatusUpdated start")
+            console.log("updated Table", updatedTable)
     setTables((prev) =>
-      prev.map(o => o.id === updatedTable.id ? updatedTable : o)
+      prev.map(o => o.id === updatedTable.tableId ? { ...o, status: updatedTable.status } : o)
     );
+    console.log("event tableStatusUpdated end")
   });
 
-  return () => socket.off('statusTableUpdated');
+  return () => socket.off('tableStatusUpdated');
 }, []);
 
 
@@ -224,7 +229,7 @@ function TableAdmin() {
                 status: "in_use"
             }
             await updateTableStatus(tableStatusData)
-            console.log(`Opening table ${selectedTableForOrder.tableName} with ${customerCount} customers`);
+
             
             // Open billing page in new tab
             window.open(`/billing?tableName=${encodeURIComponent(selectedTableForOrder.tableName)}`, '_blank');
@@ -234,8 +239,8 @@ function TableAdmin() {
             setSelectedTableForOrder(null);
             
             // Refresh tables to show new status
-            const tablesRes = await getTables(storeId);
-            setTables(tablesRes.data.tables || []);
+            // const tablesRes = await getTables(storeId);
+            // setTables(tablesRes.data.tables || []);
             
         } catch (error) {
             console.error("Error opening table:", error);
