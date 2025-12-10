@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { getTableTypes, createTable, getTables, deleteTable, createTableType } from '@/api/admin.api';
 import Modal from '@/components/Modal';
+import CustomSelect from '@/components/CustomSelect';
 import { createOrder } from '@/api/order.api';
 import { useParams } from 'react-router';
 import { updateTableStatus } from '@/api/table.api';
@@ -28,7 +29,7 @@ import {
 
 function TableAdmin() {
     const {storeId} = useParams();
-    const { register, handleSubmit, formState: { errors }, reset, watch } = useForm({
+    const { register, handleSubmit, control, formState: { errors }, reset, watch } = useForm({
             defaultValues: {
             tableName: "",
             tableTypeId: "",
@@ -457,25 +458,24 @@ function TableAdmin() {
                         <label className="block text-gray-700 text-sm font-bold mb-2">
                             ประเภทโต๊ะ <span className="text-red-500">*</span>
                         </label>
-                        <div className="relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10">
-                                <Users size={18} />
-                            </span>
-                            <select
-                                {...register("tableTypeId", { required: "กรุณาเลือกประเภทโต๊ะ" })}
-                                className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 appearance-none bg-gray-50 focus:bg-white"
-                            >
-                                <option value="">เลือกประเภทโต๊ะ</option>
-                                {tableTypes?.map((type) => (
-                                    <option key={type.id} value={type.id}>
-                                        {type.nameType} ({type.minSeat}-{type.maxSeat} ที่นั่ง)
-                                    </option>
-                                ))}
-                            </select>
-                            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
-                                <ChevronDown size={18} />
-                            </span>
-                        </div>
+                            <Controller
+                                name="tableTypeId"
+                                control={control}
+                                rules={{ required: "กรุณาเลือกประเภทโต๊ะ" }}
+                                render={({ field }) => (
+                                    <CustomSelect
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        options={tableTypes.map(type => ({
+                                            value: type.id,
+                                            label: `${type.nameType} (${type.minSeat}-${type.maxSeat} ที่นั่ง)`
+                                        }))}
+                                        placeholder="เลือกประเภทโต๊ะ"
+                                        icon={Users}
+                                        error={errors.tableTypeId}
+                                    />
+                                )}
+                            />
                         {errors.tableTypeId && (
                             <p className="text-red-500 text-xs mt-1 font-medium">{errors.tableTypeId.message}</p>
                         )}
@@ -493,25 +493,22 @@ function TableAdmin() {
                         <label className="block text-gray-700 text-sm font-bold mb-2">
                             โซน (ไม่บังคับ)
                         </label>
-                        <div className="relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10">
-                                <MapPin size={18} />
-                            </span>
-                            <select
-                                {...register("zoneId")}
-                                className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 appearance-none bg-gray-50 focus:bg-white"
-                            >
-                                <option value="">ไม่ระบุโซน</option>
-                                {zones.map((zone) => (
-                                    <option key={zone.id} value={zone.id}>
-                                        {zone.zoneName}
-                                    </option>
-                                ))}
-                            </select>
-                            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
-                                <ChevronDown size={18} />
-                            </span>
-                        </div>
+                            <Controller
+                                name="zoneId"
+                                control={control}
+                                render={({ field }) => (
+                                    <CustomSelect
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        options={zones.map(zone => ({
+                                            value: zone.id,
+                                            label: zone.zoneName
+                                        }))}
+                                        placeholder="ไม่ระบุโซน"
+                                        icon={MapPin}
+                                    />
+                                )}
+                            />
                     </div>
 
                     {/* Submit Button */}
@@ -650,49 +647,74 @@ function TableAdmin() {
             <Modal
                 isOpen={isOpenOrderModalOpen}
                 onClose={() => setIsOpenOrderModalOpen(false)}
-                title={`เปิดโต๊ะ: ${selectedTableForOrder?.tableName}`}
-                backdropClassName="bg-black/30 backdrop-blur-sm"
-                modalClassName="max-w-md"
+                title=""
+                backdropClassName="bg-black/40 backdrop-blur-md"
+                modalClassName="max-w-sm bg-white/95 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden border border-white/50"
             >
-                <div className="space-y-8">
-                    <div className="py-8 bg-gradient-to-b from-gray-50 to-white rounded-3xl border border-gray-100 shadow-inner">
-                        <label className="block text-gray-500 text-sm font-bold mb-6 uppercase tracking-wider">
-                            จำนวนลูกค้า
-                        </label>
-                        <div className="flex items-center justify-center gap-8">
+                <div className="pt-2 pb-6 px-4">
+                    {/* Header Section */}
+                    <div className="text-center mb-8 relative">
+                        <div className="w-20 h-20 mx-auto bg-gradient-to-tr from-red-50 to-white rounded-full flex items-center justify-center mb-4 shadow-lg shadow-red-100/50 border border-red-50 relative z-10">
+                            <UtensilsCrossed className="text-red-500 drop-shadow-sm" size={32} strokeWidth={2} />
+                        </div>
+                        {/* Decorative background blur behind icon */}
+                        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-24 bg-red-500/10 rounded-full blur-2xl -z-0"></div>
+                        
+                        <h3 className="text-2xl font-black text-gray-800 tracking-tight mb-1">
+                            เปิดโต๊ะ {selectedTableForOrder?.tableName}
+                        </h3>
+                        <p className="text-gray-500 text-sm font-medium">
+                            ระบุจำนวนลูกค้าที่จะใช้บริการ
+                        </p>
+                    </div>
+
+                    {/* Counter Section */}
+                    <div className="bg-gray-50/80 rounded-2xl p-6 border border-gray-100 mb-8 relative overflow-hidden group">
+                        {/* Subtle pattern */}
+                        <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#ef4444_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        
+                        <div className="flex items-center justify-between relative z-10">
                             <motion.button
-                                whileHover={{ scale: 1.1 }}
+                                whileHover={{ scale: 1.1, backgroundColor: "#fff" }}
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => adjustCustomerCount(-1)}
-                                className="w-16 h-16 rounded-2xl bg-white border border-gray-200 text-gray-400 hover:border-red-500 hover:text-red-500 hover:shadow-lg hover:shadow-red-100 flex items-center justify-center transition-all duration-300"
+                                className="w-12 h-12 rounded-xl bg-white border border-gray-200 text-gray-400 hover:border-red-200 hover:text-red-500 hover:shadow-lg hover:shadow-red-50 flex items-center justify-center transition-all duration-300"
                             >
-                                <Minus size={28} strokeWidth={2.5} />
+                                <Minus size={22} strokeWidth={2.5} />
                             </motion.button>
                             
-                            <div className="relative">
-                                <span className="text-7xl font-black text-gray-800 w-24 tabular-nums tracking-tighter leading-none">
+                            <div className="text-center">
+                                <motion.span 
+                                    key={customerCount}
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    className="block text-6xl font-black text-gray-800 tabular-nums leading-none tracking-tighter"
+                                >
                                     {customerCount}
+                                </motion.span>
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2 block">
+                                    ท่าน
                                 </span>
-                                <span className="absolute -right-4 top-0 text-xs font-bold text-gray-400 uppercase tracking-wide">ท่าน</span>
                             </div>
 
                             <motion.button
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => adjustCustomerCount(1)}
-                                className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-red-600 text-white hover:shadow-lg hover:shadow-red-200 flex items-center justify-center transition-all duration-300"
+                                className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-200 hover:shadow-red-300 hover:from-red-600 hover:to-red-700 flex items-center justify-center transition-all duration-300"
                             >
-                                <Plus size={28} strokeWidth={2.5} />
+                                <Plus size={22} strokeWidth={2.5} />
                             </motion.button>
                         </div>
                     </div>
 
-                    <div className="flex gap-4 pt-2">
+                    {/* Actions */}
+                    <div className="grid grid-cols-2 gap-3">
                         <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => setIsOpenOrderModalOpen(false)}
-                            className="flex-1 px-4 py-4 bg-gray-50 text-gray-600 rounded-2xl font-bold hover:bg-gray-100 transition-colors border border-gray-100"
+                            className="px-4 py-3.5 rounded-xl font-bold text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors text-sm"
                         >
                             ยกเลิก
                         </motion.button>
@@ -700,10 +722,10 @@ function TableAdmin() {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={handleConfirmOpenOrder}
-                            className="flex-1 px-4 py-4 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-2xl font-bold hover:shadow-lg hover:shadow-green-200 transition-all flex items-center justify-center gap-2"
+                            className="px-4 py-3.5 bg-gradient-to-r from-gray-900 to-gray-800 text-white rounded-xl font-bold shadow-lg shadow-gray-200 hover:shadow-xl hover:from-black hover:to-gray-900 transition-all flex items-center justify-center gap-2 text-sm"
                         >
-                            <CheckCircle2 size={20} />
-                            ยืนยันเปิดโต๊ะ
+                            <span>ยืนยันเปิดโต๊ะ</span>
+                            <CheckCircle2 size={18} className="text-red-500" />
                         </motion.button>
                     </div>
                 </div>
