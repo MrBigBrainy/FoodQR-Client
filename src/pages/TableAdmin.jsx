@@ -683,15 +683,25 @@ function TableAdmin() {
                                 <Minus size={22} strokeWidth={2.5} />
                             </motion.button>
                             
-                            <div className="text-center">
-                                <motion.span 
-                                    key={customerCount}
-                                    initial={{ scale: 0.8, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    className="block text-6xl font-black text-gray-800 tabular-nums leading-none tracking-tighter"
-                                >
-                                    {customerCount}
-                                </motion.span>
+                            <div className="text-center relative">
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value={customerCount}
+                                    onChange={(e) => {
+                                        const val = e.target.value;
+                                        if (val === '') {
+                                            setCustomerCount('');
+                                        } else {
+                                            const num = parseInt(val);
+                                            if (!isNaN(num) && num >= 1) setCustomerCount(num);
+                                        }
+                                    }}
+                                    onBlur={() => {
+                                        if (customerCount === '' || customerCount < 1) setCustomerCount(1);
+                                    }}
+                                    className="block w-32 text-6xl font-black text-gray-800 text-center bg-transparent border-b-2 border-gray-200 focus:border-red-500 focus:outline-none p-0 pb-2 tabular-nums leading-none tracking-tighter appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none transition-colors"
+                                />
                                 <span className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2 block">
                                     ท่าน
                                 </span>
@@ -722,10 +732,10 @@ function TableAdmin() {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={handleConfirmOpenOrder}
-                            className="px-4 py-3.5 bg-gradient-to-r from-gray-900 to-gray-800 text-white rounded-xl font-bold shadow-lg shadow-gray-200 hover:shadow-xl hover:from-black hover:to-gray-900 transition-all flex items-center justify-center gap-2 text-sm"
+                            className="px-4 py-3.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-xl font-bold shadow-lg shadow-red-200 hover:shadow-xl hover:from-red-700 hover:to-red-600 transition-all flex items-center justify-center gap-2 text-sm"
                         >
                             <span>ยืนยันเปิดโต๊ะ</span>
-                            <CheckCircle2 size={18} className="text-red-500" />
+                            <CheckCircle2 size={18} className="text-white" />
                         </motion.button>
                     </div>
                 </div>
