@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { useForm, Controller } from 'react-hook-form';
 import { getTableTypes, createTable, getTables, deleteTable, createTableType } from '@/api/admin.api';
 import Modal from '@/components/Modal';
@@ -8,6 +9,7 @@ import { useParams } from 'react-router';
 import { updateTableStatus } from '@/api/table.api';
 import CoffeeLoader from '@/components/loader/coffeeLoader';
 import { motion, AnimatePresence } from 'motion/react';
+import { socket } from '@/lib/socket';
 import { 
   Plus, 
   Settings, 
@@ -82,6 +84,19 @@ function TableAdmin() {
         fetchData();
     }, [storeId]);
 
+    useEffect(() => console.log(tables), [tables]);
+
+    useEffect(() => {
+  socket.on('statusTableUpdated', (updatedTable) => {
+    setTables((prev) =>
+      prev.map(o => o.id === updatedTable.id ? updatedTable : o)
+    );
+  });
+
+  return () => socket.off('statusTableUpdated');
+}, []);
+
+
     const onSubmit = async (data) => {
         setLoading(true);
         try {
@@ -102,7 +117,7 @@ function TableAdmin() {
             // Reset form and close modal
             reset();
             setIsAddTableModalOpen(false);
-            alert("สร้างโต๊ะสำเร็จ!");
+            toast.success("สร้างโต๊ะสำเร็จ!");
         } catch (error) {
             console.error("Error creating table:", error);
             alert("เกิดข้อผิดพลาดในการสร้างโต๊ะ");
@@ -214,7 +229,7 @@ function TableAdmin() {
             // Open billing page in new tab
             window.open(`/billing?tableName=${encodeURIComponent(selectedTableForOrder.tableName)}`, '_blank');
 
-            alert(`เปิดโต๊ะ ${selectedTableForOrder.tableName} สำหรับ ${customerCount} ท่าน เรียบร้อยแล้ว`);
+            toast.success(`เปิดโต๊ะ ${selectedTableForOrder.tableName} สำหรับ ${customerCount} ท่าน เรียบร้อยแล้ว`);
             setIsOpenOrderModalOpen(false);
             setSelectedTableForOrder(null);
             
