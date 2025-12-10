@@ -22,7 +22,8 @@ function RegisterForm({ setActiveTab }) {
       confirmPassword: '',
       phoneNumber: '',
       adminCode: '',
-      role: 'admin', // Default or handled elsewhere
+      role: 'admin', 
+      storeId: 1,
     },
   });
   const [showPassword, setShowPassword] = useState(false);
