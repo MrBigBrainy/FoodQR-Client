@@ -124,6 +124,7 @@ const useCartStore = create((set, get) => ({
         items: updatedItems,
       };
     }),
+  clearCart: () => set(defaultCartState),
 }));
 
 export default useCartStore;

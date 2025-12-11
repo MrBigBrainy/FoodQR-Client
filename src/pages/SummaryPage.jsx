@@ -5,10 +5,23 @@ import PaymentButton from "@/components/PaymentButton";
 import UserSummary from "@/components/UserSummary";
 import { ArrowLeft } from "lucide-react";
 import { Link, useParams } from "react-router";
-import { easeInOut, motion} from "motion/react";
+import { easeInOut, motion } from "motion/react";
+import { useEffect } from "react";
+import { getUserOrderByOrderId } from "@/api/userOrder.api";
+import useQrStore from "@/stores/qrStore";
 
 function SummaryPage() {
   const { storeId, tableId } = useParams();
+  const {orderId} = useQrStore();
+
+  useEffect(() => {
+    async function getUserOrder() {
+      const response = await getUserOrderByOrderId({ orderId: orderId || 1 });
+      console.log(response);
+    }
+    getUserOrder();
+  }, [])
+
   return (
     <motion.div className="pt-5"
       initial={{ x: "100%" }}
