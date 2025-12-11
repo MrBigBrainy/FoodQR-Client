@@ -3,7 +3,8 @@ import api from "@/api/axios";
 import useBillingStore from "@/stores/useBillingStore";
 import { useNavigate } from "react-router";
 
-const PaymentButton = () => {
+
+const PaymentButton = ({onClick}) => {
   const navigate = useNavigate();
   const { setBilling } = useBillingStore.getState();
 
@@ -64,7 +65,7 @@ const PaymentButton = () => {
         transition duration-300 ease-in-out 
         cursor-pointer
       "
-        onClick={handlePayment}
+        onClick={onClick}
       >
         <QrCode className="w-5 h-5 mr-3" />
 

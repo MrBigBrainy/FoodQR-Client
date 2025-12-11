@@ -15,11 +15,39 @@ function SummaryPage() {
   const { orderId } = useQrStore();
   const [userOrder, setUserOrder] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('pay-all')
-  
+
   const [totalOrder, setTotalOrder] = useState([]);
   const totalPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.price), 0);
   const totalDiscount = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.discount), 0);
   const totalNetPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.netPrice), 0);
+
+
+  Omise.setPublicKey(import.meta.env.VITE_OMISE_PUBLIC_KEY)
+ function createSource() {
+        return new Promise((resolve, reject) => {
+            // ทำการส่ง source ที่ต้องการจ่ายไป omise เพื่อนำ source token กลับมา
+            Omise.createSource('promptpay', {
+                amount: (100 * 100),
+                currency: 'THB'
+            }, (statusCode, response) => {
+                if (statusCode !== 200) {
+                    return reject(response)
+                }
+                resolve(response)
+            })
+        })
+    }
+
+  async function handlePaymentClick () {
+                const omiseResponse = await createSource()
+                // const response = await axios.post('https://foodqr-server.onrender.com/api/omise', {
+                //     source: omiseResponse.id
+                // })
+                 const response = await axios.post('http://localhost:3000/api/omise', {
+                    source: omiseResponse.id
+                })
+                console.log(response)
+  }
 
   useEffect(() => {
     async function getUserOrder() {
@@ -70,7 +98,9 @@ function SummaryPage() {
         )
       })}
       <CheckoutSummaryCard totalPrice={totalPrice} totalDiscount={totalDiscount} totalNetPrice={totalNetPrice}/>
-      <PaymentButton />
+      <PaymentButton onClick={handlePaymentClick}/>
+
+
     </motion.div>
   );
 }
