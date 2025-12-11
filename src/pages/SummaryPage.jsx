@@ -13,9 +13,10 @@ import useQrStore from "@/stores/qrStore";
 function SummaryPage() {
   const { storeId, tableId } = useParams();
   const { orderId } = useQrStore();
-  const [totalOrder, setTotalOrder] = useState([]);
   const [userOrder, setUserOrder] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('pay-all')
+  
+  const [totalOrder, setTotalOrder] = useState([]);
   const totalPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.price), 0);
   const totalDiscount = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.discount), 0);
   const totalNetPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.netPrice), 0);
@@ -62,7 +63,11 @@ function SummaryPage() {
           displayName: user.displayName,
           imageUrl: user.imageUrl,
         }
-        return <UserSummary key={index} user={userObject} userOrder={item[1]}/>
+        return (
+          <div key={index} className="mb-4">
+            <UserSummary user={userObject} userOrder={item[1]}/>
+          </div>
+        )
       })}
       <CheckoutSummaryCard totalPrice={totalPrice} totalDiscount={totalDiscount} totalNetPrice={totalNetPrice}/>
       <PaymentButton />

@@ -5,7 +5,7 @@ function UserSummary({user, userOrder}) {
   const totalAmount = userOrder.reduce((acc, item) => acc + (item.quantity * item.menu.netPrice), 0);
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-md border border-gray-200 mx-5 ไ">
+    <div className="bg-white p-4 rounded-xl shadow-md border border-gray-200 mx-5">
       <div className="flex justify-between items-center pb-3 border-b border-gray-100">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center text-xl font-bold flex-shrink-0">
