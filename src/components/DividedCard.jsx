@@ -167,7 +167,7 @@ function DividedCard({totalNetPrice, userOrder, paymentMethod, setPaymentMethod}
                          const isCurrentUser = true; // Since we filtered, it is always the current user
 
                          return (
-                          <div key={index} className="rounded-xl p-3 flex items-center justify-between border bg-red-50 border-red-200">
+                          <div key={index} className="rounded-xl p-3 flex items-center justify-between border bg-white border-red-200 shadow-sm">
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
                                 <img 
