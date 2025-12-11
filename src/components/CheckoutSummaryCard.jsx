@@ -2,7 +2,9 @@ import React from "react";
 import { motion } from "motion/react";
 import { Receipt, Sparkles } from "lucide-react";
 
-function CheckoutSummaryCard() {
+function CheckoutSummaryCard({totalPrice, totalDiscount, totalNetPrice}) {
+  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -31,9 +33,9 @@ function CheckoutSummaryCard() {
       </div>
 
       <div className="space-y-3">
-        <SummaryRow label="ยอดรวม" value="50" delay={0.1} />
-        <SummaryRow label="ส่วนลดเมนู" value="-20" isDiscount delay={0.2} />
-        <SummaryRow label="ภาษี (7%)" value="7" delay={0.3} />
+        <SummaryRow label="ยอดรวม" value={totalPrice} delay={0.1} />
+        <SummaryRow label="ส่วนลดเมนู" value={totalDiscount} isDiscount delay={0.2} />
+        <SummaryRow label="ภาษี (7%)" value={(totalNetPrice*0.07).toFixed(0)} delay={0.3} />
       </div>
 
       <motion.div
@@ -53,7 +55,7 @@ function CheckoutSummaryCard() {
         >
           <span className="text-sm font-semibold text-red-500">฿</span>
           <span className="text-2xl font-extrabold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-orange-600">
-            50
+            {totalNetPrice}
           </span>
         </motion.div>
       </div>

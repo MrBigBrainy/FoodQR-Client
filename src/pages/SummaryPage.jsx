@@ -6,21 +6,39 @@ import UserSummary from "@/components/UserSummary";
 import { ArrowLeft } from "lucide-react";
 import { Link, useParams } from "react-router";
 import { easeInOut, motion } from "motion/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getUserOrderByOrderId } from "@/api/userOrder.api";
 import useQrStore from "@/stores/qrStore";
 
 function SummaryPage() {
   const { storeId, tableId } = useParams();
-  const {orderId} = useQrStore();
+  const { orderId } = useQrStore();
+  const [totalOrder, setTotalOrder] = useState([]);
+  const [userOrder, setUserOrder] = useState(null);
+  const totalPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.price), 0);
+  const totalDiscount = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.discount), 0);
+  const totalNetPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.netPrice), 0);
 
   useEffect(() => {
     async function getUserOrder() {
       const response = await getUserOrderByOrderId({ orderId: orderId || 1 });
-      console.log(response);
+      setTotalOrder(response.data.data)
+      const groupedData = response.data.data.reduce((acc, item) => {
+      const key = item.lineId;
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(item);
+      return acc;
+      }, {});
+      console.log("groupeddata", groupedData)
+      const newData = Object.entries(groupedData)
+      console.log("newData", newData)
+      setUserOrder(newData);
     }
     getUserOrder();
   }, [])
+
+ 
+
 
   return (
     <motion.div className="pt-5"
@@ -37,8 +55,15 @@ function SummaryPage() {
       </Link>
       <DiscountCard />
       <DividedCard />
-      <UserSummary />
-      <CheckoutSummaryCard />
+      {userOrder?.map((item, index) => {
+        const user = item[1][0]
+        const userObject = {
+          displayName: user.displayName,
+          imageUrl: user.imageUrl,
+        }
+        return <UserSummary key={index} user={userObject} userOrder={item[1]}/>
+      })}
+      <CheckoutSummaryCard totalPrice={totalPrice} totalDiscount={totalDiscount} totalNetPrice={totalNetPrice}/>
       <PaymentButton />
     </motion.div>
   );
