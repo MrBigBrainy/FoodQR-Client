@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Users } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import useUserStore from "@/stores/userStore";
 
 function DividedCard({totalNetPrice, userOrder}) {
   const [selected, setSelected] = useState("pay-all");
   const [splitCount, setSplitCount] = useState(1);
+  const { lineId: currentLineId } = useUserStore();
 
   useEffect(() => {
     if (userOrder && userOrder.length > 0) {
@@ -138,6 +140,50 @@ function DividedCard({totalNetPrice, userOrder}) {
                       <span className="text-xl font-bold text-red-600">฿{pricePerPerson}</span>
                     </div>
 
+                  </div>
+                </motion.div>
+              )}
+
+              {selected === "split-item" && option.id === "split-item" && (
+                <motion.div
+                  key="split-item-content"
+                  initial={{ opacity: 0, y: -10, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: "auto" }}
+                  exit={{ opacity: 0, y: -10, height: 0 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="mt-3 overflow-hidden"
+                >
+                  <div className="space-y-3">
+                    <p className="text-sm font-medium text-gray-700">ยอดรวมบิลหลังหักส่วนลด (รวมภาษี) แยกตามลูกค้า:</p>
+                    <div className="space-y-2">
+                      {userOrder && userOrder.map(([lineId, items], index) => {
+                         const userTotal = items.reduce((acc, item) => acc + (item.quantity * item.menu.netPrice), 0);
+                         const user = items[0];
+                         const isCurrentUser = user.lineId === currentLineId;
+
+                         return (
+                          <div key={index} className={`rounded-xl p-3 flex items-center justify-between border ${isCurrentUser ? 'bg-red-50 border-red-200' : 'bg-white border-gray-100'}`}>
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
+                                <img 
+                                  src={user.imageUrl || "https://via.placeholder.com/150"} 
+                                  alt={user.displayName || lineId} 
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="font-bold text-gray-800 text-sm">{user.displayName || lineId}</span>
+                                {isCurrentUser && <span className="text-[10px] text-red-500 font-medium">คุณ</span>}
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <span className="font-bold text-red-600 text-lg">฿{userTotal.toFixed(2)}</span>
+                              {isCurrentUser && <span className="text-[10px] text-gray-500 block">(ยอดของคุณ)</span>}
+                            </div>
+                          </div>
+                         );
+                      })}
+                    </div>
                   </div>
                 </motion.div>
               )}
