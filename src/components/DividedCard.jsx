@@ -3,8 +3,7 @@ import { Users } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import useUserStore from "@/stores/userStore";
 
-function DividedCard({totalNetPrice, userOrder}) {
-  const [selected, setSelected] = useState("pay-all");
+function DividedCard({totalNetPrice, userOrder, paymentMethod, setPaymentMethod}) {
   const [splitCount, setSplitCount] = useState(1);
   const { lineId: currentLineId } = useUserStore();
 
@@ -65,9 +64,9 @@ function DividedCard({totalNetPrice, userOrder}) {
         {options.map((option) => (
           <div key={option.id}>
             <div
-              onClick={() => setSelected(option.id)}
+              onClick={() => setPaymentMethod(option.id)}
               className={`relative p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer flex items-center justify-between ${
-                selected === option.id
+                paymentMethod === option.id
                   ? "border-red-500 bg-red-50/30"
                   : "border-gray-200 hover:border-gray-300"
               }`}
@@ -75,12 +74,12 @@ function DividedCard({totalNetPrice, userOrder}) {
               <div className="flex items-center gap-3">
                 <div
                   className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                    selected === option.id
+                    paymentMethod === option.id
                       ? "border-red-500"
                       : "border-gray-400"
                   }`}
                 >
-                  {selected === option.id && (
+                  {paymentMethod === option.id && (
                     <motion.div 
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
@@ -100,7 +99,7 @@ function DividedCard({totalNetPrice, userOrder}) {
             </div>
 
             <AnimatePresence>
-              {selected === "split-equal" && option.id === "split-equal" && (
+              {paymentMethod === "split-equal" && option.id === "split-equal" && (
                 <motion.div
                   key="split-content"
                   initial={{ opacity: 0, y: -10, height: 0 }}
@@ -144,7 +143,7 @@ function DividedCard({totalNetPrice, userOrder}) {
                 </motion.div>
               )}
 
-              {selected === "split-item" && option.id === "split-item" && (
+              {paymentMethod === "split-item" && option.id === "split-item" && (
                 <motion.div
                   key="split-item-content"
                   initial={{ opacity: 0, y: -10, height: 0 }}
@@ -156,13 +155,19 @@ function DividedCard({totalNetPrice, userOrder}) {
                   <div className="space-y-3">
                     <p className="text-sm font-medium text-gray-700">ยอดรวมบิลหลังหักส่วนลด (รวมภาษี) แยกตามลูกค้า:</p>
                     <div className="space-y-2">
-                      {userOrder && userOrder.map(([lineId, items], index) => {
+                      {userOrder && userOrder
+                        .filter(([lineId, items]) => {
+                          // Check if the group belongs to the current user
+                          // items[0].lineId should match currentLineId
+                          return items[0].lineId === currentLineId;
+                        })
+                        .map(([lineId, items], index) => {
                          const userTotal = items.reduce((acc, item) => acc + (item.quantity * item.menu.netPrice), 0);
                          const user = items[0];
-                         const isCurrentUser = user.lineId === currentLineId;
+                         const isCurrentUser = true; // Since we filtered, it is always the current user
 
                          return (
-                          <div key={index} className={`rounded-xl p-3 flex items-center justify-between border ${isCurrentUser ? 'bg-red-50 border-red-200' : 'bg-white border-gray-100'}`}>
+                          <div key={index} className="rounded-xl p-3 flex items-center justify-between border bg-red-50 border-red-200">
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
                                 <img 
@@ -173,12 +178,12 @@ function DividedCard({totalNetPrice, userOrder}) {
                               </div>
                               <div className="flex flex-col">
                                 <span className="font-bold text-gray-800 text-sm">{user.displayName || lineId}</span>
-                                {isCurrentUser && <span className="text-[10px] text-red-500 font-medium">คุณ</span>}
+                                <span className="text-[10px] text-red-500 font-medium">คุณ</span>
                               </div>
                             </div>
                             <div className="text-right">
                               <span className="font-bold text-red-600 text-lg">฿{userTotal.toFixed(2)}</span>
-                              {isCurrentUser && <span className="text-[10px] text-gray-500 block">(ยอดของคุณ)</span>}
+                              <span className="text-[10px] text-gray-500 block">(ยอดของคุณ)</span>
                             </div>
                           </div>
                          );
