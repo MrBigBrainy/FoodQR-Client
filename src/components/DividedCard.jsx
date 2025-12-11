@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Users } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 
 function DividedCard({totalNetPrice, userOrder}) {
   const [selected, setSelected] = useState("pay-all");
@@ -97,48 +97,51 @@ function DividedCard({totalNetPrice, userOrder}) {
               )}
             </div>
 
-            {selected === "split-equal" && option.id === "split-equal" && (
-              <motion.div
-                initial={{ opacity: 0, y: -10, height: 0 }}
-                animate={{ opacity: 1, y: 0, height: "auto" }}
-                exit={{ opacity: 0, y: -10, height: 0 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="mt-3 overflow-hidden"
-              >
-                <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 flex items-center justify-between gap-4">
-                  
-                  {/* Counter Section */}
-                  <div className="flex flex-col items-center gap-2 flex-1">
-                    <span className="text-xs font-medium text-gray-500">จำนวนคน</span>
-                    <div className="flex items-center gap-3 bg-white rounded-full p-1 shadow-sm border border-gray-200">
-                      <button
-                        onClick={handleDecrement}
-                        className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-red-100 hover:text-red-600 active:scale-95 transition-all"
-                      >
-                        -
-                      </button>
-                      <span className="text-lg font-bold text-gray-900 w-6 text-center">{splitCount}</span>
-                      <button
-                        onClick={handleIncrement}
-                        className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-white hover:bg-red-700 active:scale-95 transition-all shadow-sm"
-                      >
-                        +
-                      </button>
+            <AnimatePresence>
+              {selected === "split-equal" && option.id === "split-equal" && (
+                <motion.div
+                  key="split-content"
+                  initial={{ opacity: 0, y: -10, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: "auto" }}
+                  exit={{ opacity: 0, y: -10, height: 0 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="mt-3 overflow-hidden"
+                >
+                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 flex items-center justify-between gap-4">
+                    
+                    {/* Counter Section */}
+                    <div className="flex flex-col items-center gap-2 flex-1">
+                      <span className="text-xs font-medium text-gray-500">จำนวนคน</span>
+                      <div className="flex items-center gap-3 bg-white rounded-full p-1 shadow-sm border border-gray-200">
+                        <button
+                          onClick={handleDecrement}
+                          className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-red-100 hover:text-red-600 active:scale-95 transition-all"
+                        >
+                          -
+                        </button>
+                        <span className="text-lg font-bold text-gray-900 w-6 text-center">{splitCount}</span>
+                        <button
+                          onClick={handleIncrement}
+                          className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-white hover:bg-red-700 active:scale-95 transition-all shadow-sm"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
+
+                    {/* Divider */}
+                    <div className="w-px h-12 bg-gray-200"></div>
+
+                    {/* Price Section */}
+                    <div className="flex flex-col items-center gap-1 flex-1">
+                      <span className="text-xs font-medium text-gray-500">จ่ายคนละ</span>
+                      <span className="text-xl font-bold text-red-600">฿{pricePerPerson}</span>
+                    </div>
+
                   </div>
-
-                  {/* Divider */}
-                  <div className="w-px h-12 bg-gray-200"></div>
-
-                  {/* Price Section */}
-                  <div className="flex flex-col items-center gap-1 flex-1">
-                    <span className="text-xs font-medium text-gray-500">จ่ายคนละ</span>
-                    <span className="text-xl font-bold text-red-600">฿{pricePerPerson}</span>
-                  </div>
-
-                </div>
-              </motion.div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         ))}
       </div>
