@@ -13,36 +13,33 @@ import useQrStore from "../stores/qrStore";
 
 
 function UserLayout() {
-  const [searchParams] = useSearchParams();
-
   const [loading, setLoading] = useState(true);
   const { setUserStore } = useUserStore.getState();
   const { setMenu } = useMenuStore.getState();
   const [error, setError] = useState(null);
-  const { setQrParams } = useQrStore.getState();
-  const { storeId, tableId, orderId, tableName } = useQrStore();
+  
+  // Zustand store
+  const { storeId, tableId, orderId, tableName, setQrParams } = useQrStore();
 
-
+  // 1️⃣ Read QR params once on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-
-const data = {
-  storeId: params.get("storeId"),
-  tableId: params.get("tableId"),
-  orderId: params.get("orderId"),
-  tableName: params.get("tableName"),
-};
-
-    console.log(data);
-    setQrParams(data);
-   
-  }, [])
-
-  useEffect(() => {
-    if (!storeId || !tableId) {
-      console.log("No storeId or tableId");
-      return;
+    const data = {
+      storeId: params.get("storeId"),
+      tableId: params.get("tableId"),
+      orderId: params.get("orderId"),
+      tableName: params.get("tableName"),
     };
+    console.log("QR params read:", data);
+    if (data.storeId && data.tableId) {
+      setQrParams(data);
+    }
+  }, [setQrParams]);
+
+  // 2️⃣ LIFF login — run only after QR params exist
+  useEffect(() => {
+    if (!storeId || !tableId) return;
+
     const startLiff = async () => {
       try {
         await initLiff();
@@ -58,41 +55,38 @@ const data = {
     };
 
     startLiff();
-  }, []);
+  }, [storeId, tableId, setUserStore]);
 
-  useEffect(() => { } , [])
-
+  // 3️⃣ Join socket room — run only after QR params exist
   useEffect(() => {
-    if (!storeId && !tableId) {
-      console.log("No storeId and tableId");
-      return;
-    }
+    if (!storeId || !tableId) return;
+
     socket.emit("joinTable", { storeId, tableId });
     return () => {
       socket.emit("leaveTable", { storeId, tableId });
     };
-
   }, [storeId, tableId]);
 
-    useEffect(() => {
-      if (!storeId) {
-        console.log("No storeId");
-        return;
+  // 4️⃣ Fetch menu — run only after storeId exists
+  useEffect(() => {
+    if (!storeId) return;
+
+    const getMenu = async () => {
+      useMenuStore.getState().setLoading(true);
+      try {
+        const response = await getStoreMenu(storeId);
+        console.log("Menu data:", response.data);
+        setMenu(response.data.menu);
+      } catch (err) {
+        console.error("Failed to fetch menu:", err);
+      } finally {
+        useMenuStore.getState().setLoading(false);
       }
-      async function getStoreMenuFunc() {
-        useMenuStore.getState().setLoading(true);
-        try {
-          const response = await getStoreMenu(storeId);
-          console.log(response.data);
-          setMenu(response.data.menu);
-        } catch (error) {
-          console.error("Failed to fetch menu:", error);
-        } finally {
-          useMenuStore.getState().setLoading(false);
-        }
-      }
-      getStoreMenuFunc();
-    }, [storeId]);
+    };
+
+    getMenu();
+  }, [storeId, setMenu]);
+
 
   return (
     <div className="fixed inset-0 bg-gray-50">
