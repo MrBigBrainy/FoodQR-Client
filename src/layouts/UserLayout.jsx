@@ -37,25 +37,25 @@ function UserLayout() {
   }, [setQrParams]);
 
   // 2️⃣ LIFF login — run only after QR params exist
-  useEffect(() => {
-    if (!storeId || !tableId) return;
+  // useEffect(() => {
+  //   if (!storeId || !tableId) return;
 
-    const startLiff = async () => {
-      try {
-        await initLiff();
-        const profileData = await getProfile();
-        console.log("profile Data", profileData);
-        setUserStore(profileData);
-      } catch (err) {
-        console.error(err);
-        setError("Cannot init LIFF");
-      } finally {
-        setLoading(false);
-      }
-    };
+  //   const startLiff = async () => {
+  //     try {
+  //       await initLiff();
+  //       const profileData = await getProfile();
+  //       console.log("profile Data", profileData);
+  //       setUserStore(profileData);
+  //     } catch (err) {
+  //       console.error(err);
+  //       setError("Cannot init LIFF");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    startLiff();
-  }, [storeId, tableId, setUserStore]);
+  //   startLiff();
+  // }, [storeId, tableId, setUserStore]);
 
   // 3️⃣ Join socket room — run only after QR params exist
   useEffect(() => {

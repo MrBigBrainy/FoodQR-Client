@@ -63,8 +63,17 @@ function CreateDiscountForm({ onCouponCreated }) {
     setIsSubmitting(true);
 
     try {
+      // const response = await axios.post(
+      //   "https://foodqr-server.onrender.com/api/discount/create",
+      //   payload,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${MOCK_AUTH.token}`,
+      //     },
+      //   }
+      // );
       const response = await axios.post(
-        "https://foodqr-server.onrender.com/api/discount/create",
+        "http://localhost:3000/api/discount/create",
         payload,
         {
           headers: {

@@ -6,7 +6,11 @@ function Login() {
 
     const handleLogin = async (data) => {
         try {
-            const result = await api.post('https://foodqr-server.onrender.com/api/auth/login', {
+            // const result = await api.post('https://foodqr-server.onrender.com/api/auth/login', {
+            //     email: data.username,
+            //     password: data.password,
+            // });
+            const result = await api.post('http://localhost:3000/api/auth/login', {
                 email: data.username,
                 password: data.password,
             });
