@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { Users } from "lucide-react";
 import { motion } from "motion/react";
 
-function DividedCard() {
+function DividedCard({totalNetPrice, userOrder}) {
   const [selected, setSelected] = useState("pay-all");
 
   const options = [
     {
       id: "pay-all",
-      title: "หารเท่า (จ่ายรวม)",
+      title: "จ่ายรวม",
       subtitle: "ชำระเงินพร้อมกันทั้งหมด",
-      price: "฿374.50",
+      price: `฿${totalNetPrice}`,
     },
     {
       id: "split-item",

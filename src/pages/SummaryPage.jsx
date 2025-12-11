@@ -54,7 +54,7 @@ function SummaryPage() {
         <span className="ml-2 text-base">กลับ</span>
       </Link>
       <DiscountCard />
-      <DividedCard />
+      <DividedCard totalNetPrice={totalNetPrice} userOrder={userOrder}/>
       {userOrder?.map((item, index) => {
         const user = item[1][0]
         const userObject = {
