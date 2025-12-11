@@ -35,7 +35,7 @@ function DiscountList() {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.get(`http://localhost:3000/api/discount/get`, {
+      const res = await axios.get(`https://foodqr-server.onrender.com/api/discount/get`, {
         headers: {
           Authorization: `Bearer ${MOCK_AUTH.token}`,
         },
@@ -71,7 +71,7 @@ function DiscountList() {
 
     try {
       await axios.delete(
-        `http://localhost:3000/api/discount/delete/${deleteTarget.id}`,
+        `https://foodqr-server.onrender.com/api/discount/delete/${deleteTarget.id}`,
         {
           headers: {
             Authorization: `Bearer ${MOCK_AUTH.token}`,
@@ -136,7 +136,7 @@ function DiscountList() {
 
     try {
       await axios.put(
-        `http://localhost:3000/api/discount/update/${editData.id}`,
+        `https://foodqr-server.onrender.com/api/discount/update/${editData.id}`,
         finalEditData,
         {
           headers: {

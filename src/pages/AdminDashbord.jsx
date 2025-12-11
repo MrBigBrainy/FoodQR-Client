@@ -6,7 +6,7 @@ import { getSaleToday } from '@/api/admin.api';
 import { io } from 'socket.io-client';
 
 // socket เลือกรับจาก backend
-const socket = io("http://localhost:3000");
+const socket = io("https://foodqr-server.onrender.com");
 
 // ข้อมูลกราฟเส้น
 const lineData = {

@@ -64,7 +64,7 @@ function CreateDiscountForm({ onCouponCreated }) {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/discount/create",
+        "https://foodqr-server.onrender.com/api/discount/create",
         payload,
         {
           headers: {
