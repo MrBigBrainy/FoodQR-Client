@@ -9,6 +9,7 @@ import { easeInOut, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { getUserOrderByOrderId } from "@/api/userOrder.api";
 import useQrStore from "@/stores/qrStore";
+import api from "@/api/axios";
 
 function SummaryPage() {
   const { storeId, tableId } = useParams();
@@ -43,7 +44,7 @@ function SummaryPage() {
                 // const response = await axios.post('https://foodqr-server.onrender.com/api/omise', {
                 //     source: omiseResponse.id
                 // })
-                 const response = await axios.post('http://localhost:3000/api/omise', {
+                 const response = await api.post('/omise', {
                     source: omiseResponse.id
                 })
                 console.log(response)

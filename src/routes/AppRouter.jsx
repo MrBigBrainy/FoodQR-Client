@@ -43,7 +43,8 @@ const router = createBrowserRouter([
   // },
   { path: '/auth', element: <AuthPage /> },
   { path: '/superAdmin', element: <SuperAdminPage /> },
-   { path: "/test", element: <CoffeeLoader /> },
+  { path: "/test", element: <CoffeeLoader /> },
+   { path: "/test2", element: <Billing /> },
   {
     path: '/admin/store/:storeId',
     element: <AdminPage />,
