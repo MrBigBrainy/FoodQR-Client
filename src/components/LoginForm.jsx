@@ -1,12 +1,12 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { User, Lock, Eye, EyeOff, LogIn } from 'lucide-react';
-import { motion } from 'motion/react';
-import { loginAdmin } from '@/api/auth.api';
-import { toast } from 'react-toastify';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { loginSchema } from '@/schemas/auth.schema';
-import { useNavigate } from 'react-router';
+import React from "react";
+import { useForm } from "react-hook-form";
+import { User, Lock, Eye, EyeOff, LogIn } from "lucide-react";
+import { motion } from "motion/react";
+import { loginAdmin } from "@/api/auth.api";
+import { toast } from "react-toastify";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "@/schemas/auth.schema";
+import { useNavigate } from "react-router";
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -24,10 +24,10 @@ function LoginForm() {
     try {
       const res = await loginAdmin(data);
       console.log(res.data);
-      toast.success('เข้าสู่ระบบสำเร็จ!');
-      navigate('/admin');
+      toast.success("เข้าสู่ระบบสำเร็จ!");
+      navigate("/admin/store/1");
     } catch (error) {
-      toast.error('Username หรือ รหัสผ่านไม่ถูกต้อง');
+      toast.error("Username หรือ รหัสผ่านไม่ถูกต้อง");
     }
   };
 
@@ -48,7 +48,7 @@ function LoginForm() {
               <User size={20} />
             </div>
             <input
-              {...register('userName')}
+              {...register("userName")}
               placeholder="ชื่อผู้ใช้"
               className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl 
                 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 
@@ -74,8 +74,8 @@ function LoginForm() {
               <Lock size={20} />
             </div>
             <input
-              {...register('password')}
-              type={showPassword ? 'text' : 'password'}
+              {...register("password")}
+              type={showPassword ? "text" : "password"}
               placeholder="รหัสผ่าน"
               className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl 
                 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 
