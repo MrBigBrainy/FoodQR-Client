@@ -19,6 +19,7 @@ import MenuBill from "../components/Billing/MenuBill";
 import SummaryOfFood from "@/pages/SummaryOfFood";
 import Billing from "@/pages/Billing";
 import CoffeeLoader from "@/components/loader/coffeeLoader";
+import PaymentQRPage from "@/pages/PaymentQRPage";
 
 const router = createBrowserRouter([
   { path: "/store/:storeId/table/:tableName/:tableId/order/:orderId/bill", element: <MenuBill /> },
@@ -43,8 +44,9 @@ const router = createBrowserRouter([
   // },
   { path: '/auth', element: <AuthPage /> },
   { path: '/superAdmin', element: <SuperAdminPage /> },
-  { path: "/test", element: <CoffeeLoader /> },
+   { path: "/test", element: <CoffeeLoader /> },
    { path: "/test2", element: <Billing /> },
+   { path: "/test3", element: <PaymentQRPage /> },
   {
     path: '/admin/store/:storeId',
     element: <AdminPage />,

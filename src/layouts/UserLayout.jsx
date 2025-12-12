@@ -91,7 +91,7 @@ function UserLayout() {
   return (
     <div className="fixed inset-0 bg-gray-50">
       <Header />
-      <div className="absolute top-24 bottom-28 left-0 right-0 overflow-y-auto no-scrollbar">
+      <div className="absolute top-24 bottom-24 left-0 right-0 overflow-y-auto no-scrollbar pb-4">
         <Outlet />
       </div>
       <Footer />
