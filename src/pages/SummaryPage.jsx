@@ -4,7 +4,7 @@ import DividedCard from "@/components/DividedCard";
 import PaymentButton from "@/components/PaymentButton";
 import UserSummary from "@/components/UserSummary";
 import { ArrowLeft } from "lucide-react";
-import { Link, useParams } from "react-router";
+import { Link, useParams, useNavigate } from "react-router";
 import { easeInOut, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { getUserOrderByOrderId } from "@/api/userOrder.api";
@@ -12,6 +12,7 @@ import useQrStore from "@/stores/qrStore";
 import api from "@/api/axios";
 
 function SummaryPage() {
+  const navigate = useNavigate();
   const { storeId, tableId } = useParams();
   const { orderId } = useQrStore();
   const [userOrder, setUserOrder] = useState(null);
@@ -28,7 +29,7 @@ function SummaryPage() {
         return new Promise((resolve, reject) => {
             // ทำการส่ง source ที่ต้องการจ่ายไป omise เพื่อนำ source token กลับมา
             Omise.createSource('promptpay', {
-                amount: (100 * 100),
+                amount: (totalNetPrice * 100),
                 currency: 'THB'
             }, (statusCode, response) => {
                 if (statusCode !== 200) {
@@ -40,14 +41,24 @@ function SummaryPage() {
     }
 
   async function handlePaymentClick () {
-                const omiseResponse = await createSource()
-                // const response = await axios.post('https://foodqr-server.onrender.com/api/omise', {
-                //     source: omiseResponse.id
-                // })
-                 const response = await api.post('/omise', {
-                    source: omiseResponse.id
-                })
-                console.log(response)
+                try {
+                    const omiseResponse = await createSource()
+                    const response = await api.post('/omise', {
+                        source: omiseResponse.id
+                    })
+                    console.log(response)
+                    
+                    navigate('/test3', { 
+                        state: { 
+                            amount: totalNetPrice, 
+                            qrCode: response.data.qrUrl, 
+                            orderNo: orderId, 
+                            tableNo: tableId 
+                        } 
+                    });
+                } catch (error) {
+                    console.error("Payment error:", error);
+                }
   }
 
   useEffect(() => {
@@ -67,9 +78,6 @@ function SummaryPage() {
     }
     getUserOrder();
   }, [])
-
- 
-
 
   return (
     <motion.div className="pt-5"
@@ -99,7 +107,7 @@ function SummaryPage() {
         )
       })}
       <CheckoutSummaryCard totalPrice={totalPrice} totalDiscount={totalDiscount} totalNetPrice={totalNetPrice}/>
-      <PaymentButton onClick={handlePaymentClick}/>
+      <PaymentButton onClick={handlePaymentClick} amount={totalNetPrice}/>
 
 
     </motion.div>

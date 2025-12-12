@@ -4,7 +4,7 @@ import useBillingStore from "@/stores/useBillingStore";
 import { useNavigate } from "react-router";
 
 
-const PaymentButton = ({onClick}) => {
+const PaymentButton = ({onClick, amount}) => {
   const navigate = useNavigate();
   const { setBilling } = useBillingStore.getState();
 
@@ -14,7 +14,7 @@ const PaymentButton = ({onClick}) => {
       Omise.createSource(
         "promptpay",
         {
-          amount: 100 * 100,
+          amount: amount * 100, // Use prop amount
           currency: "THB",
         },
         (statusCode, response) => {
@@ -47,7 +47,7 @@ const PaymentButton = ({onClick}) => {
   };
 
   const thaiLabel = "ชำระเงิน";
-  const displayAmount = "฿469.73";
+  const displayAmount = amount ? `฿${amount.toLocaleString()}` : "฿0.00";
 
   return (
     <div className="w-full mt-6 mb-8">
@@ -65,7 +65,7 @@ const PaymentButton = ({onClick}) => {
         transition duration-300 ease-in-out 
         cursor-pointer
       "
-        onClick={onClick}
+        onClick={onClick || handlePayment} 
       >
         <QrCode className="w-5 h-5 mr-3" />
 
