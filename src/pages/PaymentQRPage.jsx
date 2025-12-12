@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ArrowLeft, CheckCircle2, XCircle, Clock } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router';
 import { motion } from 'motion/react';
+import Header from '../components/Header';
 
 const PaymentQRPage = () => {
   const navigate = useNavigate();
@@ -41,35 +42,7 @@ const PaymentQRPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center font-sans pb-24 pt-28 px-4">
-      {/* Fixed Header */}
-      <motion.header
-        className="w-full fixed top-0 left-0 right-0 bg-gradient-to-r from-[#C10007] to-[#8B0000] text-white shadow-xl z-40 rounded-b-3xl px-6 py-4"
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ 
-          type: "spring", 
-          stiffness: 100, 
-          damping: 20,
-          mass: 1
-        }}
-      >
-        <div className="flex items-center justify-between max-w-2xl mx-auto relative z-10">
-            <button 
-                onClick={() => navigate(-1)}
-                className="flex items-center gap-2 text-white/90 hover:text-white transition-colors"
-            >
-                <ArrowLeft size={24} />
-                <span className="text-lg font-medium">กลับ</span>
-            </button>
-            <div className="text-center flex-1 mr-8"> {/* mr-8 to balance the back button width */}
-                <h1 className="text-xl font-bold">{shopName}</h1>
-                <p className="text-sm text-white/80">{shopNameThai} | {shopSubName}</p>
-            </div>
-        </div>
-        {/* Decorative circle for modern look */}
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
-        <div className="absolute top-10 -left-10 w-24 h-24 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
-      </motion.header>
+      <Header />
 
       {/* Order Info Card */}
       <motion.div 
@@ -140,6 +113,13 @@ const PaymentQRPage = () => {
             </span>
         </motion.div>
       </motion.div>
+
+      <button 
+        onClick={() => navigate(-1)}
+        className="w-full max-w-md mt-4 py-3 rounded-xl bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors"
+      >
+        ย้อนกลับ
+      </button>
     </div>
   );
 };
