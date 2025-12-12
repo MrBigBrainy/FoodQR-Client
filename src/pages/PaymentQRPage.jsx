@@ -116,7 +116,12 @@ const PaymentQRPage = () => {
 
       <button 
         onClick={() => navigate(-1)}
-        className="w-full max-w-md mt-4 py-3 rounded-xl bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors"
+        disabled={isSuccess}
+        className={`w-full max-w-md mt-4 py-3 rounded-xl transition-colors font-bold ${
+            isSuccess 
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
+            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+        }`}
       >
         ย้อนกลับ
       </button>
