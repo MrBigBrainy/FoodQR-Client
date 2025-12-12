@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { ArrowLeft, CheckCircle2, XCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, XCircle, Clock } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router';
 import { motion } from 'motion/react';
 
@@ -76,8 +76,8 @@ const PaymentQRPage = () => {
             </div>
         </div>
         
-        <div className="bg-red-50 border border-red-100 rounded-xl p-3 flex items-center justify-center gap-2 text-red-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">
-            <XCircle size={20} className="shrink-0" />
+        <div className="bg-orange-50 border border-orange-200 rounded-2xl p-3 flex items-center justify-center gap-2 text-orange-800 font-medium whitespace-nowrap overflow-hidden text-ellipsis shadow-sm">
+            <Clock size={20} className="shrink-0" />
             <span className="truncate text-sm sm:text-base">สถานะ / Status: <span className="font-bold">{statusThai} / {status}</span></span>
         </div>
       </motion.div>
@@ -90,11 +90,11 @@ const PaymentQRPage = () => {
         className="w-full max-w-md bg-white rounded-2xl shadow-md p-8 flex flex-col items-center text-center flex-1"
       >
         <h2 className="text-xl font-bold text-gray-800 mb-2">สแกนเพื่อชำระเงิน / Scan to Pay</h2>
-        <p className="text-3xl font-bold text-[#C10007] mb-6">{displayAmount}</p>
+        <p className="text-3xl font-bold text-black mb-6">{displayAmount}</p>
         
         <motion.div 
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
             className="bg-white p-4 rounded-xl border-2 border-gray-100 shadow-sm mb-6"
         >
@@ -115,7 +115,7 @@ const PaymentQRPage = () => {
         <motion.div 
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="flex items-center gap-2 text-green-600"
+            className="flex items-center gap-2 text-gray-600"
         >
             <CheckCircle2 size={20} />
             <span className="font-medium">กำลังรอการชำระเงินอัตโนมัติ...</span>
