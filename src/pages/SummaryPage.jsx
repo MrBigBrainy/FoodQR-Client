@@ -17,8 +17,12 @@ function SummaryPage() {
   const { orderId } = useQrStore();
   const [userOrder, setUserOrder] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('pay-all')
-
   const [totalOrder, setTotalOrder] = useState([]);
+
+  const [selectedPrice, setSelectedPrice] = useState(0);
+  const [selectedDiscount, setSelectedDiscount] = useState(0);
+  const [selectedNetPrice, setSelectedNetPrice] = useState(0);
+
   const totalPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.price), 0);
   const totalDiscount = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.discount), 0);
   const totalNetPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.netPrice), 0);
@@ -80,6 +84,19 @@ function SummaryPage() {
     }
     getUserOrder();
   }, [])
+
+
+  useEffect(() => {
+    if (paymentMethod === 'pay-all') {
+      setSelectedPrice(totalNetPrice);
+      setSelectedDiscount(totalDiscount);
+      setSelectedNetPrice(totalNetPrice);
+    } else if (paymentMethod === 'split-equal') {
+      
+    } else if (paymentMethod === 'split-item') {
+      
+    }
+  }, [paymentMethod])
 
   return (
     <motion.div className="pt-5"
