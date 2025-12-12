@@ -29,7 +29,7 @@ function SummaryPage() {
         return new Promise((resolve, reject) => {
             // ทำการส่ง source ที่ต้องการจ่ายไป omise เพื่อนำ source token กลับมา
             Omise.createSource('promptpay', {
-                amount: (totalNetPrice * 100),
+                amount: (100 * 100),
                 currency: 'THB'
             }, (statusCode, response) => {
                 if (statusCode !== 200) {
@@ -42,7 +42,9 @@ function SummaryPage() {
 
   async function handlePaymentClick () {
                 try {
-                    const omiseResponse = await createSource()
+                  const omiseResponse = await createSource()
+                  console.log('new src id:', omiseResponse.id);
+
                     const response = await api.post('/omise', {
                         source: omiseResponse.id
                     })

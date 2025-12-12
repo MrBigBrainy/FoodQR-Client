@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { QRCodeCanvas } from 'qrcode.react';
+
 import { ArrowLeft, CheckCircle2, XCircle } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router';
 import { motion } from 'motion/react';
@@ -99,20 +99,10 @@ const PaymentQRPage = () => {
             className="bg-white p-4 rounded-xl border-2 border-gray-100 shadow-sm mb-6"
         >
             {qrCode ? (
-                 <QRCodeCanvas
-                    value={qrCode}
-                    size={200}
-                    level={"H"}
-                    fgColor="#000000" // Standard black for better scanning
-                    bgColor="#FFFFFF"
-                    imageSettings={{
-                        src: "", 
-                        x: undefined,
-                        y: undefined,
-                        height: 24,
-                        width: 24,
-                        excavate: true,
-                    }}
+                <img 
+                    src={qrCode} 
+                    alt="Payment QR Code" 
+                    className="w-full h-full object-contain"
                 />
             ) : (
                 <div className="w-[200px] h-[200px] bg-gray-200 flex items-center justify-center rounded-lg text-gray-400">
