@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { ArrowLeft, CheckCircle2, XCircle, Clock } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router';
@@ -12,8 +12,11 @@ const PaymentQRPage = () => {
   // Fallback/Mock data if no state provided (for testing/direct access)
   const tableNo = tableNoState || "A-8";
   const orderNo = orderNoState || "NS-2024-1128-0042";
-  const status = "Pending Payment";
-  const statusThai = "รอชำระเงิน";
+  
+  const [status, setStatus] = useState("Pending Payment");
+  const [statusThai, setStatusThai] = useState("รอชำระเงิน");
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const shopName = "Na-ni-no-Sushi POS";
   const shopNameThai = "นานิโนะ ซูชิ";
   const shopSubName = "Nanino Sushi";
@@ -25,6 +28,16 @@ const PaymentQRPage = () => {
         console.warn("No payment data found in location.state");
     }
   }, [location.state]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+        setStatus("Payment Successful");
+        setStatusThai("ชำระเงินสำเร็จ");
+        setIsSuccess(true);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center font-sans pb-24 pt-28 px-4">
@@ -76,8 +89,12 @@ const PaymentQRPage = () => {
             </div>
         </div>
         
-        <div className="bg-orange-50 border border-orange-200 rounded-2xl p-3 flex items-center justify-center gap-2 text-orange-800 font-medium whitespace-nowrap overflow-hidden text-ellipsis shadow-sm">
-            <Clock size={20} className="shrink-0" />
+        <div className={`border rounded-2xl p-3 flex items-center justify-center gap-2 font-medium whitespace-nowrap overflow-hidden text-ellipsis shadow-sm ${
+            isSuccess 
+            ? "bg-green-50 border-green-200 text-green-700" 
+            : "bg-orange-50 border-orange-200 text-orange-800"
+        }`}>
+            {isSuccess ? <CheckCircle2 size={20} className="shrink-0" /> : <Clock size={20} className="shrink-0" />}
             <span className="truncate text-sm sm:text-base">สถานะ / Status: <span className="font-bold">{statusThai} / {status}</span></span>
         </div>
       </motion.div>
@@ -115,10 +132,12 @@ const PaymentQRPage = () => {
         <motion.div 
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="flex items-center gap-2 text-gray-600"
+            className={`flex items-center gap-2 ${isSuccess ? "text-green-600" : "text-gray-600"}`}
         >
             <CheckCircle2 size={20} />
-            <span className="font-medium">กำลังรอการชำระเงินอัตโนมัติ...</span>
+            <span className="font-medium">
+                {isSuccess ? "ชำระเงินเรียบร้อยแล้ว / Payment Completed" : "กำลังรอการชำระเงินอัตโนมัติ..."}
+            </span>
         </motion.div>
       </motion.div>
     </div>
