@@ -40,6 +40,15 @@ const PaymentQRPage = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    if (isSuccess) {
+      const timer = setTimeout(() => {
+        navigate('/test4');
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess, navigate]);
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center font-sans pb-24 pt-28 px-4">
       <Header />
