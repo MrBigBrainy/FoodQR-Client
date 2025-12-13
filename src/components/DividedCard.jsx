@@ -3,15 +3,11 @@ import { Users } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import useUserStore from "@/stores/userStore";
 
-function DividedCard({totalNetPrice, userOrder, paymentMethod, setPaymentMethod}) {
-  const [splitCount, setSplitCount] = useState(1);
+function DividedCard({totalNetPrice, userOrder, paymentMethod, setPaymentMethod, splitCount, setSplitCount}) {
+
   const { lineId: currentLineId } = useUserStore();
 
-  useEffect(() => {
-    if (userOrder && userOrder.length > 0) {
-      setSplitCount(userOrder.length);
-    }
-  }, [userOrder]);
+
 
   const handleIncrement = (e) => {
     e.stopPropagation();

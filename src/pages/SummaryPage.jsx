@@ -18,6 +18,7 @@ function SummaryPage() {
   const [userOrder, setUserOrder] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('pay-all')
   const [totalOrder, setTotalOrder] = useState([]);
+  const [splitCount, setSplitCount] = useState(1);
 
   const [selectedPrice, setSelectedPrice] = useState(0);
   const [selectedDiscount, setSelectedDiscount] = useState(0);
@@ -85,18 +86,26 @@ function SummaryPage() {
     getUserOrder();
   }, [])
 
+   useEffect(() => {
+      if (userOrder && userOrder.length > 0) {
+        setSplitCount(userOrder.length);
+      }
+    }, [userOrder]);
+
 
   useEffect(() => {
     if (paymentMethod === 'pay-all') {
-      setSelectedPrice(totalNetPrice);
-      setSelectedDiscount(totalDiscount);
-      setSelectedNetPrice(totalNetPrice);
+      setSelectedPrice(totalNetPrice.toFixed(2));
+      setSelectedDiscount(totalDiscount.toFixed(2));
+      setSelectedNetPrice(totalNetPrice.toFixed(2));
     } else if (paymentMethod === 'split-equal') {
-      
+      setSelectedPrice((totalNetPrice/splitCount).toFixed(2));
+      setSelectedDiscount((totalDiscount/splitCount).toFixed(2));
+      setSelectedNetPrice((totalNetPrice/splitCount).toFixed(2));
     } else if (paymentMethod === 'split-item') {
       
     }
-  }, [paymentMethod])
+  }, [paymentMethod, splitCount])
 
   return (
     <motion.div className="pt-5"
@@ -112,7 +121,7 @@ function SummaryPage() {
         <span className="ml-2 text-base">กลับ</span>
       </Link>
       <DiscountCard />
-      <DividedCard totalNetPrice={totalNetPrice} userOrder={userOrder} paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod}/>
+      <DividedCard splitCount={splitCount} setSplitCount={setSplitCount} totalNetPrice={totalNetPrice} userOrder={userOrder} paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod}/>
       {userOrder?.map((item, index) => {
         const user = item[1][0]
         const userObject = {
@@ -125,8 +134,8 @@ function SummaryPage() {
           </div>
         )
       })}
-      <CheckoutSummaryCard totalPrice={totalPrice} totalDiscount={totalDiscount} totalNetPrice={totalNetPrice}/>
-      <PaymentButton onClick={handlePaymentClick} amount={totalNetPrice}/>
+      <CheckoutSummaryCard totalPrice={selectedPrice} totalDiscount={selectedDiscount} totalNetPrice={selectedNetPrice}/>
+      <PaymentButton onClick={handlePaymentClick} amount={selectedNetPrice}/>
 
 
     </motion.div>
