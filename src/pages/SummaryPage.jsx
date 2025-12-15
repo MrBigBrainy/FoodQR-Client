@@ -17,6 +17,7 @@ function SummaryPage() {
   const { storeId, tableId } = useParams();
   const { orderId } = useQrStore();
   const [userOrder, setUserOrder] = useState(null);
+  const [eachUserOrder, setEachUserOrder] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('pay-all')
   const [totalOrder, setTotalOrder] = useState([]);
   const [splitCount, setSplitCount] = useState(1);
@@ -80,6 +81,7 @@ function SummaryPage() {
       return acc;
       }, {});
       console.log("groupeddata", groupedData)
+      setEachUserOrder(groupedData)
       const newData = Object.entries(groupedData)
       console.log("newData", newData)
       setUserOrder(newData);
@@ -104,7 +106,19 @@ function SummaryPage() {
       setSelectedDiscount((totalDiscount/splitCount).toFixed(2));
       setSelectedNetPrice((totalNetPrice/splitCount).toFixed(2));
     } else if (paymentMethod === 'split-item') {
-      const {lineId} = useUserStore.getState();
+      const { lineId } = useUserStore.getState();
+      const resultPrice = eachUserOrder[lineId].reduce((acc, item) => {
+        return acc + (item.quantity * item.menu.price);
+      }, 0);
+      const resultDiscount = eachUserOrder[lineId].reduce((acc, item) => {
+        return acc + (item.quantity * item.menu.discount);
+      }, 0);
+      const resultNetPrice = eachUserOrder[lineId].reduce((acc, item) => {
+        return acc + (item.quantity * item.menu.netPrice);
+      }, 0);
+      setSelectedPrice(resultPrice.toFixed(0));
+      setSelectedDiscount(resultDiscount.toFixed(0));
+      setSelectedNetPrice(resultNetPrice.toFixed(0));
     }
   }, [paymentMethod, splitCount])
 
