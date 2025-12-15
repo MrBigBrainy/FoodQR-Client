@@ -3,7 +3,7 @@ import { Users } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import useUserStore from "@/stores/userStore";
 
-function DividedCard({totalNetPrice, userOrder, paymentMethod, setPaymentMethod, splitCount, setSplitCount}) {
+function DividedCard({selectedNetPrice, userOrder, paymentMethod, setPaymentMethod, splitCount, setSplitCount}) {
 
   const { lineId: currentLineId } = useUserStore();
 
@@ -21,14 +21,14 @@ function DividedCard({totalNetPrice, userOrder, paymentMethod, setPaymentMethod,
     }
   };
 
-  const pricePerPerson = (totalNetPrice / splitCount).toFixed(2);
+  const pricePerPerson = (selectedNetPrice / splitCount).toFixed(2);
 
   const options = [
     {
       id: "pay-all",
       title: "จ่ายรวม",
       subtitle: "ชำระเงินพร้อมกันทั้งหมด",
-      price: `฿${totalNetPrice}`,
+      price: `฿${selectedNetPrice}`,
     },
     {
       id: "split-item",

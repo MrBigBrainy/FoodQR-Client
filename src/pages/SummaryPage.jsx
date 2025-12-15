@@ -140,7 +140,7 @@ function SummaryPage() {
         <span className="ml-2 text-base">กลับ</span>
       </Link>
       <DiscountCard />
-      <DividedCard splitCount={splitCount} setSplitCount={setSplitCount} totalNetPrice={totalNetPrice} userOrder={userOrder} paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod}/>
+      <DividedCard splitCount={splitCount} setSplitCount={setSplitCount} selectedNetPrice={selectedNetPrice} userOrder={userOrder} paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod}/>
       {userOrder?.map((item, index) => {
         const user = item[1][0]
         const userObject = {
