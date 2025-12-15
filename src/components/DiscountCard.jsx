@@ -28,7 +28,7 @@ function DiscountCard() {
       console.log(result);
       
       if (result.data.status === "success") {
-        setMessage({ type: "success", text: `ใช้โค้ดส่วนลดสำเร็จ! ลด ${result.data.data.amount}${result.data.data.discountType === "percent" ? "%" : " บาท"}` });
+        setMessage({ type: "success", text: `ใช้โค้ดส่วนลดสำเร็จ! ลด ${result.data.data.amount}${result.data.data.type === "percent" ? "%" : ""}` });
         setDiscount(result.data.data);
       } else {
         setMessage({ type: "error", text: "โค้ดส่วนลดไม่ถูกต้อง" });

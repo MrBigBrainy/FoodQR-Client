@@ -1,10 +1,27 @@
 import React from "react";
 import { motion } from "motion/react";
 import { Receipt, Sparkles } from "lucide-react";
+import { useEffect } from "react";
+import useCartStore from "@/stores/cartStore";
 
 function CheckoutSummaryCard({totalPrice, totalDiscount, totalNetPrice, voucherDiscount}) {
-  
+  const discount = useCartStore((state) => state.discount);
+  const {setDiscountAmount}  = useCartStore.getState()
 
+  const totalDiscountCard = (discount) => {
+    let discountAmount;
+    if (!discount) return 0;
+    if (discount.discountType === "percent") {
+      discountAmount = totalPrice * (discount.amount / 100); 
+    }  else if (discount.discountType === "bath") {
+      discountAmount = discount.amount; 
+    }
+
+    setDiscountAmount(discountAmount);
+    return discountAmount;
+  }
+
+  useEffect(() => console.log('discount', discount), [discount])
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -34,11 +51,13 @@ function CheckoutSummaryCard({totalPrice, totalDiscount, totalNetPrice, voucherD
 
       <div className="space-y-3">
         <SummaryRow label="ยอดรวม" value={totalPrice} delay={0.1} />
+        <SummaryRow label="ภาษี (7%)" value={(totalNetPrice * 0.07).toFixed(0)} delay={0.3} />
         <SummaryRow label="ส่วนลดเมนู" value={totalDiscount} isDiscount delay={0.2} />
-        {Number(voucherDiscount) > 0 && (
-          <SummaryRow label="ส่วนลดท้ายบิล" value={voucherDiscount} isDiscount delay={0.25} />
+        {/* <SummaryRow label="ส่วนลดท้ายบิล" value={voucherDiscount} isDiscount delay={0.25} /> */}
+        {discount && (
+          <SummaryRow label="ส่วนลดจากโค้ด" value={totalDiscountCard(discount).toFixed(0)} isDiscount delay={0.35} />
         )}
-        <SummaryRow label="ภาษี (7%)" value={(totalNetPrice*0.07).toFixed(0)} delay={0.3} />
+        
       </div>
 
       <motion.div

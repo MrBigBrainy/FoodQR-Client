@@ -26,8 +26,9 @@ function SummaryPage() {
   const [selectedPrice, setSelectedPrice] = useState(0);
   const [selectedDiscount, setSelectedDiscount] = useState(0);
   const [selectedNetPrice, setSelectedNetPrice] = useState(0);
-  const [voucherDiscount, setVoucherDiscount] = useState(0);
+
   const discountCard = useCartStore((state) => state.discountCard)
+  const discountAmount = useCartStore((state) => state.discountAmount)
 
   const totalPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.price), 0);
   const totalDiscount = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.discount), 0);
@@ -100,54 +101,30 @@ function SummaryPage() {
 
 
   useEffect(() => {
-    let price = 0;
-    let discount = 0;
-    let netPrice = 0;
-
     if (paymentMethod === 'pay-all') {
-      price = totalNetPrice;
-      discount = totalDiscount;
-      netPrice = totalNetPrice;
+      setSelectedPrice(totalNetPrice.toFixed(0));
+      setSelectedDiscount(totalDiscount.toFixed(0));
+      setSelectedNetPrice(totalNetPrice.toFixed(0)-discountAmount.toFixed(0));
     } else if (paymentMethod === 'split-equal') {
-      price = totalNetPrice / splitCount;
-      discount = totalDiscount / splitCount;
-      netPrice = totalNetPrice / splitCount;
+      setSelectedPrice((totalNetPrice/splitCount).toFixed(0));
+      setSelectedDiscount((totalDiscount/splitCount).toFixed(0));
+      setSelectedNetPrice((totalNetPrice/splitCount).toFixed(0)-(discountAmount/splitCount).toFixed(0));
     } else if (paymentMethod === 'split-item') {
       const { lineId } = useUserStore.getState();
-      if (eachUserOrder && eachUserOrder[lineId]) {
-        price = eachUserOrder[lineId].reduce((acc, item) => {
-          return acc + (item.quantity * item.menu.price);
-        }, 0);
-        discount = eachUserOrder[lineId].reduce((acc, item) => {
-          return acc + (item.quantity * item.menu.discount);
-        }, 0);
-        netPrice = eachUserOrder[lineId].reduce((acc, item) => {
-          return acc + (item.quantity * item.menu.netPrice);
-        }, 0);
-      }
+      const resultPrice = eachUserOrder[lineId].reduce((acc, item) => {
+        return acc + (item.quantity * item.menu.price);
+      }, 0);
+      const resultDiscount = eachUserOrder[lineId].reduce((acc, item) => {
+        return acc + (item.quantity * item.menu.discount);
+      }, 0);
+      const resultNetPrice = eachUserOrder[lineId].reduce((acc, item) => {
+        return acc + (item.quantity * item.menu.netPrice);
+      }, 0);
+      setSelectedPrice(resultPrice.toFixed(0));
+      setSelectedDiscount(resultDiscount.toFixed(0));
+      setSelectedNetPrice(resultNetPrice.toFixed(0)-(discountAmount/splitCount).toFixed(0));
     }
-
-    // Calculate Voucher Discount
-    let vDiscount = 0;
-    if (discountCard) {
-      if (discountCard.discountType === 'percent') {
-        vDiscount = netPrice * (discountCard.amount / 100);
-      } else if (discountCard.discountType === 'amount') {
-        vDiscount = discountCard.amount;
-      }
-    }
-
-    // Ensure voucher discount doesn't exceed net price
-    if (vDiscount > netPrice) {
-      vDiscount = netPrice;
-    }
-
-    setSelectedPrice(price.toFixed(2));
-    setSelectedDiscount(discount.toFixed(2));
-    setVoucherDiscount(vDiscount.toFixed(2));
-    setSelectedNetPrice((netPrice - vDiscount).toFixed(2));
-
-  }, [paymentMethod, splitCount, totalNetPrice, totalDiscount, eachUserOrder, discountCard])
+  }, [paymentMethod, splitCount, discountAmount])
 
   return (
     <motion.div className="pt-5"
@@ -176,7 +153,7 @@ function SummaryPage() {
           </div>
         )
       })}
-      <CheckoutSummaryCard totalPrice={selectedPrice} totalDiscount={selectedDiscount} totalNetPrice={selectedNetPrice} voucherDiscount={voucherDiscount}/>
+      <CheckoutSummaryCard totalPrice={selectedPrice} totalDiscount={selectedDiscount} totalNetPrice={selectedNetPrice}/>
       <PaymentButton onClick={handlePaymentClick} amount={selectedNetPrice}/>
 
 
