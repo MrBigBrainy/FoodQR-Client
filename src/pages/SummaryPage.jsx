@@ -9,6 +9,7 @@ import { easeInOut, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { getUserOrderByOrderId } from "@/api/userOrder.api";
 import useQrStore from "@/stores/qrStore";
+import useUserStore from "@/stores/userStore";
 import api from "@/api/axios";
 
 function SummaryPage() {
@@ -103,7 +104,7 @@ function SummaryPage() {
       setSelectedDiscount((totalDiscount/splitCount).toFixed(2));
       setSelectedNetPrice((totalNetPrice/splitCount).toFixed(2));
     } else if (paymentMethod === 'split-item') {
-      
+      const {lineId} = useUserStore.getState();
     }
   }, [paymentMethod, splitCount])
 
