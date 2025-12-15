@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { getUserOrderByOrderId } from "@/api/userOrder.api";
 import useQrStore from "@/stores/qrStore";
 import useUserStore from "@/stores/userStore";
+import useCartStore from "@/stores/cartStore";
 import api from "@/api/axios";
 
 function SummaryPage() {
@@ -25,6 +26,7 @@ function SummaryPage() {
   const [selectedPrice, setSelectedPrice] = useState(0);
   const [selectedDiscount, setSelectedDiscount] = useState(0);
   const [selectedNetPrice, setSelectedNetPrice] = useState(0);
+  const discountCard = useCartStore((state) => state.discountCard)
 
   const totalPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.price), 0);
   const totalDiscount = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.discount), 0);
