@@ -27,12 +27,14 @@ function SummaryPage() {
   const [selectedDiscount, setSelectedDiscount] = useState(0);
   const [selectedNetPrice, setSelectedNetPrice] = useState(0);
 
+
   const discountCard = useCartStore((state) => state.discountCard)
   const discountAmount = useCartStore((state) => state.discountAmount)
-
+  
   const totalPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.price), 0);
   const totalDiscount = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.discount), 0);
   const totalNetPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.netPrice), 0);
+  const vat = (totalNetPrice * 0.07).toFixed(0)
 
 
   Omise.setPublicKey(import.meta.env.VITE_OMISE_PUBLIC_KEY)
@@ -97,18 +99,22 @@ function SummaryPage() {
       if (userOrder && userOrder.length > 0) {
         setSplitCount(userOrder.length);
       }
-    }, [userOrder]);
+   }, [userOrder]);
+  
+  useEffect(() => {
+    console.log('discountAmount', discountAmount)
+  }, [discountAmount])
 
 
   useEffect(() => {
     if (paymentMethod === 'pay-all') {
       setSelectedPrice(totalNetPrice.toFixed(0));
       setSelectedDiscount(totalDiscount.toFixed(0));
-      setSelectedNetPrice(totalNetPrice.toFixed(0)-discountAmount.toFixed(0));
+      setSelectedNetPrice(Number(totalNetPrice.toFixed(0))+Number(vat)-Number(discountAmount.toFixed(0))-totalDiscount.toFixed(0));
     } else if (paymentMethod === 'split-equal') {
       setSelectedPrice((totalNetPrice/splitCount).toFixed(0));
       setSelectedDiscount((totalDiscount/splitCount).toFixed(0));
-      setSelectedNetPrice((totalNetPrice/splitCount).toFixed(0)-(discountAmount/splitCount).toFixed(0));
+      setSelectedNetPrice(Number(totalNetPrice/splitCount).toFixed(0)+Number(vat/splitCount)-Number(discountAmount/splitCount).toFixed(0));
     } else if (paymentMethod === 'split-item') {
       const { lineId } = useUserStore.getState();
       const resultPrice = eachUserOrder[lineId].reduce((acc, item) => {
@@ -153,7 +159,7 @@ function SummaryPage() {
           </div>
         )
       })}
-      <CheckoutSummaryCard totalPrice={selectedPrice} totalDiscount={selectedDiscount} totalNetPrice={selectedNetPrice}/>
+      <CheckoutSummaryCard vat={vat} totalPrice={selectedPrice} totalDiscount={selectedDiscount} totalNetPrice={selectedNetPrice}/>
       <PaymentButton onClick={handlePaymentClick} amount={selectedNetPrice}/>
 
 

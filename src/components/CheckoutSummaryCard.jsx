@@ -4,7 +4,7 @@ import { Receipt, Sparkles } from "lucide-react";
 import { useEffect } from "react";
 import useCartStore from "@/stores/cartStore";
 
-function CheckoutSummaryCard({totalPrice, totalDiscount, totalNetPrice, voucherDiscount}) {
+function CheckoutSummaryCard({vat, totalPrice, totalDiscount, totalNetPrice, voucherDiscount}) {
   const discount = useCartStore((state) => state.discount);
   const {setDiscountAmount}  = useCartStore.getState()
 
@@ -51,7 +51,7 @@ function CheckoutSummaryCard({totalPrice, totalDiscount, totalNetPrice, voucherD
 
       <div className="space-y-3">
         <SummaryRow label="ยอดรวม" value={totalPrice} delay={0.1} />
-        <SummaryRow label="ภาษี (7%)" value={(totalNetPrice * 0.07).toFixed(0)} delay={0.3} />
+        <SummaryRow label="ภาษี (7%)" value={vat} delay={0.3} />
         <SummaryRow label="ส่วนลดเมนู" value={totalDiscount} isDiscount delay={0.2} />
         {/* <SummaryRow label="ส่วนลดท้ายบิล" value={voucherDiscount} isDiscount delay={0.25} /> */}
         {discount && (
