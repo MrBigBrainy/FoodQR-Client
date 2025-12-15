@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "motion/react";
 import { Receipt, Sparkles } from "lucide-react";
 
-function CheckoutSummaryCard({totalPrice, totalDiscount, totalNetPrice}) {
+function CheckoutSummaryCard({totalPrice, totalDiscount, totalNetPrice, voucherDiscount}) {
   
 
   return (
@@ -35,6 +35,9 @@ function CheckoutSummaryCard({totalPrice, totalDiscount, totalNetPrice}) {
       <div className="space-y-3">
         <SummaryRow label="ยอดรวม" value={totalPrice} delay={0.1} />
         <SummaryRow label="ส่วนลดเมนู" value={totalDiscount} isDiscount delay={0.2} />
+        {Number(voucherDiscount) > 0 && (
+          <SummaryRow label="ส่วนลดท้ายบิล" value={voucherDiscount} isDiscount delay={0.25} />
+        )}
         <SummaryRow label="ภาษี (7%)" value={(totalNetPrice*0.07).toFixed(0)} delay={0.3} />
       </div>
 
