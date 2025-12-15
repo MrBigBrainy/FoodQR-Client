@@ -9,6 +9,7 @@ export const initLiff = async () => {
 
         if (!liff.isLoggedIn()) {
             liff.login();
+            //  liff.login({ redirectUri: window.location.href });
         }
     } catch (err) {
         console.error("LIFF init failed", err);

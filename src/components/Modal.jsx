@@ -1,6 +1,15 @@
 import React, { useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { X } from 'lucide-react';
 
-const Modal = ({ isOpen, onClose, title, children }) => {
+const Modal = ({ 
+    isOpen, 
+    onClose, 
+    title, 
+    children, 
+    backdropClassName = "bg-black/50 backdrop-blur-sm",
+    modalClassName = "max-w-lg"
+}) => {
     useEffect(() => {
         const handleEsc = (e) => {
             if (e.key === 'Escape') onClose();
@@ -17,31 +26,47 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         };
     }, [isOpen, onClose]);
 
-    if (!isOpen) return null;
-
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-300">
-            <div 
-                className="bg-white rounded-xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-100 opacity-100"
-                onClick={(e) => e.stopPropagation()}
-            >
-                {/* Header */}
-                <div className="flex justify-between items-center p-6 border-b border-gray-100">
-                    <h3 className="text-xl font-bold text-gray-800">{title}</h3>
-                    <button
+        <AnimatePresence>
+            {isOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    {/* Backdrop */}
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="text-gray-400 hover:text-gray-600 transition-colors duration-200 focus:outline-none"
-                    >
-                        <i className="fas fa-times text-xl"></i>
-                    </button>
-                </div>
+                        className={`fixed inset-0 transition-colors ${backdropClassName}`}
+                    />
 
-                {/* Body */}
-                <div className="p-6 max-h-[80vh] overflow-y-auto custom-scrollbar">
-                    {children}
+                    {/* Modal Container */}
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className={`bg-white rounded-2xl shadow-2xl w-full relative z-10 overflow-hidden ${modalClassName}`}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Header */}
+                        <div className="flex justify-between items-center p-6 border-b border-gray-100">
+                            <h3 className="text-xl font-bold text-gray-800">{title}</h3>
+                            <button
+                                onClick={onClose}
+                                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all duration-200 focus:outline-none"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        {/* Body */}
+                        <div className="p-6 max-h-[80vh] overflow-y-auto custom-scrollbar">
+                            {children}
+                        </div>
+                    </motion.div>
                 </div>
-            </div>
-        </div>
+            )}
+        </AnimatePresence>
     );
 };
 
