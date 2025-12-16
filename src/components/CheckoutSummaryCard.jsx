@@ -4,7 +4,7 @@ import { Receipt, Sparkles } from "lucide-react";
 import { useEffect } from "react";
 import useCartStore from "@/stores/cartStore";
 
-function CheckoutSummaryCard({vat, totalPrice, totalDiscount, totalNetPrice, voucherDiscount}) {
+function CheckoutSummaryCard({vat, selectedPrice, selectedDiscount, selectedNetPrice, voucherDiscount}) {
   const discount = useCartStore((state) => state.discount);
   const {setDiscountAmount}  = useCartStore.getState()
 
@@ -12,7 +12,7 @@ function CheckoutSummaryCard({vat, totalPrice, totalDiscount, totalNetPrice, vou
     let discountAmount;
     if (!discount) return 0;
     if (discount.discountType === "percent") {
-      discountAmount = totalPrice * (discount.amount / 100); 
+      discountAmount = selectedPrice * (discount.amount / 100); 
     }  else if (discount.discountType === "bath") {
       discountAmount = discount.amount; 
     }
@@ -50,9 +50,9 @@ function CheckoutSummaryCard({vat, totalPrice, totalDiscount, totalNetPrice, vou
       </div>
 
       <div className="space-y-3">
-        <SummaryRow label="ยอดรวม" value={totalPrice} delay={0.1} />
+        <SummaryRow label="ยอดรวม" value={selectedPrice} delay={0.1} />
         <SummaryRow label="ภาษี (7%)" value={vat} delay={0.3} />
-        <SummaryRow label="ส่วนลดเมนู" value={totalDiscount} isDiscount delay={0.2} />
+        <SummaryRow label="ส่วนลดเมนู" value={selectedDiscount} isDiscount delay={0.2} />
         {/* <SummaryRow label="ส่วนลดท้ายบิล" value={voucherDiscount} isDiscount delay={0.25} /> */}
         {discount && (
           <SummaryRow label="ส่วนลดจากโค้ด" value={totalDiscountCard(discount).toFixed(0)} isDiscount delay={0.35} />
@@ -77,7 +77,7 @@ function CheckoutSummaryCard({vat, totalPrice, totalDiscount, totalNetPrice, vou
         >
           <span className="text-sm font-semibold text-red-500">฿</span>
           <span className="text-2xl font-extrabold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-orange-600">
-            {totalNetPrice}
+            {selectedNetPrice}
           </span>
         </motion.div>
       </div>

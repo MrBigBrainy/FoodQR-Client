@@ -22,6 +22,7 @@ function SummaryPage() {
   const [paymentMethod, setPaymentMethod] = useState('pay-all')
   const [totalOrder, setTotalOrder] = useState([]);
   const [splitCount, setSplitCount] = useState(1);
+  const [vat, setVat] = useState(0);
 
   const [selectedPrice, setSelectedPrice] = useState(0);
   const [selectedDiscount, setSelectedDiscount] = useState(0);
@@ -34,9 +35,13 @@ function SummaryPage() {
   const totalPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.price), 0);
   const totalDiscount = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.discount), 0);
   const totalNetPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.netPrice), 0);
-  const vat = (totalNetPrice * 0.07).toFixed(0)
+  // const vat = (totalNetPrice * 0.07).toFixed(0)
+
+  useEffect(() => console.log('userOrder', userOrder), [userOrder])
+    useEffect(() => console.log('totalOrder', totalOrder), [totalOrder])
 
 
+  console.log('totalPrice',totalPrice)
   Omise.setPublicKey(import.meta.env.VITE_OMISE_PUBLIC_KEY)
  function createSource() {
         return new Promise((resolve, reject) => {
@@ -108,13 +113,15 @@ function SummaryPage() {
 
   useEffect(() => {
     if (paymentMethod === 'pay-all') {
-      setSelectedPrice(totalNetPrice.toFixed(0));
+      setSelectedPrice(totalPrice.toFixed(0));
       setSelectedDiscount(totalDiscount.toFixed(0));
-      setSelectedNetPrice(Number(totalNetPrice.toFixed(0))+Number(vat)-Number(discountAmount.toFixed(0))-totalDiscount.toFixed(0));
+      setSelectedNetPrice(Number(totalPrice.toFixed(0))+Number((totalPrice * 0.07).toFixed(0))-Number(discountAmount.toFixed(0))-totalDiscount.toFixed(0));
+      setVat((totalPrice * 0.07).toFixed(0))
     } else if (paymentMethod === 'split-equal') {
-      setSelectedPrice((totalNetPrice/splitCount).toFixed(0));
+      setSelectedPrice((totalPrice/splitCount).toFixed(0));
       setSelectedDiscount((totalDiscount/splitCount).toFixed(0));
-      setSelectedNetPrice(Number(totalNetPrice/splitCount).toFixed(0)+Number(vat/splitCount)-Number(discountAmount/splitCount).toFixed(0));
+      setSelectedNetPrice(Number(totalPrice/splitCount).toFixed(0)+Number(vat/splitCount)-Number(discountAmount/splitCount).toFixed(0)-Number(totalDiscount/splitCount).toFixed(0));
+      setVat((Number(totalPrice/splitCount).toFixed(0)+Number(vat/splitCount)-Number(discountAmount/splitCount).toFixed(0)-Number(totalDiscount/splitCount).toFixed(0)) * 0.07)
     } else if (paymentMethod === 'split-item') {
       const { lineId } = useUserStore.getState();
       const resultPrice = eachUserOrder[lineId].reduce((acc, item) => {
@@ -126,6 +133,9 @@ function SummaryPage() {
       const resultNetPrice = eachUserOrder[lineId].reduce((acc, item) => {
         return acc + (item.quantity * item.menu.netPrice);
       }, 0);
+      console.log('result price', resultPrice)
+      console.log('result discount', resultDiscount)
+      console.log('result net price', resultNetPrice)
       setSelectedPrice(resultPrice.toFixed(0));
       setSelectedDiscount(resultDiscount.toFixed(0));
       setSelectedNetPrice(resultNetPrice.toFixed(0)-(discountAmount/splitCount).toFixed(0));
@@ -159,7 +169,7 @@ function SummaryPage() {
           </div>
         )
       })}
-      <CheckoutSummaryCard vat={vat} totalPrice={selectedPrice} totalDiscount={selectedDiscount} totalNetPrice={selectedNetPrice}/>
+      <CheckoutSummaryCard vat={vat} selectedPrice={selectedPrice} selectedDiscount={selectedDiscount} selectedNetPrice={selectedNetPrice}/>
       <PaymentButton onClick={handlePaymentClick} amount={selectedNetPrice}/>
 
 
