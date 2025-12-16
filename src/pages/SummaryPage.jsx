@@ -121,7 +121,13 @@ function SummaryPage() {
       setSelectedPrice((totalPrice/splitCount).toFixed(0));
       setSelectedDiscount((totalDiscount/splitCount).toFixed(0));
       setVat((totalPrice/splitCount * 0.07).toFixed(0))
-      setSelectedNetPrice(Number(totalPrice/splitCount).toFixed(0)+Number((totalPrice/splitCount * 0.07).toFixed(0))-Number(discountAmount/splitCount).toFixed(0)-Number(totalDiscount/splitCount).toFixed(0));
+     setSelectedNetPrice(
+  Number((totalPrice / splitCount).toFixed(0)) +
+  Number(((totalPrice / splitCount) * 0.07).toFixed(0)) -
+  Number((discountAmount / splitCount).toFixed(0)) -
+  Number((totalDiscount / splitCount).toFixed(0))
+);
+
     } else if (paymentMethod === 'split-item') {
       const { lineId } = useUserStore.getState();
       const resultPrice = eachUserOrder[lineId].reduce((acc, item) => {
