@@ -52,7 +52,7 @@ function LoginForm() {
       }
       toast.success('เข้าสู่ระบบสำเร็จ!');
     } catch (error) {
-      toast.error('Username หรือ รหัสผ่านไม่ถูกต้อง');
+      toast.error("Username หรือ รหัสผ่านไม่ถูกต้อง");
     }
   };
 
@@ -73,7 +73,7 @@ function LoginForm() {
               <User size={20} />
             </div>
             <input
-              {...register('userName')}
+              {...register("userName")}
               placeholder="ชื่อผู้ใช้"
               className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl 
                 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 
@@ -99,8 +99,8 @@ function LoginForm() {
               <Lock size={20} />
             </div>
             <input
-              {...register('password')}
-              type={showPassword ? 'text' : 'password'}
+              {...register("password")}
+              type={showPassword ? "text" : "password"}
               placeholder="รหัสผ่าน"
               className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl 
                 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 

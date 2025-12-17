@@ -1,95 +1,160 @@
-import AddmenuForm from '../components/addmenu/AddmenuForm';
-import MenuCardAdmin from '../components/addmenu/MenuCardAdmin';
-import React, { useState } from 'react'
+import axios from "axios";
+import AddmenuForm from "../components/addmenu/AddmenuForm";
+import MenuCardAdmin from "../components/addmenu/MenuCardAdmin";
+import React, { useEffect, useState } from "react";
+import EditCard from "@/components/addmenu/EditCard";
+import DeleteCard from "@/components/addmenu/DeleteCard";
 
 function AdminAddMenu() {
-    const [menus, setMenus] = useState([
-        {
-            id: 1,
-            name: "ซูชิเนื้อยูคิมากิโรล",
-            price: 220,
-            discount: 10,
-            netPrice: 210,
-            category: "ซูชิ",
-            imageUrl: "https://images.unsplash.com/photo-1604908177522-050b22a9d19f",
-            isAvailable: false,
-        },
-        {
-            id: 2,
-            name: "ข้าวหน้าแซลมอน",
-            price: 180,
-            discount: 20,
-            netPrice: 160,
-            category: "ข้าว",
-            imageUrl: "https://images.unsplash.com/photo-1553621042-f6e147245754",
-            isAvailable: true,
-        },
-    ]);
+  const [menus, setMenus] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-    const [isOpen, setIsOpen] = useState(false);
-    const [formData, setFormData] = useState({
-        name: "",
-        price: "",
-        discount: "",
-        category: "",
-        imageUrl: "",
-    });
+  const getMenu = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get("http://localhost:3000/api/store/menu");
+      setMenus(response.data.data);
+    } catch (error) {
+      console.error("โหลดเมนูล้มเหลว", error);
+    }
+  };
+  useEffect(() => {
+    getMenu();
+  }, []);
 
-    const handleCreateMenu = async (data) => {
-        try {
-            // const res = await axios.post("http://localhost:3000/api/menu", data);
-            // console.log("✅ เพิ่มเมนูสำเร็จ:", res.data);
-            console.log('test')
-        } catch (err) {
-            console.error("❌ เพิ่มเมนูล้มเหลว:", err);
-        }
-    };
+  const [isOpen, setIsOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    price: "",
+    discount: "",
+    category: "",
+    imageUrl: "",
+  });
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState(null);
 
-    return (
-        <div className="p-6 bg-gray-50 min-h-screen">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800">จัดการเมนูอาหาร</h2>
-                <button
-                    onClick={() => setIsOpen(true)}
-                    className="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700 transition"
-                >
-                    + เพิ่มเมนู
-                </button>
-            </div>
+  const handleCreateMenu = async (formData) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/store/menu",
+        formData
+      );
+      console.log(" เพิ่มเมนูสำเร็จ:", res.data);
+      console.log("test");
+      getMenu();
+      closeModal();
+    } catch (err) {
+      console.error(" เพิ่มเมนูล้มเหลว:", err);
+    }
+  };
 
-            {/* Search Bar */}
-            <div className="mb-6">
-                <input
-                    type="text"
-                    placeholder="🔍 ค้นหาเมนู..."
-                    className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
-            </div>
+  const handleEditClick = (menu) => {
+    setSelectedMenu(menu);
+    setIsEditModalOpen(true);
+  };
 
-            <div className="flex flex-wrap gap-4 ">
-                {menus.map((menu) => (
-                    <MenuCardAdmin
-                        key={menu.id}
-                        menu={menu}
-                        onEdit={() => alert(`แก้ไขเมนู: ${menu.name}`)}
-                        onDelete={() => alert(`ลบเมนู: ${menu.name}`)}
-                    />
-                ))}
-            </div>
+  const handleSaveEdit = async (menuId, formData) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:3000/api/store/menu/${menuId}`,
+        formData
+      );
+      console.log("update success");
+      getMenu();
+    } catch (error) {
+      console.log("Failed to update:", error);
+    }
+    closeModal();
+  };
 
+  const handleDeleteClick = (menu) => {
+    setSelectedMenu(menu);
+    setIsDeleteModalOpen(true);
+  };
 
-            {/* Modal */}
-            {isOpen && (
-                <div className="fixed inset-0 backdrop-blur bg-white/30  bg-opacity-30 flex justify-center items-center">
-                    <div className="max-w-lg mx-auto mt-10 bg-white p-6 rounded-xl shadow-lg w-[90%] md:w-[500px]">
-                        {/* <h2 className="text-2xl font-semibold text-gray-800 mb-4">เพิ่มเมนูใหม่</h2> */}
-                        <AddmenuForm onSubmit={handleCreateMenu} onClose={() => setIsOpen(false)} />
-                    </div>
-                </div>
-            )}
+  const handleConfirmDelete = async (menuId) => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:3000/api/store/menu/${menuId}`
+      );
+      console.log("delete success");
+      getMenu();
+    } catch (error) {
+      console.log("Failed to delete:", error);
+    }
+    closeModal();
+  };
+  const closeModal = () => {
+    setIsOpen(false);
+    setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
+    setSelectedMenu(null);
+  };
+
+  return (
+    <div className="p-6 bg-gray-50 min-h-screen">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold text-gray-800">
+          จัดการเมนูอาหาร
+        </h2>
+        <button
+          onClick={() => setIsOpen(true)}
+          className="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700 transition"
+        >
+          + เพิ่มเมนู
+        </button>
+      </div>
+
+      {/* Search Bar */}
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="🔍 ค้นหาเมนู..."
+          className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500"
+        />
+      </div>
+
+      <div className="flex flex-wrap gap-4 ">
+        {menus.map((menu) => (
+          <MenuCardAdmin
+            key={menu.id}
+            menu={menu}
+            onEdit={handleEditClick}
+            onDelete={handleDeleteClick}
+          />
+        ))}
+      </div>
+
+      {/* Modal */}
+      {isOpen && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center ">
+          <div
+            className="bg-white rounded-xl shadow-lg w-full max-w-xl 
+                      max-h-[90vh] overflow-y-auto p-6"
+          >
+            <AddmenuForm
+              onSubmit={handleCreateMenu}
+              onClose={() => setIsOpen(false)}
+            />
+          </div>
         </div>
-    )
+      )}
+      <EditCard
+        menu={selectedMenu}
+        isVisible={isEditModalOpen}
+        onClose={closeModal}
+        onSave={handleSaveEdit}
+      />
+      <DeleteCard
+        menu={selectedMenu}
+        isVisible={isDeleteModalOpen}
+        onClose={closeModal}
+        onConfirm={handleConfirmDelete}
+      />
+    </div>
+  );
 }
 
-export default AdminAddMenu
+export default AdminAddMenu;
