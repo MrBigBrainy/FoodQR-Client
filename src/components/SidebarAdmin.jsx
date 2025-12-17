@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useParams } from 'react-router';
+import { NavLink, useParams, useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import {
   StoreIcon,
@@ -12,12 +12,38 @@ import {
   CircleArrowLeftIcon,
   MenuIcon,
 } from 'lucide-react';
+import { socket } from '@/lib/socket';
 
 function SidebarAdmin() {
   const params = useParams();
+  const navigate = useNavigate();
   const storeId = params.storeId || localStorage.getItem('storeId');
   const tableId = localStorage.getItem('tableId');
   const orderId = localStorage.getItem('orderId');
+
+  const handleLogout = () => {
+    // Save username before clearing storage (if exists)
+    const savedUsername = localStorage.getItem('lastUsername');
+    
+    // Disconnect socket if connected
+    if (socket && socket.connected) {
+      socket.emit("leaveStore", { storeId });
+      socket.disconnect();
+    }
+    
+    // Clear all localStorage items
+    localStorage.clear();
+    // Clear all sessionStorage items
+    sessionStorage.clear();
+    
+    // Restore username after clearing (so it persists after logout)
+    if (savedUsername) {
+      localStorage.setItem('lastUsername', savedUsername);
+    }
+    
+    // Navigate to login page
+    navigate('/login');
+  };
 
   const menuItems = [
     {
@@ -52,7 +78,7 @@ function SidebarAdmin() {
       label: 'จัดการส่วนลด',
     },
     {
-      path: `/admin/store/${storeId}/ตั้งค่าร้าน`,
+      path: `/admin/store/${storeId}/settings`,
       icon: StoreIcon,
       label: 'ตั้งค่าร้าน',
     },
@@ -88,7 +114,7 @@ function SidebarAdmin() {
       <nav className="flex-1 px-4 space-y-2 overflow-y-auto custom-scrollbar">
         {/* Back to Menu Link */}
         <NavLink
-          to={`/store/${storeId}/table/${tableId}/order/${orderId}`}
+          to={`http://localhost:5173/menu-qr?storeId=${storeId}`} 
           className="block mb-8"
         >
           <motion.div
@@ -159,7 +185,10 @@ function SidebarAdmin() {
 
       {/* Footer */}
       <div className="p-4 border-t border-gray-100 bg-white/50 backdrop-blur-sm">
-        <NavLink to="/admin/logout">
+        <button
+          onClick={handleLogout}
+          className="w-full"
+        >
           <motion.div
             whileHover={{ x: 5, color: "#ef4444", backgroundColor: "#fef2f2" }}
             className="flex items-center gap-3 px-4 py-3 text-gray-500 transition-colors rounded-xl cursor-pointer"
@@ -167,7 +196,7 @@ function SidebarAdmin() {
             <LogOutIcon size={20} />
             <span className="font-medium text-sm">ออกจากระบบ</span>
           </motion.div>
-        </NavLink>
+        </button>
       </div>
     </aside>
   );

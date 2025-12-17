@@ -14,17 +14,35 @@ function LoginForm() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting }, // <-- เอา errors ออกมาด้วย!
   } = useForm({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      userName: localStorage.getItem('lastUsername') || '',
+    },
   });
 
   const [showPassword, setShowPassword] = React.useState(false);
+
+  // Load saved username on mount
+  React.useEffect(() => {
+    const savedUsername = localStorage.getItem('lastUsername');
+    if (savedUsername) {
+      setValue('userName', savedUsername);
+    }
+  }, [setValue]);
 
   const onLogin = async (data) => {
     try {
       const res = await loginAdmin(data);
       console.log(res.data);
+      
+      // Save username to localStorage for next login
+      if (data.userName) {
+        localStorage.setItem('lastUsername', data.userName);
+      }
+      
       const storeId = res.data.user.storeId;
       if (storeId) {
         socket.emit("joinStore", { storeId });
