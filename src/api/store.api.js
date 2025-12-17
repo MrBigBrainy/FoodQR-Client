@@ -11,3 +11,7 @@ export async function getStoreCategory(storeId) {
 export async function getStoreById(storeId) {
     return api.get(`/store/${storeId}`);
 }
+
+export async function updateStoreById(id, shopData) {
+    return api.put(`/store/${id}`, shopData);
+}
