@@ -1,5 +1,5 @@
-// MenuBill.jsx
 import { useRef, useEffect } from "react";
+import { useParams } from "react-router";
 import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 import { QRCodeCanvas } from "qrcode.react";
@@ -7,8 +7,8 @@ import { QRCodeCanvas } from "qrcode.react";
 const MenuBill = () => {
   const targetRef = useRef(null);
 
-  const tableName = "A3";
-  const qrMenuUrl = `https://barbgon.app/menu/${tableName}`;
+  const { storeId, tableName, tableId, orderId } = useParams();
+  const qrMenuUrl = `https://food-qr-client-01.vercel.app/menu-qr?storeId=${storeId}&tableName=${tableName}&tableId=${tableId}&orderId=${orderId}`;
 
   useEffect(() => {
     if (!targetRef.current) return;
@@ -64,7 +64,7 @@ const MenuBill = () => {
       >
         {/* Header */}
         <header className="pb-4 border-b border-black text-center">
-          <div className="text-base font-semibold">Bar B Gon</div>
+          <div className="text-base font-semibold">Minna no Sushi</div>
           <div className="text-xs">Japanese Restaurant &amp; Bar</div>
         </header>
 
@@ -86,7 +86,7 @@ const MenuBill = () => {
 
         {/* Footer */}
         <footer className=" pt-2 mt-2 text-[10px] text-center">
-          © Bar B Gon — Thanks you
+          © Minna no Sushi — Thanks you
         </footer>
       </div>
     </div>

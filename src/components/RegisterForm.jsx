@@ -7,11 +7,13 @@ import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { registerSchema } from '@/schemas/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 
 function RegisterForm({ setActiveTab }) {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(registerSchema),
@@ -22,7 +24,8 @@ function RegisterForm({ setActiveTab }) {
       confirmPassword: '',
       phoneNumber: '',
       adminCode: '',
-      role: 'admin', // Default or handled elsewhere
+      role: 'admin', 
+      storeId: 1,
     },
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -54,6 +57,8 @@ function RegisterForm({ setActiveTab }) {
       console.log(error);
     }
   };
+
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -61,6 +66,7 @@ function RegisterForm({ setActiveTab }) {
       transition={{ duration: 0.3 }}
     >
       <form onSubmit={handleSubmit(onRegister)} className="space-y-4">
+        <input type="hidden" {...register('storeId', { valueAsNumber: true })} />
         {/* Name */}
         <div className="space-y-1">
           <label className="block text-gray-700 text-sm font-semibold ml-1">

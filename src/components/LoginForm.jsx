@@ -1,31 +1,56 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import { User, Lock, Eye, EyeOff, LogIn } from "lucide-react";
-import { motion } from "motion/react";
-import { loginAdmin } from "@/api/auth.api";
-import { toast } from "react-toastify";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "@/schemas/auth.schema";
-import { useNavigate } from "react-router";
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { User, Lock, Eye, EyeOff, LogIn } from 'lucide-react';
+import { motion } from 'motion/react';
+import { loginAdmin } from '@/api/auth.api';
+import { toast } from 'react-toastify';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema } from '@/schemas/auth.schema';
+import { useNavigate } from 'react-router';
+import { socket } from '@/lib/socket';
 
 function LoginForm() {
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting }, // <-- เอา errors ออกมาด้วย!
   } = useForm({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      userName: localStorage.getItem('lastUsername') || '',
+    },
   });
 
   const [showPassword, setShowPassword] = React.useState(false);
+
+  // Load saved username on mount
+  React.useEffect(() => {
+    const savedUsername = localStorage.getItem('lastUsername');
+    if (savedUsername) {
+      setValue('userName', savedUsername);
+    }
+  }, [setValue]);
 
   const onLogin = async (data) => {
     try {
       const res = await loginAdmin(data);
       console.log(res.data);
-      toast.success("เข้าสู่ระบบสำเร็จ!");
-      navigate("/admin/store/1");
+      
+      // Save username to localStorage for next login
+      if (data.userName) {
+        localStorage.setItem('lastUsername', data.userName);
+      }
+      
+      const storeId = res.data.user.storeId;
+      if (storeId) {
+        socket.emit("joinStore", { storeId });
+        navigate(`/admin/store/${storeId}`);
+      } else {
+        navigate('/admin/createStore');
+      }
+      toast.success('เข้าสู่ระบบสำเร็จ!');
     } catch (error) {
       toast.error("Username หรือ รหัสผ่านไม่ถูกต้อง");
     }

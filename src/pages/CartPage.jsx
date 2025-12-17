@@ -1,5 +1,5 @@
 import EmptyCart from "../components/EmptyCart";
-import { motion, easeInOut } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import CartAction from "../components/CartAction";
 import useCartStore from "../stores/cartStore";
 import CartCard from "../components/CartCard";
@@ -13,20 +13,31 @@ function CartPage() {
     return <EmptyCart />;
   }
   return (
-    <>
+    <div className="min-h-screen bg-gray-50 pb-32">
       <CartAction />
-      <motion.div
-        initial={{ x: "100%" }}
-        animate={{ x: 0 }}
-        transition={{ duration: 0.3, ease: easeInOut }}
-        className="lg:col-span-2 space-y-4 pb-64 mx-4 my-5"
-      >
-        {items?.map((item) => (
-          <CartCard key={item.id} item={item} />
-        ))}
-      </motion.div>
+      
+      <div className="max-w-lg mx-auto px-4 pt-2">
+        <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+          รายการอาหารที่เลือก
+          <span className="bg-red-100 text-red-600 text-xs px-2 py-0.5 rounded-full">
+            {totalCartItems}
+          </span>
+        </h2>
+
+        <motion.div
+          layout
+          className="space-y-4"
+        >
+          <AnimatePresence mode="popLayout">
+            {items?.map((item) => (
+              <CartCard key={item.id} item={item} />
+            ))}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+
       <CartOrder />
-    </>
+    </div>
   );
 }
 
