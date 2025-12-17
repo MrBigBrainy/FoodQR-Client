@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import MenuList from '../components/MenuList';
-import SearchBar from '../components/SearchBar';
-import useMenuStore from '../stores/useMenuStore';
-import CartIcon from '@/components/CartIcon';
-import RedWineLoader from '@/components/loader/RedWineLoader';
-// import CoffeeLoader from "../components/loader/coffeeLoader";
+import React, { useState, useEffect } from "react";
+import MenuList from "../components/MenuList";
+import SearchBar from "../components/SearchBar";
+import useMenuStore from "../stores/useMenuStore";
+import CartIcon from "@/components/CartIcon";
+import CoffeeLoader from "../components/loader/coffeeLoader";
 
 function MenuPage() {
   const menu = useMenuStore((state) => state.menu);
