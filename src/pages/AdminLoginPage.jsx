@@ -37,10 +37,10 @@ const AdminLoginPage = () => {
             <Coffee className="text-red-600 w-10 h-10" strokeWidth={2.5} />
           </motion.div>
           <h1 className="text-4xl font-bold text-white mb-2 tracking-tight drop-shadow-md">
-            Admin Portal
+            TOH-R-HARN
           </h1>
           <p className="text-red-100 text-sm font-medium tracking-wide uppercase opacity-90">
-            FoodQR Restaurant System
+            ADMIN Restaurant QRCode System
           </p>
         </div>
 
@@ -95,7 +95,7 @@ const AdminLoginPage = () => {
         </div>
 
         <footer className="mt-8 text-center text-white/60 text-xs font-medium">
-          © 2024 FoodQR. All rights reserved.
+          © 2025 TOH-R-HARN. All rights reserved.
         </footer>
       </motion.div>
     </div>
