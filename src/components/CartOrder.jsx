@@ -3,21 +3,32 @@ import useUserStore from "@/stores/userStore";
 import React from "react";
 import api from "@/api/axios";
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 function CartOrder() {
   const {lineId} = useUserStore.getState();
   const cart = useCartStore.getState();
+  const { clearCart } = useCartStore();
+  const navigate = useNavigate();
+
   async function handleSubmitOrder() {
     try {
-      cart.items.forEach(async (item) => {
-        const response = await api.post("/userOrder/createOrder", {
+      const orderPromises = cart.items.map((item) => 
+        api.post("/userOrder/createOrder", {
          menuId: item.id, quantity: item.amount, note: item.note, lineId: lineId, orderId: 1
-      });
-      })
+        })
+      );
+
+      await Promise.all(orderPromises);
       
-      console.log(response)
+      clearCart();
+      toast.success("สั่งอาหารสำเร็จ");
+      navigate(-1);
+      
     } catch (error) {
       console.log(error);
+      toast.error("เกิดข้อผิดพลาดในการสั่งอาหาร");
     }
   }
 

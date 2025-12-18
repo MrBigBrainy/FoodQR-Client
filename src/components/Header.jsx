@@ -1,9 +1,11 @@
 import useUserStore from "../stores/userStore";
+import useQrStore from "../stores/qrStore";
 import { motion } from "motion/react";
 
 function Header() {
   const displayName = useUserStore((state) => state.displayName);
   const pictureUrl = useUserStore((state) => state.pictureUrl);
+  const tableName = useQrStore((state) => state.tableName);
   
   return (
     <motion.header
@@ -29,7 +31,7 @@ function Header() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 shadow-sm"></span>
             </span>
-            <p className="text-xs font-semibold text-white tracking-wide shadow-sm">โต๊ะ 22</p>
+            <p className="text-xs font-semibold text-white tracking-wide shadow-sm">{tableName}</p>
           </div>
         </motion.div>
 

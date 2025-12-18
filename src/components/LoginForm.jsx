@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { User, Lock, Eye, EyeOff, LogIn } from 'lucide-react';
 import { motion } from 'motion/react';
 import { loginAdmin } from '@/api/auth.api';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@/schemas/auth.schema';
 import { useNavigate } from 'react-router';
@@ -44,13 +44,14 @@ function LoginForm() {
       }
 
       const storeId = res.data.user.storeId;
+      toast.success('เข้าสู่ระบบสำเร็จ!');
+
       if (storeId) {
         socket.emit('joinStore', { storeId });
         navigate(`/admin/store/${storeId}`);
       } else {
         navigate('/admin/createStore');
       }
-      toast.success('เข้าสู่ระบบสำเร็จ!');
     } catch (error) {
       toast.error('Username หรือ รหัสผ่านไม่ถูกต้อง');
     }

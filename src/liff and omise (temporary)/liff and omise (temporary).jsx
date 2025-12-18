@@ -58,7 +58,10 @@ function App() {
             <button onClick={async () => {
                 const omiseResponse = await createSource()
 
-                const response = await axios.post('http://localhost:3000/api/omise', {
+                // const response = await axios.post('https://foodqr-server.onrender.com/api/omise', {
+                //     source: omiseResponse.id
+                // })
+                 const response = await axios.post('http://localhost:3000/api/omise', {
                     source: omiseResponse.id
                 })
                 console.log(response)
