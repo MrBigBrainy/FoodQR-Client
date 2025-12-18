@@ -6,61 +6,73 @@ import {
     Legend,
 } from "chart.js";
 import { Doughnut } from 'react-chartjs-2';
+import { motion } from 'motion/react';
+import { Users } from 'lucide-react';
 
-// ทำเพื่อให้ใช้งาน react-chartjs-2
 ChartJS.register(
-    Tooltip,         // กล่อง tooltip ตอน hover
-    Legend,           // แสดงคำอธิบาย dataset
+    Tooltip,
+    Legend,
     ArcElement
 );
 
 function DoughnutChart({ data, title }) {
     const options = {
-        // ... กำหนด options เช่น legend (ให้แสดง label ที่ด้านข้าง)
         responsive: true,
+        maintainAspectRatio: false,
+        cutout: '75%',
         plugins: {
             legend: {
-                position: 'right', // ตัวเลือกสำหรับแสดง Legend
+                position: 'bottom',
                 labels: {
-                    generateLabels: (chart) => {
-                        const data = chart.data;
-                        if (data.labels.length && data.datasets.length) {
-                            return data.labels.map((label, i) => {
-                                const percent = data.datasets[0].data[i];
-                                const backgroundColor = data.datasets[0].backgroundColor[i];
-                                return {
-                                    text: `${label}`, // แสดง label ตามที่มี %
-                                    fillStyle: backgroundColor,
-                                    strokeStyle: backgroundColor,
-                                    lineWidth: 1,
-                                    hidden: false,
-                                    index: i,
-                                };
-                            });
-                        }
-                        return [];
+                    usePointStyle: true,
+                    padding: 20,
+                    font: {
+                        size: 12
+                    },
+                    color: '#4b5563'
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                titleColor: '#1f2937',
+                bodyColor: '#4b5563',
+                borderColor: '#e5e7eb',
+                borderWidth: 1,
+                padding: 10,
+                boxPadding: 4,
+                callbacks: {
+                    label: function(context) {
+                        return ` ${context.label}`;
                     }
                 }
             }
         }
     };
+
     return (
-        <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="mr-2 text-red-500">
-                    <i className="fas fa-users"></i>
-                </span>
+        <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="h-full flex flex-col"
+        >
+            <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
+                <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
+                    <Users size={20} />
+                </div>
                 {title}
             </h3>
-            <div className="flex justify-center items-center h-full ">
-                {/* การใช้ flex justify-center, items-center และ h-full จะช่วยจัดให้ Doughnut chart อยู่ตรงกลาง */}
-                {/* ปรับขนาดวงกลม */}
-                <div className="w-full max-h-full  p-4 flex items-center justify-center ">
-                    <Doughnut data={data} options={options} />
-                    {/*  */}
+            <div className="flex-1 min-h-[300px] w-full relative flex items-center justify-center">
+                <Doughnut data={data} options={options} />
+                {/* Center Text (Optional) */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="text-center">
+                        <p className="text-gray-400 text-xs font-medium">ทั้งหมด</p>
+                        <p className="text-2xl font-bold text-gray-800">100%</p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     )
 }
 

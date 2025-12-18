@@ -4,6 +4,8 @@ import LineChart from '../components/LineChart';
 import DoughnutChart from '../components/DoughnutChart';
 import { getAllTables, getSaleToday } from '@/api/admin.api';
 import { io } from 'socket.io-client';
+import { motion } from 'motion/react';
+import { Coins, ShoppingBag, Users, LayoutGrid } from 'lucide-react';
 
 // socket เลือกรับจาก backend
 // const socket = io("https://foodqr-server.onrender.com");
@@ -16,18 +18,21 @@ const lineData = {
         {
             label: 'ยอดขายรายชั่วโมง',
             data: [2500, 5000, 7500, 9000, 7800, 5500, 3000, 3200, 4500, 8000, 9500, 6800], // ตัวเลขตามกราฟ
-            fill: false,
-            backgroundColor: 'rgb(239, 68, 68)', // สีแดงตามภาพ
+            fill: true,
+            backgroundColor: 'rgba(239, 68, 68, 0.1)', // สีแดงจางๆ
             borderColor: 'rgb(239, 68, 68)',
             tension: 0.4,
             pointRadius: 4,
+            pointBackgroundColor: '#fff',
+            pointBorderColor: 'rgb(239, 68, 68)',
+            pointBorderWidth: 2,
         },
     ],
 };
 
 // ข้อมูลกราฟโดนัด
 const doughnutData = {
-    labels: ['คู่ 41%', 'กลุ่มเล็ก (3-4) 28%', 'กลุ่มใหญ่ (5+) 12%', 'มาเดี่ยว 18%'],
+    labels: ['คู่', 'กลุ่มเล็ก (3-4)', 'กลุ่มใหญ่ (5+)', 'มาเดี่ยว'],
     datasets: [
         {
             data: [41, 28, 12, 18], // สัดส่วนตามภาพ
@@ -37,14 +42,11 @@ const doughnutData = {
                 'rgb(168, 85, 247)', // ม่วง
                 'rgb(239, 68, 68)', // แดง
             ],
+            borderWidth: 0,
             hoverOffset: 4,
         },
     ],
 };
-
-// ดึงข้อมูลจาก backend sale to day
-
-
 
 const AdminDashboard = () => {
     // ดึงข้อมูลจาก backend sale to day
@@ -83,44 +85,83 @@ const AdminDashboard = () => {
         };
     }, []);
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 }
+    };
 
     return (
         <div className="flex bg-gray-50 min-h-screen">
-            {/* 2. Main Content Area */}
-            <main className="flex-1 p-6">
+            {/* Main Content Area */}
+            <motion.main 
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="flex-1 p-6 max-w-7xl mx-auto"
+            >
                 {/* Header */}
-                <h2 className="text-2xl font-semibold mb-1 text-gray-800">ภาพรวม</h2>
-                <p className="text-gray-500 mb-8">ภาพรวมธุรกิจของคุณ</p>
+                <motion.div variants={itemVariants} className="mb-8">
+                    <h2 className="text-2xl font-bold mb-1 text-gray-800">ภาพรวมร้านอาหาร</h2>
+                    <p className="text-gray-500">ติดตามยอดขายและสถานะร้านแบบเรียลไทม์</p>
+                </motion.div>
 
-                {/* 3. Key Metrics Cards (Top Row) */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    {/* Card 1: ยอดขายวันนี้ */}
+                {/* Key Metrics Cards */}
+                <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <DataCardAdmin 
+                        title="ยอดขายวันนี้" 
+                        count={`฿${saleToday.toLocaleString()}`} 
+                        icon={Coins}
+                        color="red"
+                    />
+                    <DataCardAdmin 
+                        title="จำนวนออเดอร์" 
+                        count={orderToday} 
+                        icon={ShoppingBag}
+                        color="orange"
+                    />
+                    <DataCardAdmin 
+                        title="ลูกค้าทั้งหมด" 
+                        count={customerToday} 
+                        icon={Users}
+                        color="blue"
+                    />
+                    <DataCardAdmin 
+                        title="โต๊ะที่ว่าง" 
+                        count={`${availableTable}/${allTable}`} 
+                        icon={LayoutGrid}
+                        color="green"
+                    />
+                </motion.div>
 
-                    <DataCardAdmin title={"ยอดขายวันนี้"} count={`฿${saleToday}`} />
-                    <DataCardAdmin title={"จำนวนออเดอร์"} count={`${orderToday}`} />
-                    <DataCardAdmin title={"ลูกค้าทั้งหมด"} count={`${customerToday}`} />
-                    <DataCardAdmin title={"โต๊ะที่ว่าง"} count={`${availableTable}/${allTable}`} />
+                {/* Chart Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Line Chart */}
+                    <motion.div 
+                        variants={itemVariants}
+                        className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-gray-100"
+                    >
+                        <LineChart data={lineData} title="ยอดขายรายชั่วโมง" />
+                    </motion.div>
+
+                    {/* Doughnut Chart */}
+                    <motion.div 
+                        variants={itemVariants}
+                        className="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-gray-100"
+                    >
+                        <DoughnutChart data={doughnutData} title="ประเภทลูกค้า" />
+                    </motion.div>
                 </div>
-
-                {/* 4. Chart Section (Bottom Row) */}
-                <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
-                    {/* chart กราฟเส้น */}
-                    <div className="lg:col-span-3 bg-white p-6 rounded-xl shadow-lg w-full">
-                        <LineChart data={lineData} title={"ยอดขายรายชั่วโมง"} />
-                    </div>
-
-
-                    {/* Doughnut Chart: ประเภทลูกค้า (Col 5-7) */}
-                    <div className="lg:col-span-3 bg-white p-6 rounded-xl shadow-lg w-full">
-                        <DoughnutChart data={doughnutData} title={"ยอดผู้ใช้บริการ"} />
-                    </div>
-
-                    <div className="lg:col-span-3 bg-white p-6 rounded-xl shadow-lg w-full">
-                        <DoughnutChart data={doughnutData} title={"ยอดผู้ใช้บริการ"} />
-                    </div>
-
-                </div>
-            </main>
+            </motion.main>
         </div>
     );
 };
