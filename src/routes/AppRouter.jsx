@@ -6,7 +6,7 @@ import CartPage from '../pages/CartPage';
 import SummaryPage from '../pages/SummaryPage';
 import UserLayout from '../layouts/UserLayout';
 import AuthPage from '../pages/AuthPage';
-
+import Billing from '@/pages/Billing';
 import AdminPage from '../pages/AdminPage';
 import AdminDashboard from '../pages/AdminDashbord';
 import AdminAddMenu from '../pages/AdminAddMenu';
