@@ -7,6 +7,7 @@ import { getStoreById, updateStoreById } from '@/api/store.api';
 import AddDropZone from '@/components/addmenu/AddDropZone';
 import { storage } from '@/firebase/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import toast from 'react-hot-toast';
 
 function AdminShopSettingPage() {
   const {
@@ -75,13 +76,14 @@ function AdminShopSettingPage() {
       (error) => {
         console.error('Upload failed:', error);
         setIsUploading(false);
-        alert('อัปโหลดรูปภาพไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
+        toast.error('อัปโหลดรูปภาพไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
       },
       async () => {
         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
         setValue('logoUrl', downloadURL);
         setIsUploading(false);
         setUploadProgress(100);
+        toast.success('อัปโหลดรูปภาพสำเร็จ');
       }
     );
   };
@@ -100,10 +102,10 @@ function AdminShopSettingPage() {
 
       await updateStoreById(1, shopData);
 
-      alert('บันทึกการตั้งค่าร้านค้าสำเร็จ!');
+      toast.success('บันทึกการตั้งค่าร้านค้าสำเร็จ!');
     } catch (error) {
       console.error('Error saving shop settings:', error);
-      alert('เกิดข้อผิดพลาดในการบันทึกการตั้งค่า');
+      toast.error('เกิดข้อผิดพลาดในการบันทึกการตั้งค่า');
     } finally {
       setLoading(false);
     }
@@ -245,7 +247,7 @@ function AdminShopSettingPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Shop Name */}
-                    <div className="group">
+                    <div className="group md:col-span-2">
                       <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
                         ชื่อร้านค้า <span className="text-xs text-gray-400 font-normal">(จะแสดงในบิล)</span>
                       </label>
