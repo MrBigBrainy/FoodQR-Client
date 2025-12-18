@@ -89,7 +89,7 @@ const AdminDashboard = () => {
             {/* 2. Main Content Area */}
             <main className="flex-1 p-6">
                 {/* Header */}
-                <h2 className="text-2xl font-semibold mb-6 text-gray-800">Dashboard</h2>
+                <h2 className="text-2xl font-semibold mb-1 text-gray-800">ภาพรวม</h2>
                 <p className="text-gray-500 mb-8">ภาพรวมธุรกิจของคุณ</p>
 
                 {/* 3. Key Metrics Cards (Top Row) */}
