@@ -1,30 +1,22 @@
 import React from 'react'
 import { motion } from 'motion/react'
 
-function DataCardAdmin({ title, count, icon: Icon, color = "blue" }) {
-    const colorVariants = {
-        red: "bg-red-50 text-red-600",
-        blue: "bg-blue-50 text-blue-600",
-        green: "bg-green-50 text-green-600",
-        orange: "bg-orange-50 text-orange-600",
-        purple: "bg-purple-50 text-purple-600",
-    };
-
+function DataCardAdmin({ title, count, icon: Icon }) {
     return (
         <motion.div 
             whileHover={{ y: -5 }}
-            className='bg-white p-6 rounded-2xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300'
+            className='p-5 rounded-2xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md'
         >
-            <div className="flex justify-between items-start">
-                <div>
-                    <p className="text-gray-500 text-sm font-medium mb-1">{title}</p>
-                    <h3 className="text-3xl font-bold text-gray-800">{count}</h3>
-                </div>
+            <div className="flex items-center justify-between mb-2">
                 {Icon && (
-                    <div className={`p-3 rounded-xl ${colorVariants[color] || colorVariants.blue}`}>
-                        <Icon size={24} />
+                    <div className="p-2.5 rounded-xl bg-gray-100">
+                        <Icon className="w-5 h-5 text-gray-600" />
                     </div>
                 )}
+            </div>
+            <div>
+                <p className="text-gray-500 text-sm font-medium mb-1">{title}</p>
+                <h3 className="text-2xl font-bold text-gray-800">{count}</h3>
             </div>
         </motion.div>
     )
