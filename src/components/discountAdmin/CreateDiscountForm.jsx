@@ -10,6 +10,7 @@ import {
   Clock 
 } from "lucide-react";
 import CustomSelect from "@/components/CustomSelect";
+import DateTimePicker from "@/components/DateTimePicker";
 
 const MOCK_AUTH = {
   storeId: 1,
@@ -231,45 +232,25 @@ function CreateDiscountForm({ onCouponCreated }) {
           </div>
         </div>
 
+
+
         <div className="flex gap-4">
-          {/* Start Time */}
           <div className="w-1/2">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              เวลาเริ่มต้น <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none z-10">
-                <Calendar size={18} />
-              </span>
-              <input
-                type="datetime-local"
-                id="startTime"
-                name="startTime"
-                value={formData.startTime}
-                onChange={handleChange}
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white accent-red-600"
-              />
-            </div>
+            <DateTimePicker
+              label="เวลาเริ่มต้น"
+              value={formData.startTime}
+              onChange={(value) => setFormData(prev => ({ ...prev, startTime: value }))}
+              required
+            />
           </div>
 
-          {/* End Time */}
           <div className="w-1/2">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              เวลาสิ้นสุด <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none z-10">
-                <Clock size={18} />
-              </span>
-              <input
-                type="datetime-local"
-                id="endTime"
-                name="endTime"
-                value={formData.endTime}
-                onChange={handleChange}
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white accent-red-600"
-              />
-            </div>
+            <DateTimePicker
+              label="เวลาสิ้นสุด"
+              value={formData.endTime}
+              onChange={(value) => setFormData(prev => ({ ...prev, endTime: value }))}
+              required
+            />
           </div>
         </div>
 
