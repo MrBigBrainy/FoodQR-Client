@@ -20,8 +20,8 @@ function DiscountData() {
       color: "text-gray-800",
       bg: "bg-white",
       border: "border-gray-200",
-      iconBg: "bg-red-50",
-      iconColor: "text-red-600",
+      iconBg: "bg-gray-100",
+      iconColor: "text-gray-600",
     },
     {
       title: "จำนวนครั้งที่ใช้แล้ว",
