@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDropzone } from "react-dropzone";
 import AddDropZone from "./AddDropZone";
+import { Utensils, DollarSign, Tag, FileText, List } from "lucide-react";
 
 function AddmenuForm({ onSubmit, onClose }) {
   const { register, handleSubmit, watch, reset } = useForm();
   const [selectedFile, setSelectedFile] = useState(null);
   const price = watch("price") || 0;
   const discount = watch("discount") || 0;
-  const netPrice = price - discount;
 
   const handleFileSelect = (file) => {
     console.log("📸 ได้ไฟล์:", file);
@@ -31,95 +30,122 @@ function AddmenuForm({ onSubmit, onClose }) {
     });
 
     if (selectedFile) {
-      console.log("📸 append file →", selectedFile.name);
       formData.append("imageFile", selectedFile);
-    } else {
-      console.warn("⚠ No file selected");
     }
 
-    console.log("📤 ส่ง formData ไป backend");
-
     if (onSubmit) onSubmit(formData);
-
     reset();
     if (onClose) onClose();
   };
+
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)}>
-      <h2 className="text-xl font-semibold text-gray-800 mb-5 text-center">
-        เพิ่มเมนูใหม่
-      </h2>
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+      {/* Name */}
       <div>
-        <label className="block text-gray-600 text-sm mb-1">ชื่อเมนู</label>
-        <input
-          type="text"
-          placeholder="ระบุชื่อเมนู"
-          {...register("name", { required: true })}
-          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-4 mt-4">
-        <div>
-          <label className="block text-gray-600 text-sm mb-1">ราคา (฿)</label>
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          ชื่อเมนู <span className="text-red-500">*</span>
+        </label>
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <Utensils size={18} />
+          </span>
           <input
-            type="number"
-            placeholder="0"
-            {...register("price", { required: true, valueAsNumber: true })}
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-red-400"
-          />
-        </div>
-        <div>
-          <label className="block text-gray-600 text-sm mb-1">ราคาลด (฿)</label>
-          <input
-            type="number"
-            placeholder="0"
-            {...register("discount", { valueAsNumber: true })}
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-red-400"
+            type="text"
+            placeholder="ระบุชื่อเมนู"
+            {...register("name", { required: true })}
+            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
           />
         </div>
       </div>
 
-      <div className="mt-4">
-        <label className="block text-gray-600 text-sm mb-1">หมวดหมู่</label>
-        <select
-          {...register("categoryId", { required: true })}
-          className="w-full p-3 border rounded-lg bg-white focus:ring-2 focus:ring-red-400"
-        >
-          <option value="1">อาหารจานหลัก</option>
-          <option value="2">ของหวาน</option>
-          <option value="3">เครื่องดื่ม</option>
-        </select>
+      {/* Price & Discount */}
+      <div className="flex gap-4">
+        <div className="w-1/2">
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            ราคา (฿) <span className="text-red-500">*</span>
+          </label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+              <DollarSign size={18} />
+            </span>
+            <input
+              type="number"
+              placeholder="0"
+              {...register("price", { required: true, valueAsNumber: true })}
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
+            />
+          </div>
+        </div>
+        <div className="w-1/2">
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            ส่วนลด (฿)
+          </label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+              <Tag size={18} />
+            </span>
+            <input
+              type="number"
+              placeholder="0"
+              {...register("discount", { valueAsNumber: true })}
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="mt-4">
-        <label className="block text-gray-600 text-sm mb-1">คำอธิบาย</label>
-        <textarea
-          placeholder="อธิบายเกี่ยวกับเมนูนี้"
-          {...register("detail")}
-          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-red-400"
-        ></textarea>
+      {/* Category */}
+      <div>
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          หมวดหมู่ <span className="text-red-500">*</span>
+        </label>
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <List size={18} />
+          </span>
+          <select
+            {...register("categoryId", { required: true })}
+            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 bg-gray-50 focus:bg-white appearance-none"
+          >
+            <option value="1">อาหารจานหลัก</option>
+            <option value="2">ของหวาน</option>
+            <option value="3">เครื่องดื่ม</option>
+          </select>
+        </div>
       </div>
 
-      <div className="mt-4">
-        <label className="block text-gray-600 text-sm mb-1">URL รูปภาพ</label>
+      {/* Description */}
+      <div>
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          คำอธิบาย
+        </label>
+        <div className="relative">
+          <span className="absolute left-3 top-3 text-gray-400">
+            <FileText size={18} />
+          </span>
+          <textarea
+            placeholder="อธิบายเกี่ยวกับเมนูนี้..."
+            {...register("detail")}
+            rows="3"
+            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white resize-none"
+          ></textarea>
+        </div>
+      </div>
+
+      {/* Image Upload */}
+      <div>
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          รูปภาพเมนู
+        </label>
         <AddDropZone onFileSelect={handleFileSelect} />
       </div>
 
-      <div className="flex justify-end gap-3 mt-6">
-        <button
-          type="button"
-          onClick={onClose}
-          className="w-1/2 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium"
-        >
-          ยกเลิก
-        </button>
-        <button
-          type="submit"
-          className="w-1/2 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium"
-        >
-          เพิ่มเมนู
-        </button>
-      </div>
+      <button
+        type="submit"
+        className="w-full bg-red-600 text-white py-3 rounded-xl font-bold text-lg hover:bg-red-700 transition-all shadow-lg shadow-red-200 mt-2"
+      >
+        เพิ่มเมนู
+      </button>
     </form>
   );
 }

@@ -2,8 +2,9 @@ import axios from "axios";
 import AddmenuForm from "../components/addmenu/AddmenuForm";
 import MenuCardAdmin from "../components/addmenu/MenuCardAdmin";
 import React, { useEffect, useState } from "react";
-import EditCard from "@/components/addmenu/EditCard";
-import DeleteCard from "@/components/addmenu/DeleteCard";
+import EditMenuForm from "@/components/addmenu/EditMenuForm";
+import DeleteMenuContent from "@/components/addmenu/DeleteMenuContent";
+import Modal from "@/components/Modal";
 import { useParams } from "react-router";
 import useMenuStore from "@/stores/useMenuStore";
 import { getStoreMenu } from "@/api/store.api";
@@ -167,36 +168,48 @@ function AdminAddMenu() {
         ))}
       </div>
 
-      {/* Modal */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-2xl shadow-xl w-full max-w-xl max-h-[90vh] overflow-y-auto p-6"
-          >
-            <AddmenuForm
-              onSubmit={handleCreateMenu}
-              onClose={() => setIsOpen(false)}
-            />
-          </motion.div>
-        </div>
-      )}
-      <EditCard
-        menu={selectedMenu}
-        isVisible={isEditModalOpen}
+      {/* Add Modal */}
+      <Modal
+        isOpen={isOpen}
         onClose={closeModal}
-        onSave={handleSaveEdit}
-      />
-      <DeleteCard
-        menu={selectedMenu}
-        isVisible={isDeleteModalOpen}
+        title="เพิ่มเมนูใหม่"
+        modalClassName="max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden"
+      >
+        <AddmenuForm
+          onSubmit={handleCreateMenu}
+          onClose={closeModal}
+        />
+      </Modal>
+
+      {/* Edit Modal */}
+      <Modal
+        isOpen={isEditModalOpen}
         onClose={closeModal}
-        onConfirm={handleConfirmDelete}
-      />
+        title="แก้ไขเมนู"
+        modalClassName="max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden"
+      >
+        <EditMenuForm
+          menu={selectedMenu}
+          onSave={handleSaveEdit}
+          onCancel={closeModal}
+        />
+      </Modal>
+
+      {/* Delete Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={closeModal}
+        title="ยืนยันการลบเมนู"
+        modalClassName="max-w-md bg-white rounded-2xl shadow-xl overflow-hidden"
+      >
+        <DeleteMenuContent
+          menu={selectedMenu}
+          onConfirm={handleConfirmDelete}
+          onCancel={closeModal}
+        />
+      </Modal>
     </motion.div>
   );
 }
 
 export default AdminAddMenu;
-
