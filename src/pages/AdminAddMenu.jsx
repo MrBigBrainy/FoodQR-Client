@@ -199,7 +199,6 @@ function AdminAddMenu() {
       <Modal
         isOpen={isDeleteModalOpen}
         onClose={closeModal}
-        title="ยืนยันการลบเมนู"
         modalClassName="max-w-md bg-white rounded-2xl shadow-xl overflow-hidden"
       >
         <DeleteMenuContent

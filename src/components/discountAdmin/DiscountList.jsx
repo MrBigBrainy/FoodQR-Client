@@ -386,7 +386,6 @@ function DiscountList() {
       <Modal
         isOpen={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
-        title="ยืนยันการลบคูปอง"
         modalClassName="max-w-md bg-white rounded-2xl shadow-xl overflow-hidden"
       >
         <div className="text-center p-4">
