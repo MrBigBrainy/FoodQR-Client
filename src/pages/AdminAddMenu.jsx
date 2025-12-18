@@ -4,24 +4,48 @@ import MenuCardAdmin from "../components/addmenu/MenuCardAdmin";
 import React, { useEffect, useState } from "react";
 import EditCard from "@/components/addmenu/EditCard";
 import DeleteCard from "@/components/addmenu/DeleteCard";
+import { useParams } from "react-router";
+import useMenuStore from "@/stores/useMenuStore";
+import { getStoreMenu } from "@/api/store.api";
 
 function AdminAddMenu() {
-  const [menus, setMenus] = useState([]);
+  const { storeId } = useParams()
+  const { setMenu } = useMenuStore.getState();
+  const menu = useMenuStore((store) => store.menu)
   const [isLoading, setIsLoading] = useState(true);
 
-  const getMenu = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.get("http://localhost:3000/api/store/menu");
-      console.log(response)
-      setMenus(response.data.data);
-    } catch (error) {
-      console.error("โหลดเมนูล้มเหลว", error);
-    }
-  };
+  // const getMenu = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await axios.get("http://localhost:3000/api/store/menu");
+  //     console.log(response)
+  //     setmenu(response.data.data);
+  //   } catch (error) {
+  //     console.error("โหลดเมนูล้มเหลว", error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   getMenu();
+  // }, []);
+
   useEffect(() => {
+    if (!storeId) return;
+
+    const getMenu = async () => {
+      useMenuStore.getState().setLoading(true);
+      try {
+        const response = await getStoreMenu(storeId);
+        console.log("Menu data:", response.data);
+        setMenu(response.data.menu);
+      } catch (err) {
+        console.error("Failed to fetch menu:", err);
+      } finally {
+        useMenuStore.getState().setLoading(false);
+      }
+    };
+
     getMenu();
-  }, []);
+  }, [storeId, setMenu]);
 
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -118,7 +142,7 @@ function AdminAddMenu() {
       </div>
 
       <div className="flex flex-wrap gap-4 ">
-        {menus.map((menu) => (
+        {menu.map((menu) => (
           <MenuCardAdmin
             key={menu.id}
             menu={menu}
