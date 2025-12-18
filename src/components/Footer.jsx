@@ -1,6 +1,6 @@
 import { NavLink, useParams } from "react-router";
 import useCartStore from "../stores/cartStore";
-import { ShoppingCartIcon, HouseIcon, WalletIcon } from "lucide-react";
+import { ShoppingCartIcon, HouseIcon, WalletIcon, HistoryIcon } from "lucide-react";
 import { motion } from "motion/react";
 
 function Footer() {
@@ -12,6 +12,7 @@ function Footer() {
   const navItems = [
     { to: baseUrl, icon: HouseIcon, label: "เมนู", end: true },
     { to: `${baseUrl}/cart`, icon: ShoppingCartIcon, label: "ตะกร้า", badge: totalCartItems },
+    { to: `${baseUrl}/history`, icon: HistoryIcon, label: "ประวัติ" },
     { to: `${baseUrl}/summary`, icon: WalletIcon, label: "ชำระเงิน" },
   ];
 

@@ -5,6 +5,7 @@ import MenuPage from '../pages/MenuPage';
 import CartPage from '../pages/CartPage';
 import SummaryPage from '../pages/SummaryPage';
 import UserLayout from '../layouts/UserLayout';
+import HistoryCard from '../components/HistoryCard';
 import AuthPage from '../pages/AuthPage';
 import Billing from '@/pages/Billing';
 import AdminPage from '../pages/AdminPage';
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <MenuPage /> },
       { path: 'cart', element: <CartPage /> },
+      { path: 'history', element: <HistoryCard /> },
       { path: 'summary', element: <SummaryPage /> },
     ],
   },
