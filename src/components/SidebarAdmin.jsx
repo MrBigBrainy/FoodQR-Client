@@ -49,7 +49,7 @@ function SidebarAdmin() {
     {
       path: `/admin/store/${storeId}`,
       icon: HouseIcon,
-      label: 'Dashboard',
+      label: 'ภาพรวมร้านค้า',
       end: true,
     },
     // {

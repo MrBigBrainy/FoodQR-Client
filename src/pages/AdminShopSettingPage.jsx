@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { FileText, Save, Store, MapPin, Receipt, Percent, CreditCard } from 'lucide-react';
-import { motion } from 'motion/react';
+import { FileText, Save, Store, MapPin, Receipt, Percent, CreditCard, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import api from '@/api/axios';
 import { getStoreById, updateStoreById } from '@/api/store.api';
+import AddDropZone from '@/components/addmenu/AddDropZone';
+import { storage } from '@/firebase/firebase';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 function AdminShopSettingPage() {
   const {
@@ -11,6 +14,8 @@ function AdminShopSettingPage() {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm({
     defaultValues: {
       logoUrl: '',
@@ -24,6 +29,10 @@ function AdminShopSettingPage() {
 
   const [loading, setLoading] = useState(false);
   const [storeId] = useState(1);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
+  
+  const currentLogoUrl = watch('logoUrl');
 
   useEffect(() => {
     const fetchShopSettings = async () => {
@@ -48,6 +57,35 @@ function AdminShopSettingPage() {
     fetchShopSettings();
   }, [storeId, reset]);
 
+  const handleImageUpload = async (file) => {
+    if (!file) return;
+
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    const storageRef = ref(storage, `shops/${storeId}/logo_${Date.now()}_${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setUploadProgress(progress);
+      },
+      (error) => {
+        console.error('Upload failed:', error);
+        setIsUploading(false);
+        alert('อัปโหลดรูปภาพไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
+      },
+      async () => {
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+        setValue('logoUrl', downloadURL);
+        setIsUploading(false);
+        setUploadProgress(100);
+      }
+    );
+  };
+
   const onSubmit = async (data) => {
     setLoading(true);
     try {
@@ -56,6 +94,7 @@ function AdminShopSettingPage() {
         address: data.address,
         serviceCharge: parseFloat(data.serviceCharge),
         vat: parseFloat(data.vat),
+        logoUrl: data.logoUrl,
       };
       console.log('Shop settings saved:', shopData);
 
@@ -130,25 +169,70 @@ function AdminShopSettingPage() {
                 </div>
                 
                 <div className="p-6 space-y-6">
-                  {/* Logo URL */}
+                  {/* Logo Upload */}
                   <div className="group">
                     <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
-                      URL โลโก้ร้านค้า
+                      โลโก้ร้านค้า
                     </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <FileText className="h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
-                      </div>
-                      <input
-                        {...register('logoUrl')}
-                        type="url"
-                        placeholder="https://example.com/logo.png"
-                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-400 transition-all text-gray-800 placeholder-gray-400"
-                      />
+                    <div className="space-y-4">
+                      <AddDropZone onFileSelect={handleImageUpload} />
+                      
+                      {/* Upload Progress */}
+                      <AnimatePresence>
+                        {isUploading && (
+                          <motion.div 
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="bg-gray-50 rounded-lg p-4 border border-gray-200"
+                          >
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-sm font-medium text-gray-600 flex items-center gap-2">
+                                <Loader2 className="w-4 h-4 animate-spin text-red-500" />
+                                กำลังอัปโหลด...
+                              </span>
+                              <span className="text-sm font-bold text-red-600">{Math.round(uploadProgress)}%</span>
+                            </div>
+                            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                              <motion.div 
+                                className="h-full bg-red-500 rounded-full"
+                                initial={{ width: 0 }}
+                                animate={{ width: `${uploadProgress}%` }}
+                                transition={{ duration: 0.2 }}
+                              />
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      {/* Current Logo Preview */}
+                      {currentLogoUrl && !isUploading && (
+                        <motion.div 
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className="relative group/preview"
+                        >
+                          <div className="absolute -inset-2 bg-gradient-to-r from-red-100 to-orange-100 rounded-xl blur-sm opacity-50 group-hover/preview:opacity-100 transition-opacity" />
+                          <div className="relative bg-white p-2 rounded-lg border border-gray-200 shadow-sm flex items-center gap-4">
+                            <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-100">
+                              <img 
+                                src={currentLogoUrl} 
+                                alt="Shop Logo" 
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-gray-900 truncate">โลโก้ปัจจุบัน</p>
+                              <p className="text-xs text-gray-500 truncate">{currentLogoUrl}</p>
+                            </div>
+                            <div className="px-3 py-1 bg-green-50 text-green-600 text-xs font-medium rounded-full border border-green-100">
+                              ใช้งานอยู่
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
                     </div>
-                    {errors.logoUrl && (
-                      <p className="text-red-500 text-xs mt-1 ml-1">{errors.logoUrl.message}</p>
-                    )}
+                    <input type="hidden" {...register('logoUrl')} />
                   </div>
 
                   {/* Shop Name */}
@@ -269,7 +353,7 @@ function AdminShopSettingPage() {
                 whileHover={{ scale: 1.02, boxShadow: "0 10px 15px -3px rgba(220, 38, 38, 0.2)" }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
-                disabled={loading}
+                disabled={loading || isUploading}
                 className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-xl font-bold hover:from-red-700 hover:to-red-600 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
@@ -277,7 +361,7 @@ function AdminShopSettingPage() {
                 ) : (
                   <Save className="w-5 h-5" />
                 )}
-                {loading ? 'กำลังบันทึก...' : 'บันทึกการตั้งค่า'}
+                {loading ? 'กำลังบันทึก...' : isUploading ? 'กำลังอัปโหลดรูปภาพ...' : 'บันทึกการตั้งค่า'}
               </motion.button>
             </div>
           </form>
