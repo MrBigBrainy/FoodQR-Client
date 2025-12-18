@@ -17,10 +17,11 @@ function DiscountData() {
       title: "ส่วนลดที่ให้แล้ว",
       value: `฿${totalDiscountGiven.toLocaleString()}`,
       icon: Wallet,
-      color: "text-red-600",
+      color: "text-gray-800",
       bg: "bg-white",
-      border: "border-red-100",
+      border: "border-gray-200",
       iconBg: "bg-red-50",
+      iconColor: "text-red-600",
     },
     {
       title: "จำนวนครั้งที่ใช้แล้ว",
@@ -30,6 +31,7 @@ function DiscountData() {
       bg: "bg-white",
       border: "border-gray-200",
       iconBg: "bg-gray-100",
+      iconColor: "text-gray-600",
     },
     {
       title: "คูปองที่ใช้งานอยู่",
@@ -39,6 +41,7 @@ function DiscountData() {
       bg: "bg-white",
       border: "border-gray-200",
       iconBg: "bg-gray-100",
+      iconColor: "text-gray-600",
     },
   ];
 
@@ -51,18 +54,15 @@ function DiscountData() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
           whileHover={{ y: -5 }}
-          className={`p-6 rounded-2xl border ${stat.border} ${stat.bg} shadow-sm transition-all`}
+          className={`p-5 rounded-2xl border ${stat.border} ${stat.bg} shadow-sm transition-all`}
         >
-          <div className="flex items-center justify-between mb-4">
-            <div className={`p-3 rounded-xl ${stat.iconBg}`}>
-              <stat.icon className={`w-6 h-6 ${stat.color}`} />
+          <div className="flex items-center justify-between mb-2">
+            <div className={`p-2.5 rounded-xl ${stat.iconBg}`}>
+              <stat.icon className={`w-5 h-5 ${stat.iconColor}`} />
             </div>
-            <span className={`text-xs font-bold px-2 py-1 rounded-full bg-white/50 ${stat.color}`}>
-              +12% จากเดือนก่อน
-            </span>
           </div>
           <div>
-            <p className="text-gray-600 text-sm font-medium mb-1">{stat.title}</p>
+            <p className="text-gray-500 text-sm font-medium mb-1">{stat.title}</p>
             <h3 className={`text-2xl font-bold ${stat.color}`}>{stat.value}</h3>
           </div>
         </motion.div>
