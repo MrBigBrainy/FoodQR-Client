@@ -2,7 +2,8 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import EditDiscountForm from "@/components/discountAdmin/EditDiscountForm";
-import { Trash2, AlertTriangle } from "lucide-react";
+import { Trash2, AlertTriangle, Search, Filter } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 
 const MOCK_AUTH = {
   storeId: 1,
@@ -169,28 +170,31 @@ function DiscountList() {
   if (error) return <p className="text-red-600">เกิดข้อผิดพลาด: {error}</p>;
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="ค้นหารหัส/ชื่อคูปอง..."
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
-        />
+    <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+      <div className="mb-6 flex gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <input
+            type="text"
+            placeholder="ค้นหารหัส/ชื่อคูปอง..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all bg-gray-50 focus:bg-white"
+          />
+        </div>
       </div>
-      <div className="flex gap-2 mb-4 border-b border-gray-200">
+      <div className="flex gap-2 mb-6 border-b border-gray-100 pb-1">
         {["all", "active", "inactive"].map((status) => (
           <button
             key={status}
             onClick={() => handleStatusFilterChange(status)}
-            className={`py-2 px-4 text-sm font-medium transition duration-150 capitalize ${
+            className={`py-2 px-4 text-sm font-medium transition-all rounded-lg capitalize ${
               filterStatus === status
-                ? "border-b-2 border-red-600 text-red-600 font-semibold"
-                : "text-gray-500 hover:text-gray-800"
+                ? "bg-red-50 text-red-600 font-bold"
+                : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
             }`}
           >
             {status === "all"
@@ -198,13 +202,15 @@ function DiscountList() {
               : status === "active"
               ? "ใช้งาน"
               : "ไม่ใช้งาน"}{" "}
-            (
-            {status === "all"
-              ? discounts.length
-              : status === "active"
-              ? discounts.filter((d) => d.status === "ใช้งาน").length
-              : discounts.filter((d) => d.status === "หมดอายุ").length}
-            )
+            <span className={`ml-1 text-xs py-0.5 px-2 rounded-full ${
+              filterStatus === status ? "bg-red-200 text-red-700" : "bg-gray-200 text-gray-600"
+            }`}>
+              {status === "all"
+                ? discounts.length
+                : status === "active"
+                ? discounts.filter((d) => d.status === "ใช้งาน").length
+                : discounts.filter((d) => d.status === "หมดอายุ").length}
+            </span>
           </button>
         ))}
       </div>
@@ -228,62 +234,94 @@ function DiscountList() {
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {currentDiscounts.map((discount) => (
-              <tr key={discount.id}>
-                <td className="px-6 py-4">
-                  <div className="text-sm font-medium text-gray-900">
-                    {discount.code}
-                  </div>
-                  <div className="text-xs text-gray-500 truncate w-32">
-                    {discount.description}
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-500">
-                  {discount.type === "baht"
-                    ? `฿${discount.value}`
-                    : `${discount.value}%`}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-500">
-                  {discount.usage_count} /{" "}
-                  {discount.usage_limit === 0 ? "∞" : discount.usage_limit}
-                </td>
-                <td className="px-6 py-4">
-                  <span
-                    className={`px-2 inline-flex text-xs font-semibold rounded-full ${
-                      discount.status === "ใช้งาน"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {discount.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-right text-sm space-x-2">
-                  <button
-                    className="text-indigo-600 hover:text-indigo-900"
-                    onClick={() => openEditModal(discount)}
-                  >
-                    ✏️
-                  </button>
+          <tbody className="bg-white divide-y divide-gray-100">
+            <AnimatePresence mode="wait">
+              {currentDiscounts.map((discount, index) => (
+                <motion.tr 
+                  key={discount.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="hover:bg-gray-50 transition-colors"
+                >
+                  <td className="px-6 py-4">
+                    <div className="flex items-center">
+                      <div className="bg-red-50 p-2 rounded-lg mr-3">
+                        <span className="text-red-600 font-bold text-xs">CODE</span>
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-gray-900">
+                          {discount.code}
+                        </div>
+                        <div className="text-xs text-gray-500 truncate w-48">
+                          {discount.description}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="text-sm font-bold text-gray-700 bg-gray-100 px-3 py-1 rounded-lg">
+                      {discount.type === "baht"
+                        ? `฿${discount.value}`
+                        : `${discount.value}%`}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-500">
+                    <div className="flex items-center gap-2">
+                      <div className="w-full bg-gray-200 rounded-full h-2 w-24">
+                        <div 
+                          className="bg-red-500 h-2 rounded-full" 
+                          style={{ width: `${Math.min((discount.usage_count / (discount.usage_limit || 1)) * 100, 100)}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-xs">
+                        {discount.usage_count}/{discount.usage_limit === 0 ? "∞" : discount.usage_limit}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span
+                      className={`px-3 py-1 inline-flex text-xs font-bold rounded-full ${
+                        discount.status === "ใช้งาน"
+                          ? "bg-green-100 text-green-700 border border-green-200"
+                          : "bg-gray-100 text-gray-500 border border-gray-200"
+                      }`}
+                    >
+                      {discount.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-right text-sm space-x-2">
+                    <button
+                      className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                      onClick={() => openEditModal(discount)}
+                    >
+                      ✏️
+                    </button>
 
-                  <button
-                    onClick={() => {
-                      setDeleteTarget(discount);
-                      setIsDeleteOpen(true);
-                    }}
-                    className="text-red-600 hover:text-red-900"
-                  >
-                    🗑️
-                  </button>
-                </td>
-              </tr>
-            ))}
+                    <button
+                      onClick={() => {
+                        setDeleteTarget(discount);
+                        setIsDeleteOpen(true);
+                      }}
+                      className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                    >
+                      🗑️
+                    </button>
+                  </td>
+                </motion.tr>
+              ))}
+            </AnimatePresence>
 
             {currentDiscounts.length === 0 && (
               <tr>
-                <td colSpan="5" className="text-center py-4 text-gray-500">
-                  ไม่พบข้อมูลคูปอง
+                <td colSpan="5" className="text-center py-12 text-gray-500">
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="bg-gray-100 p-4 rounded-full mb-3">
+                      <Search size={24} className="text-gray-400" />
+                    </div>
+                    <p>ไม่พบข้อมูลคูปอง</p>
+                  </div>
                 </td>
               </tr>
             )}

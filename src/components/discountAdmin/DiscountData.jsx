@@ -1,5 +1,6 @@
 import React from "react";
-import StatCard from "./StatCard"; // 💡 ใช้ StatCard ที่เราสร้างด้านบน
+import { motion } from "motion/react";
+import { Wallet, Tag, Ticket } from "lucide-react";
 
 // 💡 Mock Props ที่ควรจะรับมาจาก AdminDiscount Page
 const MOCK_STATS_PROPS = {
@@ -11,33 +12,61 @@ const MOCK_STATS_PROPS = {
 function DiscountData() {
   const { totalDiscountGiven, totalUses, activeCoupons } = MOCK_STATS_PROPS;
 
+  const stats = [
+    {
+      title: "ส่วนลดที่ให้แล้ว",
+      value: `฿${totalDiscountGiven.toLocaleString()}`,
+      icon: Wallet,
+      color: "text-green-600",
+      bg: "bg-green-50",
+      border: "border-green-100",
+      iconBg: "bg-green-100",
+    },
+    {
+      title: "จำนวนครั้งที่ใช้แล้ว",
+      value: `${totalUses} ครั้ง`,
+      icon: Tag,
+      color: "text-blue-600",
+      bg: "bg-blue-50",
+      border: "border-blue-100",
+      iconBg: "bg-blue-100",
+    },
+    {
+      title: "คูปองที่ใช้งานอยู่",
+      value: `${activeCoupons} ใบ`,
+      icon: Ticket,
+      color: "text-orange-600",
+      bg: "bg-orange-50",
+      border: "border-orange-100",
+      iconBg: "bg-orange-100",
+    },
+  ];
+
   return (
-    // 💡 Container หลัก: ใช้ Flexbox เพื่อจัดเรียงในแนวนอน (Desktop)
-    // 💡 flex-col บน Mobile, md:flex-row บน Desktop
-    <div className="flex flex-col md:flex-row gap-4 w-full">
-      {/* A. ส่วนลดที่ให้แล้ว (สีเขียว) */}
-      <StatCard
-        title="ส่วนลดที่ให้แล้ว"
-        value={totalDiscountGiven}
-        unit="฿"
-        color="text-green-600"
-      />
-
-      {/* B. จำนวนครั้งที่ใช้ได้แล้ว (สีน้ำเงินอ่อน) */}
-      <StatCard
-        title="จำนวนครั้งที่ใช้แล้ว"
-        value={totalUses}
-        unit="ครั้ง"
-        color="text-blue-600"
-      />
-
-      {/* C. คูปองที่ใช้งานอยู่ (สีเทาอ่อน) */}
-      <StatCard
-        title="คูปองที่ใช้งานอยู่"
-        value={activeCoupons}
-        unit="คูปอง"
-        color="text-gray-800"
-      />
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+      {stats.map((stat, index) => (
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1 }}
+          whileHover={{ y: -5 }}
+          className={`p-6 rounded-2xl border ${stat.border} ${stat.bg} shadow-sm transition-all`}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className={`p-3 rounded-xl ${stat.iconBg}`}>
+              <stat.icon className={`w-6 h-6 ${stat.color}`} />
+            </div>
+            <span className={`text-xs font-bold px-2 py-1 rounded-full bg-white/50 ${stat.color}`}>
+              +12% จากเดือนก่อน
+            </span>
+          </div>
+          <div>
+            <p className="text-gray-600 text-sm font-medium mb-1">{stat.title}</p>
+            <h3 className={`text-2xl font-bold ${stat.color}`}>{stat.value}</h3>
+          </div>
+        </motion.div>
+      ))}
     </div>
   );
 }
