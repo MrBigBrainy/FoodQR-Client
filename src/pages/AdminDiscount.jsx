@@ -44,6 +44,7 @@ function AdminDiscount() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="สร้างคูปองใหม่"
+        modalClassName="max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden"
       >
         <CreateDiscountForm onCouponCreated={handleCouponCreated} />
       </Modal>
