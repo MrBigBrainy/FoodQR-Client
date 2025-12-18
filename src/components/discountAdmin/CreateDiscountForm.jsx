@@ -1,5 +1,15 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { 
+  Ticket, 
+  DollarSign, 
+  Percent, 
+  FileText, 
+  Hash, 
+  Calendar, 
+  Clock 
+} from "lucide-react";
+import CustomSelect from "@/components/CustomSelect";
 
 const MOCK_AUTH = {
   storeId: 1,
@@ -38,6 +48,10 @@ function CreateDiscountForm({ onCouponCreated }) {
     }));
   };
 
+  const handleTypeSelect = (value) => {
+    setFormData((prev) => ({ ...prev, discountType: value }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError(null);
@@ -63,15 +77,6 @@ function CreateDiscountForm({ onCouponCreated }) {
     setIsSubmitting(true);
 
     try {
-      // const response = await axios.post(
-      //   "https://foodqr-server.onrender.com/api/discount/create",
-      //   payload,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${MOCK_AUTH.token}`,
-      //     },
-      //   }
-      // );
       const response = await axios.post(
         "http://localhost:3000/api/discount/create",
         payload,
@@ -117,129 +122,161 @@ function CreateDiscountForm({ onCouponCreated }) {
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Coupon Code */}
         <div>
-          <input
-            type="text"
-            id="code"
-            name="code"
-            value={formData.code}
-            onChange={handleChange}
-            placeholder="เช่น: SAVE10"
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition-all"
-            required
-          />
-        </div>
-
-        <div className="flex space-x-4">
-          <div className="w-1/2">
-            <label
-              htmlFor="discountType"
-              className="block text-sm font-medium text-gray-700"
-            ></label>
-            <select
-              id="discountType"
-              name="discountType"
-              value={formData.discountType}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition-all"
-            >
-              <option value="baht">ลดเป็นบาท (฿)</option>
-              <option value="percent">ลดเป็น %</option>
-            </select>
-          </div>
-
-          <div className="w-1/2">
-            <label
-              htmlFor="amount"
-              className="block text-sm font-medium text-gray-700"
-            ></label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            รหัสคูปอง <span className="text-red-500">*</span>
+          </label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+              <Ticket size={18} />
+            </span>
             <input
-              type="number"
-              id="amount"
-              name="amount"
-              value={
-                formData.amount === 0 && formData.amount !== ""
-                  ? ""
-                  : formData.amount
-              }
+              type="text"
+              id="code"
+              name="code"
+              value={formData.code}
               onChange={handleChange}
-              min="0"
-              placeholder="0"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition-all"
+              placeholder="เช่น: SAVE10"
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
               required
             />
           </div>
         </div>
-        <div>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="เช่น: ส่วนลด 10% สำหรับทุกเมนู"
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition-all"
-          />
-        </div>
 
-        <div>
-          <label
-            htmlFor="maxCount"
-            className="block text-sm font-medium text-gray-700"
-          >
-            จำกัดสิทธิ์คงเหลือ (ใส่ 0 หากไม่จำกัด)
-          </label>
-          <input
-            type="number"
-            id="maxCount"
-            name="maxCount"
-            value={formData.maxCount}
-            onChange={handleChange}
-            min="0"
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition-all"
-          />
-        </div>
-
-        <div className="flex space-x-4">
+        <div className="flex gap-4">
+          {/* Discount Type */}
           <div className="w-1/2">
-            <label
-              htmlFor="startTime"
-              className="block text-sm font-medium text-gray-700"
-            >
-              เวลาเริ่มต้น
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              ประเภทส่วนลด <span className="text-red-500">*</span>
             </label>
-            <input
-              type="datetime-local"
-              id="startTime"
-              name="startTime"
-              value={formData.startTime}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition-all"
+            <CustomSelect
+              value={formData.discountType}
+              onChange={handleTypeSelect}
+              options={[
+                { value: "baht", label: "ลดเป็นบาท (฿)" },
+                { value: "percent", label: "ลดเป็น %" },
+              ]}
+              icon={formData.discountType === "baht" ? DollarSign : Percent}
             />
           </div>
 
+          {/* Amount */}
           <div className="w-1/2">
-            <label
-              htmlFor="endTime"
-              className="block text-sm font-medium text-gray-700"
-            >
-              เวลาสิ้นสุด
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              มูลค่าส่วนลด <span className="text-red-500">*</span>
             </label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <Hash size={18} />
+              </span>
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                value={
+                  formData.amount === 0 && formData.amount !== ""
+                    ? ""
+                    : formData.amount
+                }
+                onChange={handleChange}
+                min="0"
+                placeholder="0"
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Coupon Name */}
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            ชื่อคูปอง (Optional)
+          </label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+              <FileText size={18} />
+            </span>
             <input
-              type="datetime-local"
-              id="endTime"
-              name="endTime"
-              value={formData.endTime}
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition-all"
+              placeholder="เช่น: ส่วนลด 10% สำหรับทุกเมนู"
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
             />
+          </div>
+        </div>
+
+        {/* Max Count */}
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            จำกัดสิทธิ์คงเหลือ (ใส่ 0 หากไม่จำกัด)
+          </label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+              <Hash size={18} />
+            </span>
+            <input
+              type="number"
+              id="maxCount"
+              name="maxCount"
+              value={formData.maxCount}
+              onChange={handleChange}
+              min="0"
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-4">
+          {/* Start Time */}
+          <div className="w-1/2">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              เวลาเริ่มต้น <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none z-10">
+                <Calendar size={18} />
+              </span>
+              <input
+                type="datetime-local"
+                id="startTime"
+                name="startTime"
+                value={formData.startTime}
+                onChange={handleChange}
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white accent-red-600"
+              />
+            </div>
+          </div>
+
+          {/* End Time */}
+          <div className="w-1/2">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              เวลาสิ้นสุด <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none z-10">
+                <Clock size={18} />
+              </span>
+              <input
+                type="datetime-local"
+                id="endTime"
+                name="endTime"
+                value={formData.endTime}
+                onChange={handleChange}
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white accent-red-600"
+              />
+            </div>
           </div>
         </div>
 
         <button
           disabled={isSubmitting}
           type="submit"
-          className="w-full bg-red-600 text-white font-semibold py-2 rounded-lg shadow-md hover:bg-red-700 transition duration-150"
+          className="w-full bg-red-600 text-white py-3 rounded-xl font-bold text-lg hover:bg-red-700 transition-all shadow-lg shadow-red-200 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:shadow-none mt-2"
         >
           {isSubmitting ? "กำลังสร้าง..." : "สร้างคูปอง"}
         </button>
