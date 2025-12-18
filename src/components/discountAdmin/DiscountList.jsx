@@ -289,7 +289,7 @@ function DiscountList() {
                   <td className="px-6 py-4 text-right text-sm">
                     <div className="flex justify-end gap-2">
                       <button
-                        className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
+                        className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all"
                         onClick={() => openEditModal(discount)}
                         title="แก้ไข"
                       >
@@ -301,7 +301,7 @@ function DiscountList() {
                           setDeleteTarget(discount);
                           setIsDeleteOpen(true);
                         }}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                        className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all"
                         title="ลบ"
                       >
                         <Trash2 size={18} />

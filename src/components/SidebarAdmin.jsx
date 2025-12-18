@@ -52,11 +52,11 @@ function SidebarAdmin() {
       label: 'Dashboard',
       end: true,
     },
-    {
-      path: `/admin/store/${storeId}/kitchen`,
-      icon: ChefHatIcon,
-      label: 'จัดการครัว',
-    },
+    // {
+    //   path: `/admin/store/${storeId}/kitchen`,
+    //   icon: ChefHatIcon,
+    //   label: 'จัดการครัว',
+    // },
     {
       path: `/admin/store/${storeId}/table`,
       icon: TableIcon,
@@ -67,11 +67,11 @@ function SidebarAdmin() {
       icon: MenuIcon,
       label: 'จัดการเมนู',
     },
-    {
-      path: `/admin/store/${storeId}/billing`,
-      icon: BanknoteIcon,
-      label: 'จัดการบิล',
-    },
+    // {
+    //   path: `/admin/store/${storeId}/billing`,
+    //   icon: BanknoteIcon,
+    //   label: 'จัดการบิล',
+    // },
     {
       path: `/admin/store/${storeId}/discount`,
       icon: PercentIcon,
