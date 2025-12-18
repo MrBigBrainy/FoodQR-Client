@@ -35,11 +35,18 @@ function DiscountList() {
     setLoading(true);
     setError(null);
     try {
+      // const res = await axios.get(`https://foodqr-server.onrender.com/api/discount/get`, {
+      //   headers: {
+      //     Authorization: `Bearer ${MOCK_AUTH.token}`,
+      //   },
+      // });
+
       const res = await axios.get(`http://localhost:3000/api/discount/get`, {
         headers: {
           Authorization: `Bearer ${MOCK_AUTH.token}`,
         },
       });
+
 
       const mapped = res.data.data.map((d) => ({
         id: d.id,
@@ -70,6 +77,15 @@ function DiscountList() {
     if (!deleteTarget) return;
 
     try {
+      // await axios.delete(
+      //   `https://foodqr-server.onrender.com/api/discount/delete/${deleteTarget.id}`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${MOCK_AUTH.token}`,
+      //     },
+      //   }
+      // );
+
       await axios.delete(
         `http://localhost:3000/api/discount/delete/${deleteTarget.id}`,
         {
@@ -135,7 +151,17 @@ function DiscountList() {
     };
 
     try {
-      await axios.put(
+      // await axios.put(
+      //   `https://foodqr-server.onrender.com/api/discount/update/${editData.id}`,
+      //   finalEditData,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${MOCK_AUTH.token}`,
+      //     },
+      //   }
+      // );
+
+       await axios.put(
         `http://localhost:3000/api/discount/update/${editData.id}`,
         finalEditData,
         {

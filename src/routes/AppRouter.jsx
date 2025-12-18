@@ -6,7 +6,7 @@ import CartPage from '../pages/CartPage';
 import SummaryPage from '../pages/SummaryPage';
 import UserLayout from '../layouts/UserLayout';
 import AuthPage from '../pages/AuthPage';
-
+import Billing from '@/pages/Billing';
 import AdminPage from '../pages/AdminPage';
 import AdminDashboard from '../pages/AdminDashbord';
 import AdminAddMenu from '../pages/AdminAddMenu';
@@ -17,6 +17,8 @@ import AdminShopSettingPage from '@/pages/AdminShopSettingPage';
 import AdminDiscount from "@/pages/AdminDiscount";
 import MenuBill from "../components/Billing/MenuBill";
 import CoffeeLoader from "@/components/loader/coffeeLoader";
+import PaymentQRPage from "@/pages/PaymentQRPage";
+import PaymentStatusPage from "@/pages/PaymentStatusPage";
 import NotFoundPage from "../pages/NotFoundPage";
 
 const router = createBrowserRouter([
@@ -43,8 +45,10 @@ const router = createBrowserRouter([
   // },
   { path: '/auth', element: <AuthPage /> },
   { path: '/superAdmin', element: <SuperAdminPage /> },
-  { path: '/test', element: <CoffeeLoader /> },
-
+   { path: "/test", element: <CoffeeLoader /> },
+   { path: "/test2", element: <Billing /> },
+   { path: "/test3", element: <PaymentQRPage /> },
+   { path: "/test4", element: <PaymentStatusPage /> },
   {
     path: '/admin/store/:storeId',
     element: <AdminPage />,

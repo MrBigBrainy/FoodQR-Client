@@ -7,7 +7,7 @@ function Footer() {
   const { storeId, tableId, orderId } = useParams();
   const totalCartItems = useCartStore((state) => state.totalCartItems);
 
-  const baseUrl = `/store/${storeId}/table/${tableId}/order/${orderId}`;
+  const baseUrl = `/menu-qr`;
 
   const navItems = [
     { to: baseUrl, icon: HouseIcon, label: "เมนู", end: true },

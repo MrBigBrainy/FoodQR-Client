@@ -63,6 +63,15 @@ function CreateDiscountForm({ onCouponCreated }) {
     setIsSubmitting(true);
 
     try {
+      // const response = await axios.post(
+      //   "https://foodqr-server.onrender.com/api/discount/create",
+      //   payload,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${MOCK_AUTH.token}`,
+      //     },
+      //   }
+      // );
       const response = await axios.post(
         "http://localhost:3000/api/discount/create",
         payload,
@@ -101,10 +110,7 @@ function CreateDiscountForm({ onCouponCreated }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-      <h3 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
-        สร้างคูปองใหม่
-      </h3>
+    <div className="space-y-4">
       {submitError && (
         <div className="text-red-600 text-sm p-2 bg-red-100 rounded mb-4">
           {submitError}
@@ -119,7 +125,7 @@ function CreateDiscountForm({ onCouponCreated }) {
             value={formData.code}
             onChange={handleChange}
             placeholder="เช่น: SAVE10"
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition-all"
             required
           />
         </div>
@@ -135,7 +141,7 @@ function CreateDiscountForm({ onCouponCreated }) {
               name="discountType"
               value={formData.discountType}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition-all"
             >
               <option value="baht">ลดเป็นบาท (฿)</option>
               <option value="percent">ลดเป็น %</option>
@@ -159,7 +165,7 @@ function CreateDiscountForm({ onCouponCreated }) {
               onChange={handleChange}
               min="0"
               placeholder="0"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition-all"
               required
             />
           </div>
@@ -172,7 +178,7 @@ function CreateDiscountForm({ onCouponCreated }) {
             value={formData.name}
             onChange={handleChange}
             placeholder="เช่น: ส่วนลด 10% สำหรับทุกเมนู"
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition-all"
           />
         </div>
 
@@ -190,7 +196,7 @@ function CreateDiscountForm({ onCouponCreated }) {
             value={formData.maxCount}
             onChange={handleChange}
             min="0"
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition-all"
           />
         </div>
 
@@ -208,7 +214,7 @@ function CreateDiscountForm({ onCouponCreated }) {
               name="startTime"
               value={formData.startTime}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition-all"
             />
           </div>
 
@@ -225,7 +231,7 @@ function CreateDiscountForm({ onCouponCreated }) {
               name="endTime"
               value={formData.endTime}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition-all"
             />
           </div>
         </div>

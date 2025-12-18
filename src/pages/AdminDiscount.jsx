@@ -1,14 +1,19 @@
 import CreateDiscountForm from "@/components/discountAdmin/CreateDiscountForm";
 import DiscountData from "@/components/discountAdmin/DiscountData";
 import DiscountList from "@/components/discountAdmin/DiscountList";
+import Modal from "@/components/Modal";
 import React, { useState } from "react";
 
 function AdminDiscount() {
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleCouponCreated = () => {
     setRefreshKey((prev) => prev + 1);
+    setIsModalOpen(false);
     alert("✅ สร้างคูปองสำเร็จ! กำลังอัปเดตรายการ...");
   };
+
   return (
     <div className="p-4 md:p-8 pt-10 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
@@ -20,19 +25,28 @@ function AdminDiscount() {
             ระบบจัดการส่วนลด
           </h1>
         </div>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm flex items-center gap-2"
+        >
+          <span>+</span> สร้างคูปองใหม่
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-7 gap-8 pt-10">
-        <div className="md:col-span-3">
-          <CreateDiscountForm onCouponCreated={handleCouponCreated} />
+      <div className="space-y-8 pt-6">
+        <div className="flex flex-col lg:flex-row gap-4">
+          <DiscountData />
         </div>
-        <div className="md:col-span-4 space-y-8">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <DiscountData />
-          </div>
-          <DiscountList key={refreshKey} />
-        </div>
+        <DiscountList key={refreshKey} />
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="สร้างคูปองใหม่"
+      >
+        <CreateDiscountForm onCouponCreated={handleCouponCreated} />
+      </Modal>
     </div>
   );
 }

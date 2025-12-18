@@ -75,10 +75,13 @@ function TableAdmin() {
             setLoading(true);
             try {
                 const tableTypesRes = await getTableTypes();
+                console.log(tableTypesRes)
                 setTableTypes(tableTypesRes.data.tableTypes || []);
 
-                const tablesRes = await getTables();
-                setTables(tablesRes.data.tables || []);
+                const tablesRes = await getTables(storeId);
+                console.log(tablesRes)
+                // setTables(tablesRes.data.tables || []);
+                 setTables(tablesRes.data || []);
             } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
