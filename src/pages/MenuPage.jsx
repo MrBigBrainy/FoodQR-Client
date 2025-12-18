@@ -4,6 +4,7 @@ import SearchBar from "../components/SearchBar";
 import useMenuStore from "../stores/useMenuStore";
 import CartIcon from "@/components/CartIcon";
 import CoffeeLoader from "../components/loader/coffeeLoader";
+import RedWineLoader from "../components/loader/redWineLoader";
 
 function MenuPage() {
   const menu = useMenuStore((state) => state.menu);
