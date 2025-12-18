@@ -30,17 +30,14 @@ function MenuCardAdmin({ menu, onEdit, onDelete }) {
         {/* Row 2: ราคา และ Actions */}
         <div className="flex justify-between items-center mt-auto">
           {/* Price Section */}
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-center gap-2">
             {hasDiscount ? (
               <>
                 <span className="text-red-600 font-bold text-xl">
                   ฿{menu.netPrice}
                 </span>
-                <span className="text-gray-400 line-through text-xs">
-                  ฿{menu.price}
-                </span>
-                <span className="text-red-500 text-xs font-bold">
-                  -{menu.discount}
+                <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded-md">
+                  ลด {menu.discount} บาท
                 </span>
               </>
             ) : (
