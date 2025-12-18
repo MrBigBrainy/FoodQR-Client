@@ -91,6 +91,7 @@ function AdminShopSettingPage() {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
+      console.log("logoUrl",data.logoUrl)
       const shopData = {
         name: data.name,
         address: data.address,
