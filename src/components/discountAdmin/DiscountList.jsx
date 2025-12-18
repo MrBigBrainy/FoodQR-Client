@@ -1,5 +1,8 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
+import Modal from "@/components/Modal";
+import EditDiscountForm from "@/components/discountAdmin/EditDiscountForm";
+import { Trash2, AlertTriangle } from "lucide-react";
 
 const MOCK_AUTH = {
   storeId: 1,
@@ -19,34 +22,17 @@ function DiscountList() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
-  const [editData, setEditData] = useState({
-    id: "",
-    code: "",
-    discountType: "percent",
-    amount: 0,
-    maxCount: 0,
-    startTime: "",
-    endTime: "",
-    isActive: true,
-    storeId: MOCK_AUTH.storeId,
-  });
+  const [editData, setEditData] = useState(null);
 
   const fetchDiscounts = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      // const res = await axios.get(`https://foodqr-server.onrender.com/api/discount/get`, {
-      //   headers: {
-      //     Authorization: `Bearer ${MOCK_AUTH.token}`,
-      //   },
-      // });
-
       const res = await axios.get(`http://localhost:3000/api/discount/get`, {
         headers: {
           Authorization: `Bearer ${MOCK_AUTH.token}`,
         },
       });
-
 
       const mapped = res.data.data.map((d) => ({
         id: d.id,
@@ -77,15 +63,6 @@ function DiscountList() {
     if (!deleteTarget) return;
 
     try {
-      // await axios.delete(
-      //   `https://foodqr-server.onrender.com/api/discount/delete/${deleteTarget.id}`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${MOCK_AUTH.token}`,
-      //     },
-      //   }
-      // );
-
       await axios.delete(
         `http://localhost:3000/api/discount/delete/${deleteTarget.id}`,
         {
@@ -114,6 +91,7 @@ function DiscountList() {
       code: d.code,
       discountType: d.discountType,
       amount: d.amount,
+      description: d.name || d.description, // Pass description/name correctly
       maxCount: d.maxCount || 0,
       startTime: d.startTime ? d.startTime.slice(0, 16) : "",
       endTime: d.endTime ? d.endTime.slice(0, 16) : "",
@@ -124,43 +102,19 @@ function DiscountList() {
     setIsEditOpen(true);
   }
 
-  const handleEditChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setEditData((prev) => ({
-      ...prev,
-      [name]:
-        type === "checkbox"
-          ? checked
-          : type === "number"
-          ? Number(value)
-          : value,
-    }));
-  };
-
-  async function handleSaveEdit() {
-    if (!editData.code || editData.amount <= 0) {
+  async function handleSaveEdit(formData) {
+    if (!formData.code || formData.amount <= 0) {
       alert("กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน");
       return;
     }
 
     const finalEditData = {
-      ...editData,
-      maxCount: editData.maxCount === 0 ? null : editData.maxCount,
-
+      ...formData,
+      maxCount: formData.maxCount === 0 ? null : formData.maxCount,
       storeId: MOCK_AUTH.storeId,
     };
 
     try {
-      // await axios.put(
-      //   `https://foodqr-server.onrender.com/api/discount/update/${editData.id}`,
-      //   finalEditData,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${MOCK_AUTH.token}`,
-      //     },
-      //   }
-      // );
-
        await axios.put(
         `http://localhost:3000/api/discount/update/${editData.id}`,
         finalEditData,
@@ -368,129 +322,56 @@ function DiscountList() {
           </button>
         </div>
       )}
-      {isEditOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
-          <div className="bg-white p-6 rounded-xl shadow-lg w-96">
-            <h2 className="text-lg font-bold mb-4">แก้ไขคูปอง</h2>
 
-            <label className="text-sm">ชื่อคูปอง</label>
-            <input
-              className="border p-2 w-full mb-2 px-2"
-              name="code"
-              value={editData.code}
-              onChange={handleEditChange}
-              placeholder="Code"
-            />
-            <label className="text-sm">ประเภทคูปอง</label>
-            <select
-              className="border p-2 w-full mb-2"
-              name="discountType"
-              value={editData.discountType}
-              onChange={handleEditChange}
+      {/* Edit Modal */}
+      <Modal
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        title="แก้ไขคูปอง"
+        modalClassName="max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden"
+      >
+        <EditDiscountForm 
+          initialData={editData} 
+          onSubmit={handleSaveEdit}
+          onCancel={() => setIsEditOpen(false)}
+        />
+      </Modal>
+
+      {/* Delete Modal */}
+      <Modal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        title="ยืนยันการลบคูปอง"
+        modalClassName="max-w-md bg-white rounded-2xl shadow-xl overflow-hidden"
+      >
+        <div className="text-center p-4">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Trash2 size={32} className="text-red-600" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-800 mb-2">
+            ยืนยันการลบ?
+          </h3>
+          <p className="text-gray-600 mb-6">
+            คุณต้องการลบคูปอง <span className="font-bold text-red-600">{deleteTarget?.code}</span> ใช่หรือไม่? 
+            <br />การกระทำนี้ไม่สามารถย้อนกลับได้
+          </p>
+          
+          <div className="flex gap-3">
+            <button
+              onClick={() => setIsDeleteOpen(false)}
+              className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-all"
             >
-              <option value="percent">ลดเป็น %</option>
-              <option value="baht">ลดเป็นบาท (฿)</option>
-            </select>
-            <label className="text-sm">ส่วนลด</label>
-            <input
-              className="border p-2 w-full mb-2"
-              type="number"
-              name="amount"
-              value={editData.amount}
-              onChange={handleEditChange}
-              placeholder="Amount"
-            />
-            <label className="text-sm">จำกัดสิทธิ์คงเหลือ</label>
-            <input
-              className="border p-2 w-full mb-2"
-              type="number"
-              name="maxCount"
-              value={editData.maxCount}
-              onChange={handleEditChange}
-              placeholder="Max Count"
-            />
-
-            <label className="text-sm">Start Time</label>
-            <input
-              className="border p-2 w-full mb-2"
-              type="datetime-local"
-              name="startTime"
-              value={editData.startTime}
-              onChange={handleEditChange}
-            />
-
-            <label className="text-sm">End Time</label>
-            <input
-              className="border p-2 w-full mb-2"
-              type="datetime-local"
-              name="endTime"
-              value={editData.endTime}
-              onChange={handleEditChange}
-            />
-
-            <div className="flex items-center gap-2 mb-3">
-              <input
-                type="checkbox"
-                id="isActive"
-                name="isActive"
-                checked={editData.isActive}
-                onChange={handleEditChange}
-                className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
-              />
-              <label
-                htmlFor="isActive"
-                className="text-sm font-medium text-gray-700"
-              >
-                เปิดใช้งานคูปอง
-              </label>
-            </div>
-
-            <div className="flex justify-end gap-2 mt-3">
-              <button
-                className="px-3 py-1 bg-blue-600 text-white rounded"
-                onClick={handleSaveEdit}
-              >
-                บันทึก
-              </button>
-              <button
-                className="px-3 py-1 bg-gray-300 rounded"
-                onClick={() => setIsEditOpen(false)}
-              >
-                ยกเลิก
-              </button>
-            </div>
+              ยกเลิก
+            </button>
+            <button
+              onClick={handleConfirmDelete}
+              className="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg shadow-red-200"
+            >
+              ลบเลย
+            </button>
           </div>
         </div>
-      )}
-
-      {isDeleteOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
-          <div className="bg-white p-6 rounded-xl shadow-lg w-80">
-            <h2 className="text-lg font-bold text-red-600 mb-4">
-              ยืนยันการลบคูปอง?
-            </h2>
-
-            <p className="text-sm text-gray-600 mb-4">
-              ต้องการลบคูปอง <b>{deleteTarget?.code}</b> ใช่หรือไม่?
-            </p>
-
-            <div className="flex justify-end gap-2">
-              <button
-                className="px-3 py-1 bg-red-600 text-white rounded"
-                onClick={handleConfirmDelete}
-              >
-                ลบเลย
-              </button>
-              <button
-                className="px-3 py-1 bg-gray-300 rounded"
-                onClick={() => setIsDeleteOpen(false)}
-              >
-                ยกเลิก
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      </Modal>
     </div>
   );
 }

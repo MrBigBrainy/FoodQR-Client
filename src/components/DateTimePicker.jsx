@@ -172,7 +172,7 @@ const DateTimePicker = ({ label, value, onChange, minDate, required = false }) =
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute z-50 mt-2 p-4 bg-white rounded-2xl shadow-xl border border-gray-100 w-[320px]"
+            className="absolute z-50 bottom-full mb-2 p-4 bg-white rounded-2xl shadow-xl border border-gray-100 w-[320px]"
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
