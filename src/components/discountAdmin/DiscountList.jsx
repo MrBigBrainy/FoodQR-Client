@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import EditDiscountForm from "@/components/discountAdmin/EditDiscountForm";
-import { Trash2, AlertTriangle, Search, Filter } from "lucide-react";
+import { Trash2, AlertTriangle, Search, Filter, Pencil } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 const MOCK_AUTH = {
@@ -289,10 +289,11 @@ function DiscountList() {
                   <td className="px-6 py-4 text-right text-sm">
                     <div className="flex justify-end gap-2">
                       <button
-                        className="flex items-center gap-1 px-3 py-1.5 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-all font-medium text-xs"
+                        className="p-2 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-all"
                         onClick={() => openEditModal(discount)}
+                        title="แก้ไข"
                       >
-                        แก้ไข
+                        <Pencil size={16} />
                       </button>
 
                       <button
@@ -300,9 +301,10 @@ function DiscountList() {
                           setDeleteTarget(discount);
                           setIsDeleteOpen(true);
                         }}
-                        className="flex items-center gap-1 px-3 py-1.5 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-all font-medium text-xs"
+                        className="p-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-all"
+                        title="ลบ"
                       >
-                        ลบ
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </td>
