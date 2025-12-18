@@ -42,7 +42,7 @@ export default function AddDropZone({ onFileSelect }) {
           />
         ) : (
           <p className="text-center px-4">
-            📂 <span className="font-medium text-gray-600">ลากรูป</span> หรือ{" "}
+            <span className="font-medium text-gray-600">ลากรูป</span> หรือ{" "}
             <span className="text-red-500 font-medium">คลิกเพื่ออัปโหลด</span>
           </p>
         )}

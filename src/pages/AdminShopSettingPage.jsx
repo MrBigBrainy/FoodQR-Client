@@ -159,24 +159,27 @@ function AdminShopSettingPage() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-6 max-w-3xl mx-auto">
               
-              {/* General Info Section */}
               <motion.div variants={itemVariants} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="p-6 border-b border-gray-50 bg-gradient-to-r from-gray-50 to-white">
                   <div className="flex items-center gap-2">
                     <Store className="w-5 h-5 text-gray-400" />
-                    <h3 className="font-semibold text-gray-800">ข้อมูลทั่วไป</h3>
+                    <h3 className="font-semibold text-gray-800">ข้อมูลร้านค้า</h3>
                   </div>
                 </div>
                 
-                <div className="p-6 space-y-6">
-                  {/* Logo Upload */}
+                <div className="p-6 space-y-8">
+                  {/* Logo Upload Section */}
                   <div className="group">
-                    <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
+                    <label className="block text-gray-700 text-sm font-medium mb-4 group-focus-within:text-red-500 transition-colors">
                       โลโก้ร้านค้า
                     </label>
+                    
                     <div className="space-y-4">
-                      <AddDropZone onFileSelect={handleImageUpload} />
-                      
+                      {/* Show DropZone ONLY if no logo and not uploading */}
+                      {!currentLogoUrl && !isUploading && (
+                        <AddDropZone onFileSelect={handleImageUpload} />
+                      )}
+
                       {/* Upload Progress */}
                       <AnimatePresence>
                         {isUploading && (
@@ -205,144 +208,148 @@ function AdminShopSettingPage() {
                         )}
                       </AnimatePresence>
 
-                      {/* Current Logo Preview */}
+                      {/* Current Logo Display (Replaces DropZone) */}
                       {currentLogoUrl && !isUploading && (
                         <motion.div 
-                          initial={{ opacity: 0, scale: 0.9 }}
+                          initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          className="relative group/preview"
+                          className="relative group/image"
                         >
-                          <div className="absolute -inset-2 bg-gradient-to-r from-red-100 to-orange-100 rounded-xl blur-sm opacity-50 group-hover/preview:opacity-100 transition-opacity" />
-                          <div className="relative bg-white p-2 rounded-lg border border-gray-200 shadow-sm flex items-center gap-4">
-                            <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-100">
-                              <img 
-                                src={currentLogoUrl} 
-                                alt="Shop Logo" 
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-gray-900 truncate">โลโก้ปัจจุบัน</p>
-                              <p className="text-xs text-gray-500 truncate">{currentLogoUrl}</p>
-                            </div>
-                            <div className="px-3 py-1 bg-green-50 text-green-600 text-xs font-medium rounded-full border border-green-100">
-                              ใช้งานอยู่
+                          <div className="relative w-full h-[220px] rounded-lg overflow-hidden border-2 border-gray-100 bg-gray-50 flex items-center justify-center group-hover/image:border-red-100 transition-colors">
+                            <img 
+                              src={currentLogoUrl} 
+                              alt="Shop Logo" 
+                              className="h-full object-contain"
+                            />
+                            
+                            {/* Overlay Actions */}
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/image:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-[2px]">
+                              <button
+                                type="button"
+                                onClick={() => setValue('logoUrl', '')}
+                                className="px-4 py-2 bg-white text-red-600 rounded-lg font-medium shadow-lg hover:bg-red-50 transition-colors transform hover:scale-105 active:scale-95 flex items-center gap-2"
+                              >
+                                <ImageIcon className="w-4 h-4" />
+                                เปลี่ยนรูปภาพ
+                              </button>
                             </div>
                           </div>
+                          <p className="text-center text-xs text-gray-400 mt-2">
+                            คลิกที่รูปเพื่อเปลี่ยนโลโก้
+                          </p>
                         </motion.div>
                       )}
                     </div>
                     <input type="hidden" {...register('logoUrl')} />
                   </div>
 
-                  {/* Shop Name */}
-                  <div className="group">
-                    <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
-                      ชื่อร้านค้า <span className="text-xs text-gray-400 font-normal">(จะแสดงในบิล)</span>
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Store className="h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Shop Name */}
+                    <div className="group">
+                      <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
+                        ชื่อร้านค้า <span className="text-xs text-gray-400 font-normal">(จะแสดงในบิล)</span>
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Store className="h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
+                        </div>
+                        <input
+                          {...register('name', { required: 'กรุณากรอกชื่อร้านค้า' })}
+                          type="text"
+                          placeholder="เช่น Na-ni-no-Sushi POS"
+                          className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-400 transition-all text-gray-800 placeholder-gray-400"
+                        />
                       </div>
-                      <input
-                        {...register('name', { required: 'กรุณากรอกชื่อร้านค้า' })}
-                        type="text"
-                        placeholder="เช่น Na-ni-no-Sushi POS"
-                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-400 transition-all text-gray-800 placeholder-gray-400"
-                      />
+                      {errors.name && (
+                        <p className="text-red-500 text-xs mt-1 ml-1">{errors.name.message}</p>
+                      )}
                     </div>
-                    {errors.name && (
-                      <p className="text-red-500 text-xs mt-1 ml-1">{errors.name.message}</p>
-                    )}
+
+                    {/* Shop Address */}
+                    <div className="group md:col-span-2">
+                      <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
+                        ที่อยู่ร้านค้า <span className="text-xs text-gray-400 font-normal">(สำหรับออกใบเสร็จ)</span>
+                      </label>
+                      <div className="relative">
+                        <div className="absolute top-3 left-3 pointer-events-none">
+                          <MapPin className="h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
+                        </div>
+                        <textarea
+                          {...register('address', { required: 'กรุณากรอกที่อยู่ร้านค้า' })}
+                          rows="3"
+                          placeholder="เช่น 123/4 Central District, Bangkok"
+                          className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-400 transition-all text-gray-800 placeholder-gray-400 resize-none"
+                        />
+                      </div>
+                      {errors.address && (
+                        <p className="text-red-500 text-xs mt-1 ml-1">{errors.address.message}</p>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Shop Address */}
-                  <div className="group">
-                    <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
-                      ที่อยู่ร้านค้า <span className="text-xs text-gray-400 font-normal">(สำหรับออกใบเสร็จ)</span>
-                    </label>
-                    <div className="relative">
-                      <div className="absolute top-3 left-3 pointer-events-none">
-                        <MapPin className="h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
-                      </div>
-                      <textarea
-                        {...register('address', { required: 'กรุณากรอกที่อยู่ร้านค้า' })}
-                        rows="3"
-                        placeholder="เช่น 123/4 Central District, Bangkok"
-                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-400 transition-all text-gray-800 placeholder-gray-400 resize-none"
-                      />
+                  <div className="border-t border-gray-100 pt-6">
+                    <div className="flex items-center gap-2 mb-6">
+                      <Receipt className="w-5 h-5 text-gray-400" />
+                      <h3 className="font-semibold text-gray-800">ตั้งค่าภาษีและค่าบริการ</h3>
                     </div>
-                    {errors.address && (
-                      <p className="text-red-500 text-xs mt-1 ml-1">{errors.address.message}</p>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
 
-              {/* Financials Section */}
-              <motion.div variants={itemVariants} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="p-6 border-b border-gray-50 bg-gradient-to-r from-gray-50 to-white">
-                  <div className="flex items-center gap-2">
-                    <Receipt className="w-5 h-5 text-gray-400" />
-                    <h3 className="font-semibold text-gray-800">ตั้งค่าภาษีและค่าบริการ</h3>
-                  </div>
-                </div>
-                
-                <div className="p-6 space-y-6">
-                  {/* Service Charge */}
-                  <div className="group">
-                    <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
-                      ค่าบริการ (Service Charge)
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <CreditCard className="h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Service Charge */}
+                      <div className="group">
+                        <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
+                          ค่าบริการ (Service Charge)
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <CreditCard className="h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
+                          </div>
+                          <input
+                            {...register('serviceCharge', {
+                              min: { value: 0, message: 'ค่าบริการต้องมากกว่าหรือเท่ากับ 0' },
+                              max: { value: 100, message: 'ค่าบริการต้องไม่เกิน 100' },
+                              valueAsNumber: true,
+                            })}
+                            type="number"
+                            step="0.01"
+                            className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-400 transition-all text-gray-800 placeholder-gray-400"
+                          />
+                          <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                            <span className="text-gray-400 font-medium">%</span>
+                          </div>
+                        </div>
+                        {errors.serviceCharge && (
+                          <p className="text-red-500 text-xs mt-1 ml-1">{errors.serviceCharge.message}</p>
+                        )}
                       </div>
-                      <input
-                        {...register('serviceCharge', {
-                          min: { value: 0, message: 'ค่าบริการต้องมากกว่าหรือเท่ากับ 0' },
-                          max: { value: 100, message: 'ค่าบริการต้องไม่เกิน 100' },
-                          valueAsNumber: true,
-                        })}
-                        type="number"
-                        step="0.01"
-                        className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-400 transition-all text-gray-800 placeholder-gray-400"
-                      />
-                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                        <span className="text-gray-400 font-medium">%</span>
-                      </div>
-                    </div>
-                    {errors.serviceCharge && (
-                      <p className="text-red-500 text-xs mt-1 ml-1">{errors.serviceCharge.message}</p>
-                    )}
-                  </div>
 
-                  {/* VAT */}
-                  <div className="group">
-                    <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
-                      ภาษีมูลค่าเพิ่ม (VAT)
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Percent className="h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
-                      </div>
-                      <input
-                        {...register('vat', {
-                          min: { value: 0, message: 'ภาษีมูลค่าเพิ่มต้องมากกว่าหรือเท่ากับ 0' },
-                          max: { value: 100, message: 'ภาษีมูลค่าเพิ่มต้องไม่เกิน 100' },
-                          valueAsNumber: true,
-                        })}
-                        type="number"
-                        step="0.01"
-                        className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-400 transition-all text-gray-800 placeholder-gray-400"
-                      />
-                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                        <span className="text-gray-400 font-medium">%</span>
+                      {/* VAT */}
+                      <div className="group">
+                        <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
+                          ภาษีมูลค่าเพิ่ม (VAT)
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Percent className="h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
+                          </div>
+                          <input
+                            {...register('vat', {
+                              min: { value: 0, message: 'ภาษีมูลค่าเพิ่มต้องมากกว่าหรือเท่ากับ 0' },
+                              max: { value: 100, message: 'ภาษีมูลค่าเพิ่มต้องไม่เกิน 100' },
+                              valueAsNumber: true,
+                            })}
+                            type="number"
+                            step="0.01"
+                            className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-400 transition-all text-gray-800 placeholder-gray-400"
+                          />
+                          <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                            <span className="text-gray-400 font-medium">%</span>
+                          </div>
+                        </div>
+                        {errors.vat && (
+                          <p className="text-red-500 text-xs mt-1 ml-1">{errors.vat.message}</p>
+                        )}
                       </div>
                     </div>
-                    {errors.vat && (
-                      <p className="text-red-500 text-xs mt-1 ml-1">{errors.vat.message}</p>
-                    )}
                   </div>
                 </div>
               </motion.div>
