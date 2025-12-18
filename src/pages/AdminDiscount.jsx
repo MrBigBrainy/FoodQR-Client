@@ -21,7 +21,7 @@ function AdminDiscount() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="p-4 md:p-6 pt-6 max-w-7xl mx-auto h-[calc(100vh-2rem)] flex flex-col"
+      className="p-4 md:p-6 pt-6 max-w-7xl mx-auto min-h-screen flex flex-col"
     >
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 shrink-0">
         <div>

@@ -13,6 +13,7 @@ function AdminAddMenu() {
     setIsLoading(true);
     try {
       const response = await axios.get("http://localhost:3000/api/store/menu");
+      console.log(response)
       setMenus(response.data.data);
     } catch (error) {
       console.error("โหลดเมนูล้มเหลว", error);
