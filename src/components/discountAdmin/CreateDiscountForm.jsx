@@ -17,13 +17,23 @@ const MOCK_AUTH = {
 };
 
 function CreateDiscountForm({ onCouponCreated }) {
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
   const [formData, setFormData] = useState({
     code: "",
     discountType: "baht",
     amount: 0,
     name: "",
     maxCount: 0,
-    startTime: "",
+    startTime: getCurrentDateTime(),
     endTime: "",
   });
 
@@ -100,7 +110,7 @@ function CreateDiscountForm({ onCouponCreated }) {
         amount: 0,
         name: "",
         maxCount: 0,
-        startTime: "",
+        startTime: getCurrentDateTime(),
         endTime: "",
       });
     } catch (error) {
@@ -157,7 +167,6 @@ function CreateDiscountForm({ onCouponCreated }) {
                 { value: "baht", label: "ลดเป็นบาท (฿)" },
                 { value: "percent", label: "ลดเป็น %" },
               ]}
-              icon={formData.discountType === "baht" ? DollarSign : Percent}
             />
           </div>
 
@@ -167,9 +176,6 @@ function CreateDiscountForm({ onCouponCreated }) {
               มูลค่าส่วนลด <span className="text-red-500">*</span>
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                <Hash size={18} />
-              </span>
               <input
                 type="number"
                 id="amount"
@@ -182,7 +188,7 @@ function CreateDiscountForm({ onCouponCreated }) {
                 onChange={handleChange}
                 min="0"
                 placeholder="0"
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 bg-gray-50 focus:bg-white"
                 required
               />
             </div>
@@ -192,7 +198,7 @@ function CreateDiscountForm({ onCouponCreated }) {
         {/* Coupon Name */}
         <div>
           <label className="block text-gray-700 text-sm font-bold mb-2">
-            ชื่อคูปอง (Optional)
+           รายละเอียดคูปอง
           </label>
           <div className="relative">
             <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
