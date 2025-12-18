@@ -8,10 +8,10 @@ function MenuCardAdmin({ menu, onEdit, onDelete }) {
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className="bg-white rounded-2xl shadow-sm hover:shadow-md overflow-hidden border border-gray-100 w-full flex flex-col transition-all duration-300"
+      className="bg-white rounded-2xl shadow-sm hover:shadow-md overflow-hidden border border-gray-100 w-full h-full flex flex-col transition-all duration-300"
     >
       {/* รูปภาพอาหาร */}
-      <div className="relative w-full h-48 overflow-hidden group">
+      <div className="relative w-full h-44 overflow-hidden group">
         <img
           src={menu.imageUrl}
           alt={menu.name}
@@ -21,65 +21,50 @@ function MenuCardAdmin({ menu, onEdit, onDelete }) {
       </div>
 
       {/* เนื้อหา */}
-      <div className="p-5 flex flex-col flex-1">
-        {/* ชื่อเมนู */}
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="font-bold text-gray-800 text-lg line-clamp-1" title={menu.name}>
-            {menu.name}
-          </h3>
-        </div>
+      <div className="p-4 flex flex-col flex-1">
+        {/* Row 1: ชื่อเมนู */}
+        <h3 className="font-bold text-gray-800 text-lg line-clamp-1 mb-3" title={menu.name}>
+          {menu.name}
+        </h3>
 
-        {/* ราคา */}
-        <div className="flex items-center gap-2 mb-4">
-          {hasDiscount ? (
-            <>
-              <span className="text-red-600 font-bold text-xl">
-                ฿{menu.netPrice}
-              </span>
-              <span className="text-gray-400 line-through text-sm">
+        {/* Row 2: ราคา และ Actions */}
+        <div className="flex justify-between items-center mt-auto">
+          {/* Price Section */}
+          <div className="flex items-baseline gap-2">
+            {hasDiscount ? (
+              <>
+                <span className="text-red-600 font-bold text-xl">
+                  ฿{menu.netPrice}
+                </span>
+                <span className="text-gray-400 line-through text-xs">
+                  ฿{menu.price}
+                </span>
+                <span className="text-red-500 text-xs font-bold">
+                  -{menu.discount}
+                </span>
+              </>
+            ) : (
+              <span className="text-gray-900 font-bold text-xl">
                 ฿{menu.price}
               </span>
-              <span className="bg-red-50 text-red-600 text-xs font-bold px-2 py-1 rounded-lg border border-red-100">
-                ลด ฿{menu.discount}
-              </span>
-            </>
-          ) : (
-            <span className="text-gray-900 font-bold text-xl">
-              ฿{menu.price}
-            </span>
-          )}
-        </div>
+            )}
+          </div>
 
-        {/* Spacer to push bottom content down */}
-        <div className="flex-1" />
-
-        {/* ปุ่มสถานะ และ Actions */}
-        <div className="flex justify-between items-center pt-4 border-t border-gray-50">
-          <span
-            className={`px-3 py-1 text-xs rounded-full font-bold border ${
-              menu.isAvailable
-                ? "bg-green-50 text-green-600 border-green-100"
-                : "bg-gray-50 text-gray-500 border-gray-100"
-            }`}
-          >
-            {menu.isAvailable ? "● กำลังขาย" : "○ ปิดขาย"}
-          </span>
-
-          {/* ปุ่มแก้ไข/ลบ */}
+          {/* Buttons Section */}
           <div className="flex items-center gap-1">
             <button
               onClick={() => onEdit(menu)}
               className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
               title="แก้ไข"
             >
-              <Pencil size={18} />
+              <Pencil size={16} />
             </button>
             <button
               onClick={() => onDelete(menu.id)}
               className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
               title="ลบ"
             >
-              <Trash2 size={18} />
+              <Trash2 size={16} />
             </button>
           </div>
         </div>
