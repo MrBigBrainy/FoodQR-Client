@@ -24,18 +24,13 @@ function AdminDiscount() {
       className="p-4 md:p-8 pt-10 max-w-7xl mx-auto"
     >
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <div className="flex items-center bg-white p-3 rounded-2xl shadow-sm border border-gray-100">
-          <div className="bg-red-100 p-3 rounded-xl mr-4">
-            <Percent className="text-red-600 w-8 h-8" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">
-              ระบบจัดการส่วนลด
-            </h1>
-            <p className="text-gray-500 text-sm">
-              จัดการคูปองและโปรโมชั่นทั้งหมด
-            </p>
-          </div>
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800 mb-1">
+            ระบบจัดการส่วนลด
+          </h1>
+          <p className="text-gray-500">
+            จัดการคูปองและโปรโมชั่นทั้งหมด
+          </p>
         </div>
         <motion.button
           whileHover={{ scale: 1.05 }}

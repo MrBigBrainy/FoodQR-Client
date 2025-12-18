@@ -219,17 +219,17 @@ function DiscountList() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium">
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
                 รหัส/ชื่อ
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium">
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
                 ส่วนลด
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium">
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
                 ใช้แล้ว
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium">สถานะ</th>
-              <th className="px-6 py-3 text-left text-xs font-medium">
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">สถานะ</th>
+              <th className="px-6 py-4 text-right text-sm font-bold text-gray-700 uppercase tracking-wider">
                 จัดการ
               </th>
             </tr>
@@ -246,17 +246,12 @@ function DiscountList() {
                   className="hover:bg-gray-50 transition-colors"
                 >
                   <td className="px-6 py-4">
-                    <div className="flex items-center">
-                      <div className="bg-red-50 p-2 rounded-lg mr-3">
-                        <span className="text-red-600 font-bold text-xs">CODE</span>
+                    <div>
+                      <div className="text-base font-bold text-gray-900">
+                        {discount.code}
                       </div>
-                      <div>
-                        <div className="text-sm font-bold text-gray-900">
-                          {discount.code}
-                        </div>
-                        <div className="text-xs text-gray-500 truncate w-48">
-                          {discount.description}
-                        </div>
+                      <div className="text-sm text-gray-500 truncate w-48">
+                        {discount.description}
                       </div>
                     </div>
                   </td>
@@ -268,16 +263,16 @@ function DiscountList() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500">
-                    <div className="flex items-center gap-2">
-                      <div className="w-full bg-gray-200 rounded-full h-2 w-24">
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-medium w-12">
+                        {discount.usage_count}/{discount.usage_limit === 0 ? "∞" : discount.usage_limit}
+                      </span>
+                      <div className="w-24 bg-gray-100 rounded-full h-1.5">
                         <div 
-                          className="bg-red-500 h-2 rounded-full" 
+                          className="bg-red-500 h-1.5 rounded-full transition-all duration-500" 
                           style={{ width: `${Math.min((discount.usage_count / (discount.usage_limit || 1)) * 100, 100)}%` }}
                         ></div>
                       </div>
-                      <span className="text-xs">
-                        {discount.usage_count}/{discount.usage_limit === 0 ? "∞" : discount.usage_limit}
-                      </span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -291,23 +286,25 @@ function DiscountList() {
                       {discount.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right text-sm space-x-2">
-                    <button
-                      className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                      onClick={() => openEditModal(discount)}
-                    >
-                      ✏️
-                    </button>
+                  <td className="px-6 py-4 text-right text-sm">
+                    <div className="flex justify-end gap-2">
+                      <button
+                        className="flex items-center gap-1 px-3 py-1.5 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-all font-medium text-xs"
+                        onClick={() => openEditModal(discount)}
+                      >
+                        แก้ไข
+                      </button>
 
-                    <button
-                      onClick={() => {
-                        setDeleteTarget(discount);
-                        setIsDeleteOpen(true);
-                      }}
-                      className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                    >
-                      🗑️
-                    </button>
+                      <button
+                        onClick={() => {
+                          setDeleteTarget(discount);
+                          setIsDeleteOpen(true);
+                        }}
+                        className="flex items-center gap-1 px-3 py-1.5 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-all font-medium text-xs"
+                      >
+                        ลบ
+                      </button>
+                    </div>
                   </td>
                 </motion.tr>
               ))}
