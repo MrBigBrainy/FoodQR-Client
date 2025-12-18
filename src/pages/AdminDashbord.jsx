@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DataCardAdmin from '../components/DataCardAdmin';
 import LineChart from '../components/LineChart';
 import DoughnutChart from '../components/DoughnutChart';
-import { getSaleToday } from '@/api/admin.api';
+import { getAllTables, getSaleToday } from '@/api/admin.api';
 import { io } from 'socket.io-client';
 
 // socket เลือกรับจาก backend
@@ -50,16 +50,17 @@ const AdminDashboard = () => {
     // ดึงข้อมูลจาก backend sale to day
     const [saleToday, setSaleToday] = useState(0)
     const [orderToday, setOrderToday] = useState(0)
+    const [customerToday, setCustomerToday] = useState(0)
+    const [allTable, setAllTable] = useState(0)
+    const [availableTable, setAvailableTable] = useState(0)
 
     useEffect(() => {
         const getDataTodays = async () => {
             try {
-                const response = await getSaleToday(); // 🔗 ดึงจาก backend
-                console.log(response)
-                const sumTotal = response.data.reduce((sum, num) => sum + (num.total || 0), 0);
-                const sumOrder = response.data.length
-                setSaleToday(sumTotal);
-                setOrderToday(sumOrder)
+                const response = await getSaleToday();
+                const table = await getAllTables()
+                // const availableTable = table.data.filter((each) => each.status === "available");
+
             } catch (err) {
                 console.error("❌ ดึงข้อมูลไม่สำเร็จ:", err);
             }
@@ -67,10 +68,15 @@ const AdminDashboard = () => {
         getDataTodays();
 
         socket.on("updateSale", (data) => {
-            if (data.saleToday !== undefined) {
-                setSaleToday(data.saleToday);
-                setOrderToday(data.sumOrder)
-            }
+            console.log('data1', data)
+            setSaleToday(data.saleToday);
+            setOrderToday(data.sumOrder)
+            setCustomerToday(data.sumCustomer)
+        });
+        socket.on("updateTable", (data) => {
+            console.log('data2', data)
+            setAllTable(data.sumTable)
+            setAvailableTable(data.availableTable)
         });
         return () => {
             socket.off("updateSale");
@@ -90,10 +96,10 @@ const AdminDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                     {/* Card 1: ยอดขายวันนี้ */}
 
-                    <DataCardAdmin title={"ยอดขายวันนี้"} count={`฿${saleToday}`} percent={"+12%"} />
-                    <DataCardAdmin title={"จำนวนออเดอร์"} count={`${orderToday}`} percent={"+12%"} />
-                    <DataCardAdmin title={"ลูกค้าทั้งหมด"} count={"654"} percent={"+12%"} />
-                    <DataCardAdmin title={"โต๊ะที่ว่าง"} count={"8/12"} percent={"ว่าง"} />
+                    <DataCardAdmin title={"ยอดขายวันนี้"} count={`฿${saleToday}`} />
+                    <DataCardAdmin title={"จำนวนออเดอร์"} count={`${orderToday}`} />
+                    <DataCardAdmin title={"ลูกค้าทั้งหมด"} count={`${customerToday}`} />
+                    <DataCardAdmin title={"โต๊ะที่ว่าง"} count={`${availableTable}/${allTable}`} />
                 </div>
 
                 {/* 4. Chart Section (Bottom Row) */}

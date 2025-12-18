@@ -8,11 +8,9 @@ import CoffeeLoader from "../components/loader/coffeeLoader";
 function MenuPage() {
   const menu = useMenuStore((state) => state.menu);
 
-
-
   useEffect(() => console.log(menu), [menu]);
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (term) => {
     setSearchTerm(term);
@@ -28,9 +26,10 @@ function MenuPage() {
 
       <div className="max-w-6xl mx-auto pb-36 px-4">
         {useMenuStore((state) => state.loading) ? (
-          <div className="flex justify-center items-center min-h-[60vh] animate-pulse">
-            <div className="bg-white/90 backdrop-blur-md p-3 rounded-full shadow-xl border border-red-100 flex items-center justify-center transform hover:scale-105 transition-transform duration-300">
-              <CoffeeLoader scale={0.3} />
+          <div className="flex justify-center items-center min-h-[50vh]">
+            <div className="bg-white/80 backdrop-blur-sm p-8 rounded-full shadow-lg border border-white/50">
+              {/* <CoffeeLoader scale={0.4} /> */}
+              <RedWineLoader scale={1} />
             </div>
           </div>
         ) : filteredMenu?.length > 0 ? (

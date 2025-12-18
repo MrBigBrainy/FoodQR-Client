@@ -26,7 +26,6 @@ const CoffeeLoader = ({ scale = 0.5 }) => {
             // No background color
           }}
         ></div>
-        
       </div>
     </div>
   );

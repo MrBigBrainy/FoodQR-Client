@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { FileText, Save } from 'lucide-react';
+import api from '@/api/axios';
+import { getStoreById, updateStoreById } from '@/api/store.api';
 
 function AdminShopSettingPage() {
   const {
@@ -14,7 +16,7 @@ function AdminShopSettingPage() {
       shopName: '',
       shopAddress: '',
       shopPhone: '',
-      taxId: '',
+      // taxId: '',
       serviceCharge: '',
       vat: '',
     },
@@ -31,17 +33,30 @@ function AdminShopSettingPage() {
     { name: 'Purple', value: 'purple', color: 'bg-purple-500' },
     { name: 'Orange', value: 'orange', color: 'bg-orange-500' },
   ];
-
   // Fetch shop settings on component mount
   useEffect(() => {
     const fetchShopSettings = async () => {
       try {
-        // TODO: Call API to get shop settings
-        // const response = await getShopSettings(storeId);
-        // if (response.data) {
-        //     reset(response.data);
-        //     setSelectedTheme(response.data.themeColor || 'red');
-        // }
+        // hard code 
+        const res = await getStoreById(1);
+
+        const data = res.data.store
+        console.log("✅ ข้อมูลที่ได้:", data);
+        // reset(res.data.store)
+
+        // แจ้งพี่วี เรื่อง data ไม่ตรงกัน
+        reset({
+          // logoUrl: data.logoUrl,
+          name: data.name,
+          address: data.address,
+          // shopPhone: data.phone,
+          // taxId: data.taxId,
+          serviceCharge: data.serviceCharge,
+          vat: data.vat,
+          // hardcode
+          id: data.id,
+        })
+
       } catch (error) {
         console.error('Error fetching shop settings:', error);
       }
@@ -53,20 +68,17 @@ function AdminShopSettingPage() {
     setLoading(true);
     try {
       const shopData = {
-        logoUrl: data.logoUrl,
-        shopName: data.shopName,
-        shopAddress: data.shopAddress,
-        shopPhone: data.shopPhone,
-        taxId: data.taxId,
+        // logoUrl: data.logoUrl,
+        name: data.name,
+        address: data.address,
+        // taxId: data.taxId,
         serviceCharge: parseFloat(data.serviceCharge),
         vat: parseFloat(data.vat),
-        themeColor: selectedTheme,
-        storeId: storeId,
       };
-
-      // TODO: Call API to save shop settings
-      // const response = await updateShopSettings(storeId, shopData);
       console.log('Shop settings saved:', shopData);
+
+      // put data to backend 
+      const res = await updateStoreById(1, shopData);
 
       alert('บันทึกการตั้งค่าร้านค้าสำเร็จ!');
     } catch (error) {
@@ -76,6 +88,8 @@ function AdminShopSettingPage() {
       setLoading(false);
     }
   };
+
+
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -119,7 +133,7 @@ function AdminShopSettingPage() {
                 ชื่อร้านค้า (จะแสดงในบิล)
               </label>
               <input
-                {...register('shopName', { required: 'กรุณากรอกชื่อร้านค้า' })}
+                {...register('name', { required: 'กรุณากรอกชื่อร้านค้า' })}
                 type="text"
                 placeholder="เช่น Na-ni-no-Sushi POS"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-800 placeholder-gray-400"
@@ -137,7 +151,7 @@ function AdminShopSettingPage() {
                 ที่อยู่ร้านค้า (สำหรับออกใบเสร็จ)
               </label>
               <input
-                {...register('shopAddress', {
+                {...register('address', {
                   required: 'กรุณากรอกที่อยู่ร้านค้า',
                 })}
                 type="text"
@@ -152,12 +166,12 @@ function AdminShopSettingPage() {
             </div>
 
             {/* Shop Phone */}
-            <div>
+            {/* <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
                 เบอร์โทรศัพท์ร้านค้า
               </label>
               <input
-                {...register('shopPhone')}
+                // {...register('shopPhone')}
                 type="tel"
                 placeholder="เช่น 02-123-4567"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-800 placeholder-gray-400"
@@ -167,10 +181,10 @@ function AdminShopSettingPage() {
                   {errors.shopPhone.message}
                 </p>
               )}
-            </div>
+            </div> */}
 
             {/* Tax ID */}
-            <div>
+            {/* <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
                 เลขประจำตัวผู้เสียภาษี
               </label>
@@ -185,7 +199,7 @@ function AdminShopSettingPage() {
                   {errors.taxId.message}
                 </p>
               )}
-            </div>
+            </div> */}
 
             {/* Service Charge */}
             <div>
