@@ -146,7 +146,7 @@ function CartCard({ item }) {
             <Edit3 size={12} className="group-hover:text-red-500" />
             {currentNote ? (
               <span className="text-gray-500 font-medium text-ellipsis line-clamp-1">
-                Note: {currentNote}
+                {currentNote}
               </span>
             ) : (
               <span>เพิ่มหมายเหตุถึงร้านค้า...</span>
