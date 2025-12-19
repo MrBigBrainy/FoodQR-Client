@@ -37,7 +37,7 @@ function RedWineLoader({ scale = 1 }) {
         <path
           d="M10 10 H90 V50 C90 75 70 95 50 95 C30 95 10 75 10 50 V10 Z"
           stroke="black"
-          strokeWidth="8"
+          strokeWidth="5"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
@@ -49,7 +49,7 @@ function RedWineLoader({ scale = 1 }) {
           x2="50"
           y2="145"
           stroke="black"
-          strokeWidth="8"
+          strokeWidth="5"
           strokeLinecap="round"
         />
 
@@ -60,7 +60,7 @@ function RedWineLoader({ scale = 1 }) {
           x2="75"
           y2="145"
           stroke="black"
-          strokeWidth="8"
+          strokeWidth="5"
           strokeLinecap="round"
         />
       </svg>
