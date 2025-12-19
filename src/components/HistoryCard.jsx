@@ -87,9 +87,8 @@ export default function HistoryCard() {
                         </div>
                         
                         <div>
-                            <div className="font-bold text-gray-800 text-sm">{item.user?.displayName || "Unknown User"}</div>
+                            <div className="font-bold text-gray-800 text-sm">{item.displayName || "Unknown User"}</div>
                             <div className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
-                                <Sparkles className="w-3 h-3 text-orange-400" />
                                 {formatDate(item.updatedAt)}
                             </div>
                         </div>
