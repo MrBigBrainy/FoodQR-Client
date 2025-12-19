@@ -114,7 +114,9 @@ const AdminDashboard = () => {
             className="flex-1 p-6 max-w-7xl mx-auto"
         >
             {isLoading ? (
-                <RedWineLoader />
+                <div className="flex h-[80vh] items-center justify-center">
+                    <RedWineLoader />
+                </div>
             ) : (
                 <>
                     {/* ===== Summary Cards ===== */}
