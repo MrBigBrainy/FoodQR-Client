@@ -8,6 +8,7 @@ import { createOrder } from '@/api/order.api';
 import { useParams } from 'react-router';
 import { updateTableStatus } from '@/api/table.api';
 import CoffeeLoader from '@/components/loader/coffeeLoader';
+import RedWineLoader from '@/components/loader/RedWineLoader';
 import { motion, AnimatePresence } from 'motion/react';
 import { socket } from '@/lib/socket';
 import { 
@@ -334,7 +335,7 @@ function TableAdmin() {
             {/* Header & Actions */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h2 className="text-3xl font-bold text-gray-900 mb-1 tracking-tight">จัดการโต๊ะ</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-1 tracking-tight">จัดการโต๊ะ</h2>
                     <p className="text-gray-500">จัดการและติดตามสถานะโต๊ะทั้งหมดในร้าน</p>
                 </div>
                 <div className="flex gap-3">
@@ -373,7 +374,8 @@ function TableAdmin() {
                 
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
-                        <CoffeeLoader scale={0.6} />
+                        {/* <CoffeeLoader scale={0.6} /> */}
+                        <RedWineLoader scale={1} />
                     </div>
                 ) : tables.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-80 text-gray-400 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50/50">

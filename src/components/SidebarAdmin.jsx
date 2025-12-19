@@ -49,14 +49,14 @@ function SidebarAdmin() {
     {
       path: `/admin/store/${storeId}`,
       icon: HouseIcon,
-      label: 'Dashboard',
+      label: 'ภาพรวมร้านค้า',
       end: true,
     },
-    {
-      path: `/admin/store/${storeId}/kitchen`,
-      icon: ChefHatIcon,
-      label: 'จัดการครัว',
-    },
+    // {
+    //   path: `/admin/store/${storeId}/kitchen`,
+    //   icon: ChefHatIcon,
+    //   label: 'จัดการครัว',
+    // },
     {
       path: `/admin/store/${storeId}/table`,
       icon: TableIcon,
@@ -67,11 +67,11 @@ function SidebarAdmin() {
       icon: MenuIcon,
       label: 'จัดการเมนู',
     },
-    {
-      path: `/admin/store/${storeId}/billing`,
-      icon: BanknoteIcon,
-      label: 'จัดการบิล',
-    },
+    // {
+    //   path: `/admin/store/${storeId}/billing`,
+    //   icon: BanknoteIcon,
+    //   label: 'จัดการบิล',
+    // },
     {
       path: `/admin/store/${storeId}/discount`,
       icon: PercentIcon,
@@ -85,7 +85,7 @@ function SidebarAdmin() {
   ];
 
   return (
-    <aside className="w-72 bg-white h-screen flex flex-col shadow-xl z-50 sticky top-0 overflow-hidden font-sans border-r border-gray-100">
+    <aside className="w-72 bg-white h-screen fixed top-0 left-0 flex flex-col shadow-xl z-50 font-sans border-r border-gray-100">
       {/* Subtle Background Pattern */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-red-50 rounded-full blur-3xl -z-10 opacity-40 translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 left-0 w-40 h-40 bg-orange-50 rounded-full blur-3xl -z-10 opacity-40 -translate-x-1/2 translate-y-1/2" />
@@ -111,7 +111,7 @@ function SidebarAdmin() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 space-y-2 overflow-y-auto custom-scrollbar">
+      <nav className="flex-1 px-4 space-y-2">
         {/* Back to Menu Link */}
         <NavLink
           to={`http://localhost:5173/menu-qr?storeId=${storeId}`} 

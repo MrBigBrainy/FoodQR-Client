@@ -1,74 +1,74 @@
 import React from "react";
 import { Pencil, Trash2 } from "lucide-react";
+import { motion } from "motion/react";
 
 function MenuCardAdmin({ menu, onEdit, onDelete }) {
+  const hasDiscount = menu.discount > 0;
+
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 w-[300px]">
+    <motion.div
+      whileHover={{ y: -5 }}
+      className="bg-white rounded-2xl shadow-sm hover:shadow-md overflow-hidden border border-gray-100 w-full h-full flex flex-col transition-all duration-300"
+    >
       {/* รูปภาพอาหาร */}
-      <div className="relative w-full h-48">
+      <div className="relative w-full h-44 overflow-hidden group">
         <img
           src={menu.imageUrl}
           alt={menu.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
       </div>
 
       {/* เนื้อหา */}
-      <div className="p-4">
-        {/* ชื่อเมนู */}
-        <h3 className="font-semibold text-gray-800 mb-1">{menu.name}</h3>
+      <div className="p-4 flex flex-col flex-1">
+        {/* Row 1: ชื่อเมนู */}
+        <h3 className="font-medium text-gray-800 text-lg line-clamp-1 mb-3" title={menu.name}>
+          {menu.name}
+        </h3>
 
-        {/* ราคา */}
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-red-600 font-bold text-lg">
-            ฿{menu.netPrice}
-          </span>
-          <span className="text-gray-400 line-through text-sm">
-            ฿{menu.price}
-          </span>
-          <span className="bg-red-100 text-red-600 text-xs font-semibold px-2 py-1 rounded-md">
-            ลด ฿{menu.discount}
-          </span>
-        </div>
-
-        {/* รายละเอียดสั้น */}
-        {/* <div className="flex items-center text-sm text-gray-500 mb-3">
-                        <span>🧺 คงเหลือ: {menu.stock}</span>
-                        <span className="mx-2">•</span>
-                        <span>{menu.category}</span>
-                    </div> */}
-
-        {/* ปุ่มสถานะ */}
-        <div className="flex justify-between items-center">
-          <button
-            className={`px-4 py-1 text-sm rounded-full font-medium ${
-              menu.isAvailable
-                ? "bg-green-100 text-green-600"
-                : "bg-gray-100 text-gray-500"
-            }`}
-          >
-            {menu.isAvailable ? "กำลังขาย" : "ปิดขาย"}
-          </button>
-
-          {/* ปุ่มแก้ไข/ลบ */}
+        {/* Row 2: ราคา และ Actions */}
+        <div className="flex justify-between items-center mt-auto">
+          {/* Price Section */}
           <div className="flex items-center gap-2">
+            {hasDiscount ? (
+              <>
+                <span className="text-red-600 font-medium text-xl">
+                  ฿{menu.netPrice}
+                </span>
+                <span className="bg-red-100 text-red-600 text-xs font-medium px-2 py-0.5 rounded-md">
+                  ลด {menu.discount} บาท
+                </span>
+              </>
+            ) : (
+              <span className="text-gray-900 font-medium text-xl">
+                ฿{menu.price}
+              </span>
+            )}
+          </div>
+
+          {/* Buttons Section */}
+          <div className="flex items-center gap-1">
             <button
               onClick={() => onEdit(menu)}
-              className="p-2 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100"
+              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+              title="แก้ไข"
             >
               <Pencil size={16} />
             </button>
             <button
               onClick={() => onDelete(menu.id)}
-              className="p-2 bg-red-50 text-red-600 rounded-full hover:bg-red-100"
+              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+              title="ลบ"
             >
               <Trash2 size={16} />
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 export default MenuCardAdmin;
+

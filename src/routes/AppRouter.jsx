@@ -17,6 +17,7 @@ import AdminShopSettingPage from '@/pages/AdminShopSettingPage';
 import AdminDiscount from "@/pages/AdminDiscount";
 import MenuBill from "../components/Billing/MenuBill";
 import CoffeeLoader from "@/components/loader/coffeeLoader";
+import RedWineLoader from "@/components/loader/RedWineLoader";
 import PaymentQRPage from "@/pages/PaymentQRPage";
 import PaymentStatusPage from "@/pages/PaymentStatusPage";
 import NotFoundPage from "../pages/NotFoundPage";
@@ -48,7 +49,8 @@ const router = createBrowserRouter([
    { path: "/test", element: <CoffeeLoader /> },
    { path: "/test2", element: <Billing /> },
    { path: "/test3", element: <PaymentQRPage /> },
-   { path: "/test4", element: <PaymentStatusPage /> },
+  { path: "/test4", element: <PaymentStatusPage /> },
+   { path: "/test5", element: <RedWineLoader /> },
   {
     path: '/admin/store/:storeId',
     element: <AdminPage />,

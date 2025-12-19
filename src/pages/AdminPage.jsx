@@ -5,9 +5,9 @@ import { Outlet } from 'react-router'
 function AdminPage() {
     return (
         <div>
-            <div className='flex bg-gray-50 min-h-screen'>
+            <div className='bg-gray-50 min-h-screen'>
                 <SidebarAdmin />
-                <div className='w-full'>
+                <div className='ml-72'>
                     <Outlet />
                 </div>
             </div>

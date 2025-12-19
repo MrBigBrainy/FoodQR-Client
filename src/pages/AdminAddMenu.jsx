@@ -2,37 +2,59 @@ import axios from "axios";
 import AddmenuForm from "../components/addmenu/AddmenuForm";
 import MenuCardAdmin from "../components/addmenu/MenuCardAdmin";
 import React, { useEffect, useState } from "react";
-import EditCard from "@/components/addmenu/EditCard";
-import DeleteCard from "@/components/addmenu/DeleteCard";
+import EditMenuForm from "@/components/addmenu/EditMenuForm";
+import DeleteMenuContent from "@/components/addmenu/DeleteMenuContent";
+import Modal from "@/components/Modal";
+import { useParams } from "react-router";
+import useMenuStore from "@/stores/useMenuStore";
+import { getStoreMenu } from "@/api/store.api";
+import { motion } from "motion/react";
+import { Plus, Search } from "lucide-react";
+import RedWineLoader from "@/components/loader/RedWineLoader";
 
 function AdminAddMenu() {
-  const [menus, setMenus] = useState([]);
+  const { storeId } = useParams();
+  const { setMenu } = useMenuStore.getState();
+  const menu = useMenuStore((store) => store.menu);
   const [isLoading, setIsLoading] = useState(true);
 
-  const getMenu = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.get("http://localhost:3000/api/store/menu");
-      setMenus(response.data.data);
-    } catch (error) {
-      console.error("โหลดเมนูล้มเหลว", error);
-    }
-  };
   useEffect(() => {
+    if (!storeId) return;
+
+    const getMenu = async () => {
+      useMenuStore.getState().setLoading(true);
+      try {
+        const response = await getStoreMenu(storeId);
+        console.log("Menu data:", response.data);
+        setMenu(response.data.menu);
+      } catch (err) {
+        console.error("Failed to fetch menu:", err);
+      } finally {
+        useMenuStore.getState().setLoading(false);
+        setIsLoading(false);
+      }
+    };
+
     getMenu();
-  }, []);
+  }, [storeId, setMenu]);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    price: "",
-    discount: "",
-    category: "",
-    imageUrl: "",
-  });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const getMenu = async () => {
+     // Re-fetch logic if needed for updates, though store might handle it.
+     // For now reusing the logic from useEffect but as a function if needed by child components
+      if (!storeId) return;
+      try {
+        const response = await getStoreMenu(storeId);
+        setMenu(response.data.menu);
+      } catch (err) {
+        console.error("Failed to fetch menu:", err);
+      }
+  };
 
   const handleCreateMenu = async (formData) => {
     try {
@@ -41,7 +63,6 @@ function AdminAddMenu() {
         formData
       );
       console.log(" เพิ่มเมนูสำเร็จ:", res.data);
-      console.log("test");
       getMenu();
       closeModal();
     } catch (err) {
@@ -85,6 +106,7 @@ function AdminAddMenu() {
     }
     closeModal();
   };
+
   const closeModal = () => {
     setIsOpen(false);
     setIsEditModalOpen(false);
@@ -92,68 +114,108 @@ function AdminAddMenu() {
     setSelectedMenu(null);
   };
 
+  const filteredMenu = menu.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="p-4 md:p-6 pt-6 max-w-7xl mx-auto min-h-screen flex flex-col"
+    >
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold text-gray-800">
-          จัดการเมนูอาหาร
-        </h2>
-        <button
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 shrink-0">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-1">
+            จัดการเมนูอาหาร
+          </h1>
+          <p className="text-gray-500 text-sm">
+            เพิ่ม ลบ แก้ไข รายการอาหารของคุณ
+          </p>
+        </div>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => setIsOpen(true)}
-          className="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700 transition"
+          className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-red-200 flex items-center gap-2 text-sm"
         >
-          + เพิ่มเมนู
-        </button>
+          <Plus size={18} />
+          <span>เพิ่มเมนู</span>
+        </motion.button>
       </div>
 
       {/* Search Bar */}
-      <div className="mb-6">
+      <div className="mb-6 relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
         <input
           type="text"
-          placeholder="🔍 ค้นหาเมนู..."
-          className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500"
+          placeholder="ค้นหาเมนู..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all bg-white shadow-sm"
         />
       </div>
 
-      <div className="flex flex-wrap gap-4 ">
-        {menus.map((menu) => (
-          <MenuCardAdmin
-            key={menu.id}
-            menu={menu}
-            onEdit={handleEditClick}
-            onDelete={handleDeleteClick}
-          />
-        ))}
-      </div>
-
-      {/* Modal */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center ">
-          <div
-            className="bg-white rounded-xl shadow-lg w-full max-w-xl 
-                      max-h-[90vh] overflow-y-auto p-6"
-          >
-            <AddmenuForm
-              onSubmit={handleCreateMenu}
-              onClose={() => setIsOpen(false)}
+      {/* Menu Grid */}
+      {isLoading ? (
+        <div className="flex-1 flex items-center justify-center min-h-[400px]">
+          <RedWineLoader scale={1} />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredMenu.map((menu) => (
+            <MenuCardAdmin
+              key={menu.id}
+              menu={menu}
+              onEdit={handleEditClick}
+              onDelete={handleDeleteClick}
             />
-          </div>
+          ))}
         </div>
       )}
-      <EditCard
-        menu={selectedMenu}
-        isVisible={isEditModalOpen}
+
+      {/* Add Modal */}
+      <Modal
+        isOpen={isOpen}
         onClose={closeModal}
-        onSave={handleSaveEdit}
-      />
-      <DeleteCard
-        menu={selectedMenu}
-        isVisible={isDeleteModalOpen}
+        title="เพิ่มเมนูใหม่"
+        modalClassName="max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden"
+      >
+        <AddmenuForm
+          onSubmit={handleCreateMenu}
+          onClose={closeModal}
+        />
+      </Modal>
+
+      {/* Edit Modal */}
+      <Modal
+        isOpen={isEditModalOpen}
         onClose={closeModal}
-        onConfirm={handleConfirmDelete}
-      />
-    </div>
+        title="แก้ไขเมนู"
+        modalClassName="max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden"
+      >
+        <EditMenuForm
+          menu={selectedMenu}
+          onSave={handleSaveEdit}
+          onCancel={closeModal}
+        />
+      </Modal>
+
+      {/* Delete Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={closeModal}
+        modalClassName="max-w-md bg-white rounded-2xl shadow-xl overflow-hidden"
+      >
+        <DeleteMenuContent
+          menu={selectedMenu}
+          onConfirm={handleConfirmDelete}
+          onCancel={closeModal}
+        />
+      </Modal>
+    </motion.div>
   );
 }
 

@@ -38,7 +38,7 @@ const CustomSelect = ({
             <div 
                 onClick={() => !disabled && setIsOpen(!isOpen)}
                 className={`
-                    w-full pl-10 pr-10 py-3 border rounded-xl cursor-pointer transition-all duration-200
+                    w-full ${Icon ? 'pl-10' : 'pl-4'} pr-10 py-3 border rounded-xl cursor-pointer transition-all duration-200
                     flex items-center justify-between bg-gray-50 hover:bg-white
                     ${isOpen ? 'ring-2 ring-red-500/20 border-red-500 bg-white' : 'border-gray-200'}
                     ${error ? 'border-red-500 ring-2 ring-red-500/20' : ''}

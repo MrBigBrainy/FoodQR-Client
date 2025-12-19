@@ -1,5 +1,7 @@
 import React from 'react'
 import { Line } from 'react-chartjs-2'
+import { motion } from 'motion/react'
+import { Clock } from 'lucide-react'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -9,47 +11,95 @@ import {
     Title,
     Tooltip,
     Legend,
+    Filler
 } from "chart.js";
 
-// ทำเพื่อให้ใช้งาน react-chartjs-2
 ChartJS.register(
-    LineElement,     // สำหรับกราฟเส้น
-    CategoryScale,   // แกน X (หมวดหมู่)
-    LinearScale,     // แกน Y (ตัวเลข)
-    PointElement,    // จุดบนกราฟเส้น
-    Tooltip,         // กล่อง tooltip ตอน hover
-    Legend,           // แสดงคำอธิบาย dataset
-    Title
+    LineElement,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    Tooltip,
+    Legend,
+    Title,
+    Filler
 );
 
 function LineChart({ data, title }) {
     const options = {
-        // ... กำหนด options เช่น scale, legend, tooltip
         responsive: true,
-        scales: {
-            y: {
-                // ... y-axis configuration (max 10000)
-                beginAtZero: true,
-            }
-        },
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 display: false
+            },
+            tooltip: {
+                mode: 'index',
+                intersect: false,
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                titleColor: '#1f2937',
+                bodyColor: '#4b5563',
+                borderColor: '#e5e7eb',
+                borderWidth: 1,
+                padding: 10,
+                boxPadding: 4,
+                usePointStyle: true,
             }
+        },
+        scales: {
+            x: {
+                grid: {
+                    display: false,
+                    drawBorder: false,
+                },
+                ticks: {
+                    color: '#9ca3af',
+                    font: {
+                        size: 11
+                    }
+                }
+            },
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: '#f3f4f6',
+                    drawBorder: false,
+                },
+                ticks: {
+                    color: '#9ca3af',
+                    font: {
+                        size: 11
+                    },
+                    callback: function(value) {
+                        return '฿' + value;
+                    }
+                }
+            }
+        },
+        interaction: {
+            mode: 'nearest',
+            axis: 'x',
+            intersect: false
         }
     };
+
     return (
-        <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="mr-2 text-red-500">
-                    <i className="far fa-clock"></i>
-                </span>
+        <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="h-full flex flex-col"
+        >
+            <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
+                <div className="p-2 bg-red-50 rounded-lg text-red-600">
+                    <Clock size={20} />
+                </div>
                 {title}
             </h3>
-            <div className="h-80"> {/* กำหนดความสูงเพื่อให้กราฟแสดงผลได้ดี */}
+            <div className="flex-1 min-h-[300px] w-full">
                 <Line data={data} options={options} />
             </div>
-        </div>
+        </motion.div>
     )
 }
 
