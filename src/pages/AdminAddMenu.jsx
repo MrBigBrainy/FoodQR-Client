@@ -1,4 +1,3 @@
-import axios from "axios";
 import AddmenuForm from "../components/addmenu/AddmenuForm";
 import MenuCardAdmin from "../components/addmenu/MenuCardAdmin";
 import React, { useEffect, useState } from "react";
@@ -8,9 +7,11 @@ import Modal from "@/components/Modal";
 import { useParams } from "react-router";
 import useMenuStore from "@/stores/useMenuStore";
 import { getStoreMenu } from "@/api/store.api";
+import { createMenu } from "@/api/menu.api";
 import { motion } from "motion/react";
 import { Plus, Search } from "lucide-react";
 import RedWineLoader from "@/components/loader/RedWineLoader";
+import toast from "react-hot-toast";
 
 function AdminAddMenu() {
   const { storeId } = useParams();
@@ -56,17 +57,15 @@ function AdminAddMenu() {
       }
   };
 
-  const handleCreateMenu = async (formData) => {
+  const handleCreateMenu = async (menuData) => {
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/store/menu",
-        formData
-      );
-      console.log(" เพิ่มเมนูสำเร็จ:", res.data);
-      getMenu();
+      await createMenu(menuData);
+      toast.success("เพิ่มเมนูสำเร็จ!");
+      await getMenu();
       closeModal();
     } catch (err) {
-      console.error(" เพิ่มเมนูล้มเหลว:", err);
+      console.error("เพิ่มเมนูล้มเหลว:", err);
+      toast.error(err?.response?.data?.message || "เกิดข้อผิดพลาดในการเพิ่มเมนู");
     }
   };
 
@@ -76,17 +75,12 @@ function AdminAddMenu() {
   };
 
   const handleSaveEdit = async (menuId, formData) => {
+    // EditMenuForm handles the update itself, this callback is just for refreshing the menu list
     try {
-      const res = await axios.put(
-        `http://localhost:3000/api/store/menu/${menuId}`,
-        formData
-      );
-      console.log("update success");
-      getMenu();
+      await getMenu();
     } catch (error) {
-      console.log("Failed to update:", error);
+      console.error("Failed to refresh menu:", error);
     }
-    closeModal();
   };
 
   const handleDeleteClick = (menu) => {
@@ -154,7 +148,7 @@ function AdminAddMenu() {
           placeholder="ค้นหาเมนู..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all bg-white shadow-sm"
+          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all bg-white shadow-sm text-gray-800 placeholder:text-gray-400"
         />
       </div>
 
@@ -162,6 +156,22 @@ function AdminAddMenu() {
       {isLoading ? (
         <div className="flex-1 flex items-center justify-center min-h-[400px]">
           <RedWineLoader scale={1} />
+        </div>
+      ) : filteredMenu.length === 0 && searchTerm ? (
+        <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] text-gray-400">
+          <Search size={64} className="mb-4 opacity-20" />
+          <p className="text-lg font-medium text-gray-500">ไม่มีเมนูที่ค้นหา</p>
+          <p className="text-sm text-gray-400 mt-2">ลองค้นหาด้วยคำอื่น</p>
+        </div>
+      ) : filteredMenu.length === 0 ? (
+        <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] text-gray-400">
+          <p className="text-lg font-medium text-gray-500">ยังไม่มีเมนูในระบบ</p>
+          <button 
+            onClick={() => setIsOpen(true)}
+            className="mt-4 text-red-600 hover:text-red-700 font-medium hover:underline"
+          >
+            + เพิ่มเมนูแรกของคุณ
+          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -186,6 +196,7 @@ function AdminAddMenu() {
         <AddmenuForm
           onSubmit={handleCreateMenu}
           onClose={closeModal}
+          storeId={storeId}
         />
       </Modal>
 
@@ -200,6 +211,7 @@ function AdminAddMenu() {
           menu={selectedMenu}
           onSave={handleSaveEdit}
           onCancel={closeModal}
+          storeId={storeId}
         />
       </Modal>
 

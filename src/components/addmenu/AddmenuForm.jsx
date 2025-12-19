@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import AddDropZone from "./AddDropZone";
-import { Utensils, DollarSign, Tag, FileText, List } from "lucide-react";
+import { Utensils, DollarSign, Tag, FileText, List, Loader2 } from "lucide-react";
+import { storage } from "@/firebase/firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import toast from "react-hot-toast";
 
-function AddmenuForm({ onSubmit, onClose }) {
+function AddmenuForm({ onSubmit, onClose, storeId }) {
   const { register, handleSubmit, watch, reset } = useForm();
   const [selectedFile, setSelectedFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const price = watch("price") || 0;
   const discount = watch("discount") || 0;
 
@@ -14,28 +19,78 @@ function AddmenuForm({ onSubmit, onClose }) {
     setSelectedFile(file);
   };
 
-  const handleFormSubmit = (data) => {
-    const formData = new FormData();
-    const payload = {
-      ...data,
-      price: Number(data.price),
-      discount: Number(data.discount),
-      netPrice: Number(price - discount),
-      categoryId: Number(data.categoryId),
-      menuTypeId: Number(data.menuTypeId),
-    };
+  const uploadImageToFirebase = async (file) => {
+    return new Promise((resolve, reject) => {
+      const storageRef = ref(storage, `menus/${storeId || 'default'}/menu_${Date.now()}_${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
 
-    Object.keys(payload).forEach((key) => {
-      formData.append(key, payload[key]);
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setUploadProgress(progress);
+        },
+        (error) => {
+          console.error('Upload failed:', error);
+          reject(error);
+        },
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            resolve(downloadURL);
+          } catch (error) {
+            reject(error);
+          }
+        }
+      );
     });
+  };
 
-    if (selectedFile) {
-      formData.append("imageFile", selectedFile);
+  const handleFormSubmit = async (data) => {
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    try {
+      let imageUrl = "";
+
+      // Upload image to Firebase Storage if file is selected
+      if (selectedFile) {
+        try {
+          imageUrl = await uploadImageToFirebase(selectedFile);
+          toast.success("อัปโหลดรูปภาพสำเร็จ!");
+        } catch (error) {
+          console.error("Failed to upload image:", error);
+          toast.error("อัปโหลดรูปภาพไม่สำเร็จ");
+          setIsUploading(false);
+          return;
+        }
+      }
+
+      // Prepare payload with imageUrl instead of imageFile
+      const payload = {
+        ...data,
+        price: Number(data.price),
+        discount: Number(data.discount),
+        netPrice: Number(price - discount),
+        categoryId: Number(data.categoryId),
+        menuTypeId: Number(data.menuTypeId),
+        ...(imageUrl && { imageUrl }), // Only include imageUrl if it exists
+      };
+
+      if (onSubmit) {
+        await onSubmit(payload);
+      }
+      
+      reset();
+      setSelectedFile(null);
+      setUploadProgress(0);
+      if (onClose) onClose();
+    } catch (error) {
+      console.error("Failed to submit form:", error);
+      toast.error("เกิดข้อผิดพลาดในการเพิ่มเมนู");
+    } finally {
+      setIsUploading(false);
     }
-
-    if (onSubmit) onSubmit(formData);
-    reset();
-    if (onClose) onClose();
   };
 
   return (
@@ -142,9 +197,17 @@ function AddmenuForm({ onSubmit, onClose }) {
 
       <button
         type="submit"
-        className="w-full bg-red-600 text-white py-3 rounded-xl font-bold text-lg hover:bg-red-700 transition-all shadow-lg shadow-red-200 mt-2"
+        disabled={isUploading}
+        className="w-full bg-red-600 text-white py-3 rounded-xl font-bold text-lg hover:bg-red-700 transition-all shadow-lg shadow-red-200 mt-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
-        เพิ่มเมนู
+        {isUploading ? (
+          <>
+            <Loader2 size={20} className="animate-spin" />
+            <span>กำลังอัปโหลด... {Math.round(uploadProgress)}%</span>
+          </>
+        ) : (
+          "เพิ่มเมนู"
+        )}
       </button>
     </form>
   );

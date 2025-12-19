@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Utensils, DollarSign, Tag, FileText, List, Image as ImageIcon } from "lucide-react";
+import { Utensils, DollarSign, Tag, FileText, List, Image as ImageIcon, Loader2 } from "lucide-react";
 import CustomSelect from "@/components/CustomSelect";
+import { updateMenu } from "@/api/menu.api";
+import { storage } from "@/firebase/firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import toast from "react-hot-toast";
 
-function EditMenuForm({ menu, onSave, onCancel }) {
+function EditMenuForm({ menu, onSave, onCancel, storeId }) {
   const [formData, setFormData] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     if (menu) {
@@ -49,22 +55,88 @@ function EditMenuForm({ menu, onSave, onCancel }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const uploadImageToFirebase = async (file) => {
+    return new Promise((resolve, reject) => {
+      const storageRef = ref(storage, `menus/${storeId || 'default'}/menu_${Date.now()}_${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setUploadProgress(progress);
+        },
+        (error) => {
+          console.error('Upload failed:', error);
+          reject(error);
+        },
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            resolve(downloadURL);
+          } catch (error) {
+            reject(error);
+          }
+        }
+      );
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const dataToSend = new FormData();
-
-    dataToSend.append("id", menu.id);
-    for (const key in formData) {
-      dataToSend.append(key, String(formData[key]));
-    }
-    dataToSend.append("netPrice", String(netPrice));
-    if (selectedFile) {
-      dataToSend.append("imageFile", selectedFile, selectedFile.name);
-    } else if (menu.imageUrl) {
-      dataToSend.append("imageUrl", menu.imageUrl);
+    
+    if (!menu || !menu.id) {
+      toast.error("ไม่พบข้อมูลเมนู");
+      return;
     }
 
-    onSave(menu.id, dataToSend);
+    setIsUpdating(true);
+    setUploadProgress(0);
+    
+    try {
+      let imageUrl = menu.imageUrl || "";
+
+      // Upload new image to Firebase Storage if file is selected
+      if (selectedFile) {
+        try {
+          imageUrl = await uploadImageToFirebase(selectedFile);
+          toast.success("อัปโหลดรูปภาพสำเร็จ!");
+        } catch (error) {
+          console.error("Failed to upload image:", error);
+          toast.error("อัปโหลดรูปภาพไม่สำเร็จ");
+          setIsUpdating(false);
+          return;
+        }
+      }
+
+      // Prepare payload with imageUrl instead of FormData
+      const payload = {
+        id: menu.id,
+        ...formData,
+        netPrice: netPrice,
+        imageUrl: imageUrl,
+      };
+
+      await updateMenu(menu.id, payload);
+      toast.success("แก้ไขเมนูสำเร็จ!");
+      
+      // Call onSave callback if provided (for parent component to refresh data)
+      // Wait for refresh to complete before closing modal
+      if (onSave) {
+        await onSave(menu.id, payload);
+      }
+      
+      // Call onCancel to close modal if provided
+      if (onCancel) {
+        onCancel();
+      }
+    } catch (error) {
+      console.error("Failed to update menu:", error);
+      toast.error(error?.response?.data?.message || "เกิดข้อผิดพลาดในการแก้ไขเมนู");
+    } finally {
+      setIsUpdating(false);
+      setUploadProgress(0);
+    }
   };
 
   return (
@@ -216,12 +288,36 @@ function EditMenuForm({ menu, onSave, onCancel }) {
         </div>
       </div>
 
-      <button
-        type="submit"
-        className="w-full bg-red-600 text-white py-3 rounded-xl font-bold text-lg hover:bg-red-700 transition-all shadow-lg shadow-red-200 mt-2"
-      >
-        บันทึกการแก้ไข
-      </button>
+      <div className="flex gap-3 mt-2">
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isUpdating}
+            className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            ยกเลิก
+          </button>
+        )}
+        <button
+          type="submit"
+          disabled={isUpdating}
+          className={`${onCancel ? 'flex-1' : 'w-full'} bg-red-600 text-white py-3 rounded-xl font-bold text-lg hover:bg-red-700 transition-all shadow-lg shadow-red-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2`}
+        >
+          {isUpdating ? (
+            <>
+              <Loader2 size={20} className="animate-spin" />
+              <span>
+                {selectedFile && uploadProgress > 0 
+                  ? `กำลังอัปโหลด... ${Math.round(uploadProgress)}%`
+                  : "กำลังบันทึก..."}
+              </span>
+            </>
+          ) : (
+            "บันทึกการแก้ไข"
+          )}
+        </button>
+      </div>
     </form>
   );
 }

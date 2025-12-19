@@ -145,16 +145,26 @@ function AdminShopSettingPage() {
        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-orange-50/50 rounded-full blur-3xl -z-10 opacity-60 -translate-x-1/4 translate-y-1/4" />
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 shrink-0">
+      <motion.div 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 shrink-0"
+      >
         <div>
-          <h1 className="text-2xl font-bold text-gray-800 mb-1">
-            ตั้งค่าระบบและร้านค้า
-          </h1>
-          <p className="text-gray-500 text-sm">
-            จัดการข้อมูลร้านค้าและตั้งค่าภาษี
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-gradient-to-br from-red-500 to-red-600 rounded-xl shadow-lg shadow-red-200">
+              <Store className="w-6 h-6 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+              ตั้งค่าระบบและร้านค้า
+            </h1>
+          </div>
+          <p className="text-gray-600 text-sm ml-14">
+            จัดการข้อมูลร้านค้า โลโก้ และตั้งค่าภาษีมูลค่าเพิ่ม
           </p>
         </div>
-      </div>
+      </motion.div>
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto min-h-0 pb-6 pr-2 custom-scrollbar">
@@ -171,18 +181,27 @@ function AdminShopSettingPage() {
             <form onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-6 max-w-3xl mx-auto">
               
-              <motion.div variants={itemVariants} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="p-6 border-b border-gray-50 bg-gradient-to-r from-gray-50 to-white">
-                  <div className="flex items-center gap-2">
-                    <Store className="w-5 h-5 text-gray-400" />
-                    <h3 className="font-semibold text-gray-800">ข้อมูลร้านค้า</h3>
+              <motion.div 
+                variants={itemVariants} 
+                className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300"
+              >
+                <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-red-50 via-white to-orange-50">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-red-100 rounded-lg">
+                      <Store className="w-5 h-5 text-red-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900 text-lg">ข้อมูลร้านค้า</h3>
+                      <p className="text-xs text-gray-500 mt-0.5">จัดการข้อมูลพื้นฐานของร้านค้า</p>
+                    </div>
                   </div>
                 </div>
                 
                 <div className="p-6 space-y-8">
                   {/* Logo Upload Section */}
                   <div className="group">
-                    <label className="block text-gray-700 text-sm font-medium mb-4 group-focus-within:text-red-500 transition-colors">
+                    <label className="block text-gray-800 text-sm font-bold mb-4 group-focus-within:text-red-600 transition-colors flex items-center gap-2">
+                      <ImageIcon className="w-4 h-4 text-red-500" />
                       โลโก้ร้านค้า
                     </label>
                     
@@ -227,26 +246,28 @@ function AdminShopSettingPage() {
                           animate={{ opacity: 1, scale: 1 }}
                           className="relative group/image"
                         >
-                          <div className="relative w-full h-[220px] rounded-lg overflow-hidden border-2 border-gray-100 bg-gray-50 flex items-center justify-center group-hover/image:border-red-100 transition-colors">
+                          <div className="relative w-full h-[220px] rounded-xl overflow-hidden border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white flex items-center justify-center group-hover/image:border-red-300 shadow-md group-hover/image:shadow-lg transition-all duration-300">
                             <img 
                               src={currentLogoUrl} 
                               alt="Shop Logo" 
-                              className="h-full object-contain"
+                              className="h-full object-contain p-4"
                             />
                             
                             {/* Overlay Actions */}
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/image:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-[2px]">
-                              <button
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity flex items-end justify-center pb-6">
+                              <motion.button
                                 type="button"
                                 onClick={() => setValue('logoUrl', '')}
-                                className="px-4 py-2 bg-white text-red-600 rounded-lg font-medium shadow-lg hover:bg-red-50 transition-colors transform hover:scale-105 active:scale-95 flex items-center gap-2"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="px-5 py-2.5 bg-white text-red-600 rounded-xl font-bold shadow-xl hover:bg-red-50 transition-colors flex items-center gap-2 border border-red-100"
                               >
                                 <ImageIcon className="w-4 h-4" />
                                 เปลี่ยนรูปภาพ
-                              </button>
+                              </motion.button>
                             </div>
                           </div>
-                          <p className="text-center text-xs text-gray-400 mt-2">
+                          <p className="text-center text-xs text-gray-500 mt-3 font-medium">
                             คลิกที่รูปเพื่อเปลี่ยนโลโก้
                           </p>
                         </motion.div>
@@ -258,61 +279,81 @@ function AdminShopSettingPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Shop Name */}
                     <div className="group md:col-span-2">
-                      <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
-                        ชื่อร้านค้า <span className="text-xs text-gray-400 font-normal">(จะแสดงในบิล)</span>
+                      <label className="block text-gray-800 text-sm font-bold mb-2 group-focus-within:text-red-600 transition-colors flex items-center gap-2">
+                        <Store className="w-4 h-4 text-red-500" />
+                        ชื่อร้านค้า <span className="text-xs text-gray-500 font-normal">(จะแสดงในบิล)</span>
                       </label>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                           <Store className="h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
                         </div>
                         <input
                           {...register('name', { required: 'กรุณากรอกชื่อร้านค้า' })}
                           type="text"
                           placeholder="เช่น Na-ni-no-Sushi POS"
-                          className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-400 transition-all text-gray-800 placeholder-gray-400"
+                          className="w-full pl-12 pr-4 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 shadow-sm hover:border-gray-300"
                         />
                       </div>
                       {errors.name && (
-                        <p className="text-red-500 text-xs mt-1 ml-1">{errors.name.message}</p>
+                        <motion.p 
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-red-500 text-xs mt-2 ml-1 font-medium flex items-center gap-1"
+                        >
+                          <span>⚠️</span> {errors.name.message}
+                        </motion.p>
                       )}
                     </div>
 
                     {/* Shop Address */}
                     <div className="group md:col-span-2">
-                      <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
-                        ที่อยู่ร้านค้า <span className="text-xs text-gray-400 font-normal">(สำหรับออกใบเสร็จ)</span>
+                      <label className="block text-gray-800 text-sm font-bold mb-2 group-focus-within:text-red-600 transition-colors flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-red-500" />
+                        ที่อยู่ร้านค้า <span className="text-xs text-gray-500 font-normal">(สำหรับออกใบเสร็จ)</span>
                       </label>
                       <div className="relative">
-                        <div className="absolute top-3 left-3 pointer-events-none">
+                        <div className="absolute top-3.5 left-4 pointer-events-none">
                           <MapPin className="h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
                         </div>
                         <textarea
                           {...register('address', { required: 'กรุณากรอกที่อยู่ร้านค้า' })}
                           rows="3"
                           placeholder="เช่น 123/4 Central District, Bangkok"
-                          className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-400 transition-all text-gray-800 placeholder-gray-400 resize-none"
+                          className="w-full pl-12 pr-4 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 resize-none shadow-sm hover:border-gray-300"
                         />
                       </div>
                       {errors.address && (
-                        <p className="text-red-500 text-xs mt-1 ml-1">{errors.address.message}</p>
+                        <motion.p 
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-red-500 text-xs mt-2 ml-1 font-medium flex items-center gap-1"
+                        >
+                          <span>⚠️</span> {errors.address.message}
+                        </motion.p>
                       )}
                     </div>
                   </div>
 
-                  <div className="border-t border-gray-100 pt-6">
-                    <div className="flex items-center gap-2 mb-6">
-                      <Receipt className="w-5 h-5 text-gray-400" />
-                      <h3 className="font-semibold text-gray-800">ตั้งค่าภาษีและค่าบริการ</h3>
+                  <div className="border-t border-gray-200 pt-8 mt-8">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="p-2 bg-orange-100 rounded-lg">
+                        <Receipt className="w-5 h-5 text-orange-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900 text-lg">ตั้งค่าภาษีและค่าบริการ</h3>
+                        <p className="text-xs text-gray-500 mt-0.5">กำหนดอัตราภาษีมูลค่าเพิ่มและค่าบริการ</p>
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {/* Service Charge */}
                       <div className="group">
-                        <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
+                        <label className="block text-gray-800 text-sm font-bold mb-2 group-focus-within:text-red-600 transition-colors flex items-center gap-2">
+                          <CreditCard className="w-4 h-4 text-red-500" />
                           ค่าบริการ (Service Charge)
                         </label>
                         <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <CreditCard className="h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
                           </div>
                           <input
@@ -323,24 +364,32 @@ function AdminShopSettingPage() {
                             })}
                             type="number"
                             step="0.01"
-                            className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-400 transition-all text-gray-800 placeholder-gray-400"
+                            placeholder="0.00"
+                            className="w-full pl-12 pr-14 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 shadow-sm hover:border-gray-300"
                           />
                           <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                            <span className="text-gray-400 font-medium">%</span>
+                            <span className="text-gray-500 font-bold">%</span>
                           </div>
                         </div>
                         {errors.serviceCharge && (
-                          <p className="text-red-500 text-xs mt-1 ml-1">{errors.serviceCharge.message}</p>
+                          <motion.p 
+                            initial={{ opacity: 0, y: -5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-red-500 text-xs mt-2 ml-1 font-medium flex items-center gap-1"
+                          >
+                            <span>⚠️</span> {errors.serviceCharge.message}
+                          </motion.p>
                         )}
                       </div>
 
                       {/* VAT */}
                       <div className="group">
-                        <label className="block text-gray-700 text-sm font-medium mb-2 group-focus-within:text-red-500 transition-colors">
+                        <label className="block text-gray-800 text-sm font-bold mb-2 group-focus-within:text-red-600 transition-colors flex items-center gap-2">
+                          <Percent className="w-4 h-4 text-red-500" />
                           ภาษีมูลค่าเพิ่ม (VAT)
                         </label>
                         <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <Percent className="h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
                           </div>
                           <input
@@ -351,14 +400,21 @@ function AdminShopSettingPage() {
                             })}
                             type="number"
                             step="0.01"
-                            className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-400 transition-all text-gray-800 placeholder-gray-400"
+                            placeholder="0.00"
+                            className="w-full pl-12 pr-14 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-gray-800 placeholder-gray-400 shadow-sm hover:border-gray-300"
                           />
                           <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                            <span className="text-gray-400 font-medium">%</span>
+                            <span className="text-gray-500 font-bold">%</span>
                           </div>
                         </div>
                         {errors.vat && (
-                          <p className="text-red-500 text-xs mt-1 ml-1">{errors.vat.message}</p>
+                          <motion.p 
+                            initial={{ opacity: 0, y: -5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-red-500 text-xs mt-2 ml-1 font-medium flex items-center gap-1"
+                          >
+                            <span>⚠️</span> {errors.vat.message}
+                          </motion.p>
                         )}
                       </div>
                     </div>
@@ -369,18 +425,23 @@ function AdminShopSettingPage() {
               {/* Submit Button */}
               <motion.button
                 variants={itemVariants}
-                whileHover={{ scale: 1.02, boxShadow: "0 10px 15px -3px rgba(220, 38, 38, 0.2)" }}
+                whileHover={{ scale: 1.02, boxShadow: "0 20px 25px -5px rgba(220, 38, 38, 0.3), 0 10px 10px -5px rgba(220, 38, 38, 0.1)" }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={loading || isUploading}
-                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-xl font-bold hover:from-red-700 hover:to-red-600 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-red-600 via-red-500 to-red-600 text-white rounded-2xl font-bold text-lg hover:from-red-700 hover:via-red-600 hover:to-red-700 transition-all duration-300 shadow-xl shadow-red-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none relative overflow-hidden group"
               >
+                {/* Animated background effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                
                 {loading ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <Loader2 className="w-6 h-6 animate-spin" />
                 ) : (
-                  <Save className="w-5 h-5" />
+                  <Save className="w-6 h-6" />
                 )}
-                {loading ? 'กำลังบันทึก...' : isUploading ? 'กำลังอัปโหลดรูปภาพ...' : 'บันทึกการตั้งค่า'}
+                <span className="relative z-10">
+                  {loading ? 'กำลังบันทึก...' : isUploading ? 'กำลังอัปโหลดรูปภาพ...' : 'บันทึกการตั้งค่า'}
+                </span>
               </motion.button>
             </div>
             </form>

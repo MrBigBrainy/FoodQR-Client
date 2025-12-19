@@ -3,8 +3,9 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import EditDiscountForm from "@/components/discountAdmin/EditDiscountForm";
-import { Trash2, AlertTriangle, Search, Filter, Pencil } from "lucide-react";
+import { Trash2, AlertTriangle, Search, Filter, Pencil, Calendar, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import toast from "react-hot-toast";
 
 const MOCK_AUTH = {
   storeId: 1,
@@ -40,14 +41,20 @@ function DiscountList({ discounts, loading, error, onRefresh }) {
         }
       );
 
-      alert("ลบสำเร็จ!");
+      toast.success(`ลบคูปอง "${deleteTarget.code}" สำเร็จ!`, {
+        icon: '✅',
+        duration: 3000,
+      });
       setIsDeleteOpen(false);
       setDeleteTarget(null);
       setCurrentPage(1);
       onRefresh(); // Call parent refresh
     } catch (err) {
       console.error("Error deleting:", err.response?.data || err);
-      alert("ลบไม่สำเร็จ: " + (err.response?.data?.message || err.message));
+      toast.error(`ลบไม่สำเร็จ: ${err.response?.data?.message || err.message}`, {
+        icon: '❌',
+        duration: 4000,
+      });
     }
   }
 
@@ -72,7 +79,10 @@ function DiscountList({ discounts, loading, error, onRefresh }) {
 
   async function handleSaveEdit(formData) {
     if (!formData.code || formData.amount <= 0) {
-      alert("กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน");
+      toast.error("กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน", {
+        icon: '⚠️',
+        duration: 3000,
+      });
       return;
     }
 
@@ -93,12 +103,18 @@ function DiscountList({ discounts, loading, error, onRefresh }) {
         }
       );
 
-      alert("แก้ไขสำเร็จ!");
+      toast.success("แก้ไขคูปองสำเร็จ!", {
+        icon: '✅',
+        duration: 3000,
+      });
       setIsEditOpen(false);
       onRefresh(); // Call parent refresh
     } catch (err) {
       console.error("Edit error:", err.response?.data || err);
-      alert("แก้ไขไม่สำเร็จ: " + (err.response?.data?.message || err.message));
+      toast.error(`แก้ไขไม่สำเร็จ: ${err.response?.data?.message || err.message}`, {
+        icon: '❌',
+        duration: 4000,
+      });
     }
   }
 
@@ -144,13 +160,13 @@ function DiscountList({ discounts, loading, error, onRefresh }) {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
           <input
             type="text"
-            placeholder="ค้นหารหัส/ชื่อคูปอง..."
+            placeholder="ค้นหาส่วนลด..."
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all bg-gray-50 focus:bg-white"
+            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all bg-gray-50 focus:bg-white text-gray-800 placeholder:text-gray-400"
           />
         </div>
       </div>
@@ -195,6 +211,12 @@ function DiscountList({ discounts, loading, error, onRefresh }) {
               </th>
               <th className="px-6 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
                 ใช้แล้ว
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+                วันที่เริ่มต้น
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+                วันที่หมดอายุ
               </th>
               <th className="px-6 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">สถานะ</th>
               <th className="px-6 py-4 text-right text-sm font-bold text-gray-700 uppercase tracking-wider">
@@ -244,6 +266,62 @@ function DiscountList({ discounts, loading, error, onRefresh }) {
                     </div>
                   </td>
                   <td className="px-6 py-4">
+                    {discount.startTime ? (
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Calendar size={16} className="text-gray-400" />
+                        <div>
+                          <div className="font-medium text-gray-800">
+                            {new Date(discount.startTime).toLocaleDateString('th-TH', { 
+                              year: 'numeric', 
+                              month: 'short', 
+                              day: 'numeric' 
+                            })}
+                          </div>
+                          <div className="text-xs text-gray-500 flex items-center gap-1">
+                            <Clock size={12} className="text-gray-400" />
+                            <span>
+                              {new Date(discount.startTime).toLocaleTimeString('th-TH', { 
+                                hour: '2-digit', 
+                                minute: '2-digit',
+                                hour12: false
+                              })} น.
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <span className="text-sm text-gray-400">-</span>
+                    )}
+                  </td>
+                  <td className="px-6 py-4">
+                    {discount.endTime ? (
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Clock size={16} className="text-gray-400" />
+                        <div>
+                          <div className="font-medium text-gray-800">
+                            {new Date(discount.endTime).toLocaleDateString('th-TH', { 
+                              year: 'numeric', 
+                              month: 'short', 
+                              day: 'numeric' 
+                            })}
+                          </div>
+                          <div className="text-xs text-gray-500 flex items-center gap-1">
+                            <Clock size={12} className="text-gray-400" />
+                            <span>
+                              {new Date(discount.endTime).toLocaleTimeString('th-TH', { 
+                                hour: '2-digit', 
+                                minute: '2-digit',
+                                hour12: false
+                              })} น.
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <span className="text-sm text-gray-400">-</span>
+                    )}
+                  </td>
+                  <td className="px-6 py-4">
                     <span
                       className={`px-3 py-1 inline-flex text-xs font-bold rounded-full ${
                         discount.status === "ใช้งาน"
@@ -282,12 +360,17 @@ function DiscountList({ discounts, loading, error, onRefresh }) {
 
             {currentDiscounts.length === 0 && (
               <tr>
-                <td colSpan="5" className="text-center py-12 text-gray-500">
+                <td colSpan="7" className="text-center py-12 text-gray-500">
                   <div className="flex flex-col items-center justify-center">
                     <div className="bg-gray-100 p-4 rounded-full mb-3">
                       <Search size={24} className="text-gray-400" />
                     </div>
-                    <p>ไม่พบข้อมูลคูปอง</p>
+                    <p className="text-lg font-medium text-gray-600">
+                      {searchTerm ? "ไม่มีส่วนลดที่ค้นหา" : discounts.length === 0 ? "ยังไม่มีส่วนลดในระบบ" : "ไม่พบข้อมูลส่วนลด"}
+                    </p>
+                    {searchTerm && (
+                      <p className="text-sm text-gray-400 mt-2">ลองค้นหาด้วยคำอื่น</p>
+                    )}
                   </div>
                 </td>
               </tr>
