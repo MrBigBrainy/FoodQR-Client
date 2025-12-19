@@ -23,7 +23,7 @@ function MenuCardAdmin({ menu, onEdit, onDelete }) {
       {/* เนื้อหา */}
       <div className="p-4 flex flex-col flex-1">
         {/* Row 1: ชื่อเมนู */}
-        <h3 className="font-bold text-gray-800 text-lg line-clamp-1 mb-3" title={menu.name}>
+        <h3 className="font-medium text-gray-800 text-lg line-clamp-1 mb-3" title={menu.name}>
           {menu.name}
         </h3>
 
@@ -33,15 +33,15 @@ function MenuCardAdmin({ menu, onEdit, onDelete }) {
           <div className="flex items-center gap-2">
             {hasDiscount ? (
               <>
-                <span className="text-red-600 font-bold text-xl">
+                <span className="text-red-600 font-medium text-xl">
                   ฿{menu.netPrice}
                 </span>
-                <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded-md">
+                <span className="bg-red-100 text-red-600 text-xs font-medium px-2 py-0.5 rounded-md">
                   ลด {menu.discount} บาท
                 </span>
               </>
             ) : (
-              <span className="text-gray-900 font-bold text-xl">
+              <span className="text-gray-900 font-medium text-xl">
                 ฿{menu.price}
               </span>
             )}

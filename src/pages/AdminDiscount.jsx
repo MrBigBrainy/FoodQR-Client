@@ -2,18 +2,67 @@ import CreateDiscountForm from "@/components/discountAdmin/CreateDiscountForm";
 import DiscountData from "@/components/discountAdmin/DiscountData";
 import DiscountList from "@/components/discountAdmin/DiscountList";
 import Modal from "@/components/Modal";
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { motion } from "motion/react";
 import { Plus, Percent } from "lucide-react";
+import RedWineLoader from "@/components/loader/RedWineLoader";
+import axios from "axios";
+
+const MOCK_AUTH = {
+  storeId: 1,
+  token: "MOCK_ADMIN_JWT_TOKEN",
+};
 
 function AdminDiscount() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [discounts, setDiscounts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchDiscounts = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await axios.get(`http://localhost:3000/api/discount/get`, {
+        headers: {
+          Authorization: `Bearer ${MOCK_AUTH.token}`,
+        },
+      });
+
+      const mapped = res.data.data.map((d) => ({
+        id: d.id,
+        code: d.code,
+        description: d.name || d.description || "ไม่มีคำอธิบาย",
+        value: d.amount,
+        type: d.discountType,
+        usage_count: d.count,
+        usage_limit: d.maxCount || 0,
+        status: d.isActive ? "ใช้งาน" : "หมดอายุ",
+        raw: d,
+      }));
+
+      setDiscounts(mapped);
+    } catch (err) {
+      console.error("Error Fetch Discounts:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchDiscounts();
+  }, [fetchDiscounts, refreshKey]);
 
   const handleCouponCreated = () => {
     setRefreshKey((prev) => prev + 1);
     setIsModalOpen(false);
     alert("✅ สร้างคูปองสำเร็จ! กำลังอัปเดตรายการ...");
+  };
+
+  const handleRefresh = () => {
+    setRefreshKey((prev) => prev + 1);
   };
 
   return (
@@ -43,14 +92,25 @@ function AdminDiscount() {
         </motion.button>
       </div>
 
-      <div className="space-y-6 flex-1 flex flex-col min-h-0">
-        <div className="shrink-0">
-          <DiscountData />
+      {loading ? (
+        <div className="flex-1 flex items-center justify-center min-h-[400px]">
+          <RedWineLoader scale={1} />
         </div>
-        <div className="flex-1 min-h-0">
-          <DiscountList key={refreshKey} />
+      ) : (
+        <div className="space-y-6 flex-1 flex flex-col min-h-0">
+          <div className="shrink-0">
+            <DiscountData />
+          </div>
+          <div className="flex-1 min-h-0">
+            <DiscountList 
+              discounts={discounts} 
+              loading={loading} 
+              error={error} 
+              onRefresh={handleRefresh} 
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       <Modal
         isOpen={isModalOpen}

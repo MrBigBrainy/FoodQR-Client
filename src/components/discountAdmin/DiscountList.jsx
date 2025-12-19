@@ -1,5 +1,5 @@
 import axios from "axios";
-import RedWineLoader from "@/components/loader/RedWineLoader";
+
 import React, { useCallback, useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import EditDiscountForm from "@/components/discountAdmin/EditDiscountForm";
@@ -12,11 +12,10 @@ const MOCK_AUTH = {
 };
 const ITEMS_PER_PAGE = 5;
 
-function DiscountList() {
-  const [discounts, setDiscounts] = useState([]);
+function DiscountList({ discounts, loading, error, onRefresh }) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(true); // Removed internal loading
+  // const [error, setError] = useState(null); // Removed internal error
 
   const [currentPage, setCurrentPage] = useState(1);
   const [filterStatus, setFilterStatus] = useState("all");
@@ -26,40 +25,7 @@ function DiscountList() {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [editData, setEditData] = useState(null);
 
-  const fetchDiscounts = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await axios.get(`http://localhost:3000/api/discount/get`, {
-        headers: {
-          Authorization: `Bearer ${MOCK_AUTH.token}`,
-        },
-      });
-
-      const mapped = res.data.data.map((d) => ({
-        id: d.id,
-        code: d.code,
-        description: d.name || d.description || "ไม่มีคำอธิบาย",
-        value: d.amount,
-        type: d.discountType,
-        usage_count: d.count,
-        usage_limit: d.maxCount || 0,
-        status: d.isActive ? "ใช้งาน" : "หมดอายุ",
-        raw: d,
-      }));
-
-      setDiscounts(mapped);
-    } catch (err) {
-      console.error("Error Fetch Discounts:", err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [MOCK_AUTH.token]);
-
-  useEffect(() => {
-    fetchDiscounts();
-  }, [fetchDiscounts]);
+  // Removed fetchDiscounts and useEffect
 
   async function handleConfirmDelete() {
     if (!deleteTarget) return;
@@ -78,7 +44,7 @@ function DiscountList() {
       setIsDeleteOpen(false);
       setDeleteTarget(null);
       setCurrentPage(1);
-      fetchDiscounts();
+      onRefresh(); // Call parent refresh
     } catch (err) {
       console.error("Error deleting:", err.response?.data || err);
       alert("ลบไม่สำเร็จ: " + (err.response?.data?.message || err.message));
@@ -93,7 +59,7 @@ function DiscountList() {
       code: d.code,
       discountType: d.discountType,
       amount: d.amount,
-      description: d.name || d.description, // Pass description/name correctly
+      description: d.name || d.description,
       maxCount: d.maxCount || 0,
       startTime: d.startTime ? d.startTime.slice(0, 16) : "",
       endTime: d.endTime ? d.endTime.slice(0, 16) : "",
@@ -129,7 +95,7 @@ function DiscountList() {
 
       alert("แก้ไขสำเร็จ!");
       setIsEditOpen(false);
-      fetchDiscounts();
+      onRefresh(); // Call parent refresh
     } catch (err) {
       console.error("Edit error:", err.response?.data || err);
       alert("แก้ไขไม่สำเร็จ: " + (err.response?.data?.message || err.message));
@@ -167,14 +133,8 @@ function DiscountList() {
     setFilterStatus(status);
     setCurrentPage(1);
   };
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 bg-white rounded-2xl shadow-lg border border-gray-100">
-        <RedWineLoader scale={1} />
-        <p className="mt-4 text-gray-500 font-medium animate-pulse">กำลังโหลดข้อมูล...</p>
-      </div>
-    );
-  }
+  
+  // Removed loading check here, handled by parent
   if (error) return <p className="text-red-600">เกิดข้อผิดพลาด: {error}</p>;
 
   return (
