@@ -7,7 +7,7 @@ import { initLiff, getProfile } from "@/liff/liff";
 import useUserStore from "@/stores/userStore";
 import { socket } from "@/socket/socket";
 import { useParams, useSearchParams } from "react-router";
-import { getStoreMenu } from "@/api/store.api";
+import { getStoreMenu, getStoreById } from "@/api/store.api";
 import useMenuStore from "../stores/useMenuStore";
 import useQrStore from "../stores/qrStore";
 import { getUserOrderByOrderId } from "@/api/userOrder.api";
@@ -71,24 +71,32 @@ function UserLayout() {
     };
   }, [storeId, tableId]);
 
-  // 4️⃣ Fetch menu — run only after storeId exists
+  // 4️⃣ Fetch menu and store info — run only after storeId exists
   useEffect(() => {
     if (!storeId) return;
 
-    const getMenu = async () => {
+    const fetchData = async () => {
       useMenuStore.getState().setLoading(true);
       try {
-        const response = await getStoreMenu(storeId);
-        console.log("Menu data:", response.data);
-        setMenu(response.data.menu);
+        const [menuRes, storeRes] = await Promise.all([
+          getStoreMenu(storeId),
+          getStoreById(storeId)
+        ]);
+        
+        console.log("Menu data:", menuRes.data);
+        setMenu(menuRes.data.menu);
+        
+        console.log("Store data:", storeRes.data);
+        useMenuStore.getState().setStoreInfo(storeRes.data.store);
+        
       } catch (err) {
-        console.error("Failed to fetch menu:", err);
+        console.error("Failed to fetch data:", err);
       } finally {
         useMenuStore.getState().setLoading(false);
       }
     };
 
-    getMenu();
+    fetchData();
   }, [storeId, setMenu]);
 
     useEffect(() => {
