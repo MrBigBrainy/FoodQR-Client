@@ -6,50 +6,12 @@ import CartIcon from '@/components/CartIcon';
 import CoffeeLoader from '../components/loader/coffeeLoader';
 import RedWineLoader from '@/components/loader/RedWineLoader';
 
-import toast from 'react-hot-toast';
-import { X, Info } from 'lucide-react';
-import { motion } from 'motion/react';
+import BillSplitInstructionModal from '@/components/BillSplitInstructionModal';
 
 function MenuPage() {
   const menu = useMenuStore((state) => state.menu);
 
-  useEffect(() => {
-    toast((t) => (
-      <motion.div 
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-start gap-4 min-w-[300px]"
-      >
-        <div className="bg-gradient-to-br from-orange-100 to-red-50 p-2.5 rounded-xl shrink-0 shadow-sm border border-orange-100">
-          <Info size={20} className="text-orange-600" />
-        </div>
-        <div className="flex-1 pt-0.5">
-          <h3 className="font-bold text-gray-900 text-sm mb-1">คำแนะนำ</h3>
-          <p className="text-sm text-gray-600 leading-relaxed">
-            หากต้องการแยกบิล ลูกค้าทุกท่านแสกนและสั่งอาหารของตัวเองได้เลยค่ะ
-          </p>
-        </div>
-        <button 
-          onClick={() => toast.dismiss(t.id)}
-          className="text-gray-400 hover:text-gray-600 transition-colors p-1.5 -mr-2 -mt-2 hover:bg-gray-100 rounded-full"
-        >
-          <X size={16} />
-        </button>
-      </motion.div>
-    ), {
-      duration: Infinity,
-      position: 'top-center',
-      style: {
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(8px)',
-        border: '1px solid #fff',
-        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-        borderRadius: '20px',
-        padding: '16px',
-        maxWidth: '90vw',
-      },
-    });
-  }, []);
+  useEffect(() => console.log(menu), [menu]);
 
   useEffect(() => console.log(menu), [menu]);
 
@@ -105,6 +67,7 @@ function MenuPage() {
         )}
       </div>
       {/* <CartIcon /> */}
+      <BillSplitInstructionModal />
     </div>
   );
 }
