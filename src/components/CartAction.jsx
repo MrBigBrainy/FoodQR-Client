@@ -23,9 +23,9 @@ const MenuActions = ({ onCallStaff, staffCalled }) => {
           <button 
             onClick={onCallStaff}
             disabled={staffCalled}
-            className={`${staffCalled ? 'bg-green-600 hover:bg-green-700' : 'bg-[#C10007] hover:bg-[#a30006]'} flex gap-2 justify-center items-center text-white font-medium py-2 px-3 rounded-lg shadow-md transition-colors w-full cursor-pointer`}
+            className={`${staffCalled ? 'bg-orange-500 hover:bg-orange-600' : 'bg-[#C10007] hover:bg-[#a30006]'} flex gap-2 justify-center items-center text-white font-medium py-2 px-3 rounded-lg shadow-md transition-colors w-full cursor-pointer`}
           >
-            <Bell className="w-5 h-5 mr-2" />
+            <Bell className={`w-5 h-5 mr-2 ${staffCalled ? 'animate-bounce' : ''}`} />
             <p>{staffCalled ? 'พนักงานกำลังมา...' : 'เรียกพนักงาน'}</p>
           </button>
 

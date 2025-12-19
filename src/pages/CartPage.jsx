@@ -6,17 +6,21 @@ import CartCard from "../components/CartCard";
 import CartOrder from "@/components/CartOrder";
 import { useState } from "react";
 import DeliveryLoader from "@/components/loader/DeliveryLoader";
+import { useOutletContext } from "react-router";
 
 function CartPage() {
   const items = useCartStore((state) => state.items);
   const totalCartItems = useCartStore((state) => state.totalCartItems);
   const [isCallingStaff, setIsCallingStaff] = useState(false);
   const [staffCalled, setStaffCalled] = useState(false);
+  const { setShowFooter } = useOutletContext();
 
   const handleCallStaff = () => {
     setIsCallingStaff(true);
+    setShowFooter(false);
     setTimeout(() => {
       setIsCallingStaff(false);
+      setShowFooter(true);
       setStaffCalled(true);
     }, 3000);
   };
@@ -26,11 +30,18 @@ function CartPage() {
   }
   return (
     <div className="min-h-screen bg-gray-50 pb-32 relative">
-      {isCallingStaff && (
-        <div className="fixed inset-0 z-50">
+      <AnimatePresence>
+        {isCallingStaff && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50"
+          >
             <DeliveryLoader />
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
       
       <CartAction onCallStaff={handleCallStaff} staffCalled={staffCalled} />
       

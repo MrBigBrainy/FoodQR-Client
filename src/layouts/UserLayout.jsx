@@ -1,4 +1,5 @@
 import { Outlet } from "react-router";
+import { AnimatePresence } from "motion/react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import CartIcon from "../components/CartIcon";
@@ -120,13 +121,17 @@ function UserLayout() {
     }, [])
 
 
+  const [showFooter, setShowFooter] = useState(true);
+
   return (
     <div className="fixed inset-0 bg-gray-50">
       <Header />
       <div className="absolute top-24 bottom-24 left-0 right-0 overflow-y-auto no-scrollbar pb-4">
-        <Outlet />
+        <Outlet context={{ setShowFooter }} />
       </div>
-      <Footer />
+      <AnimatePresence>
+        {showFooter && <Footer />}
+      </AnimatePresence>
     </div>
   );
 }
