@@ -14,16 +14,24 @@ const PaymentStatusPage = () => {
   const [paidUserIds, setPaidUserIds] = React.useState([]);
 
   React.useEffect(() => {
+    const timeouts = [];
     // Initial delay before starting the sequence
     const startDelay = setTimeout(() => {
       userOrder.forEach(([userId], index) => {
-        setTimeout(() => {
-          setPaidUserIds(prev => [...prev, userId]);
+        const timeout = setTimeout(() => {
+          setPaidUserIds(prev => {
+            if (prev.includes(userId)) return prev;
+            return [...prev, userId];
+          });
         }, index * 2000); // Stagger each user by 2 seconds
+        timeouts.push(timeout);
       });
     }, 2000); // Wait 2 seconds before starting
 
-    return () => clearTimeout(startDelay);
+    return () => {
+      clearTimeout(startDelay);
+      timeouts.forEach(clearTimeout);
+    };
   }, [userOrder]);
 
   // Transform userOrder data to match the UI requirements
