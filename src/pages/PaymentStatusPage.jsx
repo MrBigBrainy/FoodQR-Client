@@ -9,6 +9,20 @@ import useUserStore from "@/stores/userStore";
 const PaymentStatusPage = () => {
   const userOrder = useMenuStore((state) => state.userOrder);
   const currentLineId = useUserStore((state) => state.lineId);
+  const [paidUserIds, setPaidUserIds] = React.useState([]);
+
+  React.useEffect(() => {
+    // Initial delay before starting the sequence
+    const startDelay = setTimeout(() => {
+      userOrder.forEach(([userId], index) => {
+        setTimeout(() => {
+          setPaidUserIds(prev => [...prev, userId]);
+        }, index * 2000); // Stagger each user by 2 seconds
+      });
+    }, 2000); // Wait 2 seconds before starting
+
+    return () => clearTimeout(startDelay);
+  }, [userOrder]);
 
   // Transform userOrder data to match the UI requirements
   const users = userOrder.map(([userId, items]) => {
@@ -19,7 +33,7 @@ const PaymentStatusPage = () => {
       id: userId,
       name: user?.displayName || 'Guest',
       amount: amount,
-      status: 'pending', // Default status for now
+      status: paidUserIds.includes(userId) ? 'paid' : 'pending',
       avatarColor: 'bg-gray-200', // Default color, or derive from something if needed
       imageUrl: user?.imageUrl,
       isCurrentUser: userId === currentLineId,

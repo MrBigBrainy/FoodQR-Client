@@ -52,7 +52,9 @@ const router = createBrowserRouter([
    { path: "/test2", element: <Billing /> },
    { path: "/test3", element: <PaymentQRPage /> },
   { path: "/test4", element: <PaymentStatusPage /> },
-   { path: "/test5", element: <RedWineLoader /> },
+  { path: "/test5", element: <RedWineLoader /> },
+  { path: "/test6", element: <MenuBill /> },
+   
   {
     path: '/admin/store/:storeId',
     element: <AdminPage />,
