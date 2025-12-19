@@ -8,6 +8,7 @@ import { createOrder } from '@/api/order.api';
 import { useParams } from 'react-router';
 import { updateTableStatus } from '@/api/table.api';
 import CoffeeLoader from '@/components/loader/coffeeLoader';
+import RedWineLoader from '@/components/loader/RedWineLoader';
 import { motion, AnimatePresence } from 'motion/react';
 import { socket } from '@/lib/socket';
 import { 
@@ -373,7 +374,8 @@ function TableAdmin() {
                 
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
-                        <CoffeeLoader scale={0.6} />
+                        {/* <CoffeeLoader scale={0.6} /> */}
+                        <RedWineLoader scale={1} />
                     </div>
                 ) : tables.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-80 text-gray-400 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50/50">
