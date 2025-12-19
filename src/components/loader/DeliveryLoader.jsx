@@ -2,10 +2,10 @@ import React from 'react';
 
 const DeliveryLoader = () => {
   return (
-    <div className="relative h-screen w-full bg-gradient-to-br from-red-500 to-red-700 overflow-hidden flex items-center justify-center font-['Open_Sans',sans-serif]">
+    <div className="relative h-screen w-full bg-gradient-to-br from-red-500 to-red-700 overflow-hidden flex items-center justify-center">
       {/* CSS Styles Block */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,600');
+
 
         @keyframes speeder {
           0% { transform: translate(2px, 1px) rotate(0deg); }
@@ -106,8 +106,8 @@ const DeliveryLoader = () => {
       </div>
 
       {/* Text Label */}
-      <h1 className="absolute top-[58%] left-1/2 -translate-x-1/2 -ml-[20px] text-[#fafafa] text-[12px] font-semibold uppercase tracking-wider">
-        กำลังเรียกพนักงาน
+      <h1 className="absolute top-[60%] left-1/2 -translate-x-1/2 text-white text-xl font-bold tracking-wide animate-pulse">
+        กำลังเรียกพนักงาน...
       </h1>
     </div>
   );
