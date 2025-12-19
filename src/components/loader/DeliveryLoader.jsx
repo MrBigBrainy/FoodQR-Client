@@ -2,7 +2,7 @@ import React from 'react';
 
 const DeliveryLoader = () => {
   return (
-    <div className="relative h-screen w-full bg-[#f2692e] overflow-hidden flex items-center justify-center font-['Open_Sans',sans-serif]">
+    <div className="relative h-screen w-full bg-gradient-to-br from-red-500 to-red-700 overflow-hidden flex items-center justify-center font-['Open_Sans',sans-serif]">
       {/* CSS Styles Block */}
       <style>{`
         @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,600');
