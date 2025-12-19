@@ -10,12 +10,16 @@ import { useParams, useSearchParams } from "react-router";
 import { getStoreMenu } from "@/api/store.api";
 import useMenuStore from "../stores/useMenuStore";
 import useQrStore from "../stores/qrStore";
+import { getUserOrderByOrderId } from "@/api/userOrder.api";
 
 
 function UserLayout() {
   const [loading, setLoading] = useState(true);
   const { setUserStore } = useUserStore.getState();
   const { setMenu } = useMenuStore.getState();
+  const { setUserOrder } = useMenuStore.getState();
+  const { setTotalOrder } = useMenuStore.getState();
+  const { setEachUserOrder } = useMenuStore.getState();
   const [error, setError] = useState(null);
   
   // Zustand store
@@ -86,6 +90,26 @@ function UserLayout() {
 
     getMenu();
   }, [storeId, setMenu]);
+
+    useEffect(() => {
+      async function getUserOrder() {
+        const response = await getUserOrderByOrderId({ orderId: orderId || 1 });
+        setTotalOrder(response.data.data)
+        console.log('totalOrder', response.data.data)
+        const groupedData = response.data.data.reduce((acc, item) => {
+        const key = item.lineId;
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(item);
+        return acc;
+        }, {});
+        console.log("groupeddata", groupedData)
+        setEachUserOrder(groupedData)
+        const newData = Object.entries(groupedData)
+        console.log("newData", newData)
+        setUserOrder(newData);
+      }
+      getUserOrder();
+    }, [])
 
 
   return (

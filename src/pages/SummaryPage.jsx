@@ -81,24 +81,24 @@ function SummaryPage() {
                 }
   }
 
-  useEffect(() => {
-    async function getUserOrder() {
-      const response = await getUserOrderByOrderId({ orderId: orderId || 1 });
-      setTotalOrder(response.data.data)
-      const groupedData = response.data.data.reduce((acc, item) => {
-      const key = item.lineId;
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(item);
-      return acc;
-      }, {});
-      console.log("groupeddata", groupedData)
-      setEachUserOrder(groupedData)
-      const newData = Object.entries(groupedData)
-      console.log("newData", newData)
-      setUserOrder(newData);
-    }
-    getUserOrder();
-  }, [])
+  // useEffect(() => {
+  //   async function getUserOrder() {
+  //     const response = await getUserOrderByOrderId({ orderId: orderId || 1 });
+  //     setTotalOrder(response.data.data)
+  //     const groupedData = response.data.data.reduce((acc, item) => {
+  //     const key = item.lineId;
+  //     if (!acc[key]) acc[key] = [];
+  //     acc[key].push(item);
+  //     return acc;
+  //     }, {});
+  //     console.log("groupeddata", groupedData)
+  //     setEachUserOrder(groupedData)
+  //     const newData = Object.entries(groupedData)
+  //     console.log("newData", newData)
+  //     setUserOrder(newData);
+  //   }
+  //   getUserOrder();
+  // }, [])
 
    useEffect(() => {
       if (userOrder && userOrder.length > 0) {
