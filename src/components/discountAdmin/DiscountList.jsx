@@ -6,6 +6,7 @@ import EditDiscountForm from "@/components/discountAdmin/EditDiscountForm";
 import { Trash2, AlertTriangle, Search, Filter, Pencil, Calendar, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import toast from "react-hot-toast";
+import api from "@/api/axios";
 
 const MOCK_AUTH = {
   storeId: 1,
@@ -32,8 +33,16 @@ function DiscountList({ discounts, loading, error, onRefresh }) {
     if (!deleteTarget) return;
 
     try {
-      await axios.delete(
-        `http://localhost:3000/api/discount/delete/${deleteTarget.id}`,
+      // await axios.delete(
+      //   `http://localhost:3000/api/discount/delete/${deleteTarget.id}`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${MOCK_AUTH.token}`,
+      //     },
+      //   }
+      // );
+      await api.delete(
+        `/discount/delete/${deleteTarget.id}`,
         {
           headers: {
             Authorization: `Bearer ${MOCK_AUTH.token}`,
@@ -93,8 +102,17 @@ function DiscountList({ discounts, loading, error, onRefresh }) {
     };
 
     try {
-       await axios.put(
-        `http://localhost:3000/api/discount/update/${editData.id}`,
+      //  await axios.put(
+      //   `http://localhost:3000/api/discount/update/${editData.id}`,
+      //   finalEditData,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${MOCK_AUTH.token}`,
+      //     },
+      //   }
+      // );
+      await api.put(
+        `/discount/update/${editData.id}`,
         finalEditData,
         {
           headers: {

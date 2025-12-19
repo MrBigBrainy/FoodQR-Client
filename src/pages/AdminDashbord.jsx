@@ -9,8 +9,8 @@ import { Coins, ShoppingBag, Users, LayoutGrid } from 'lucide-react';
 import RedWineLoader from '@/components/loader/RedWineLoader';
 
 // socket เลือกรับจาก backend
-// const socket = io("https://foodqr-server.onrender.com");
-const socket = io("http://localhost:3000");
+const socket = io("https://foodqr-server.onrender.com");
+// const socket = io("http://localhost:3000");
 
 // ข้อมูลกราฟเส้น
 const lineData = {

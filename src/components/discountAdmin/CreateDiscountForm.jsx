@@ -12,6 +12,7 @@ import {
 import CustomSelect from "@/components/CustomSelect";
 import DateTimePicker from "@/components/DateTimePicker";
 import toast from "react-hot-toast";
+import api from "@/api/axios";
 
 const MOCK_AUTH = {
   storeId: 1,
@@ -99,8 +100,17 @@ function CreateDiscountForm({ onCouponCreated }) {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/discount/create",
+      // const response = await axios.post(
+      //   "http://localhost:3000/api/discount/create",
+      //   payload,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${MOCK_AUTH.token}`,
+      //     },
+      //   }
+      // );
+      const response = await api.post(
+        "/discount/create",
         payload,
         {
           headers: {

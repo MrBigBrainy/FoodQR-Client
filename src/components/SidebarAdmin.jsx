@@ -114,7 +114,7 @@ function SidebarAdmin() {
       <nav className="flex-1 px-4 space-y-2">
         {/* Back to Menu Link */}
         <NavLink
-          to={`http://localhost:5173/menu-qr?storeId=${storeId}`} 
+          to={` https://foodqr-ba71e.web.app/menu-qr?storeId=${storeId}`} 
           className="block mb-8"
         >
           <motion.div

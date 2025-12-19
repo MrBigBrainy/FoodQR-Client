@@ -8,6 +8,7 @@ import { Plus, Percent } from "lucide-react";
 import RedWineLoader from "@/components/loader/RedWineLoader";
 import axios from "axios";
 import toast from "react-hot-toast";
+import api from "@/api/axios";
 
 const MOCK_AUTH = {
   storeId: 1,
@@ -25,7 +26,12 @@ function AdminDiscount() {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.get(`http://localhost:3000/api/discount/get`, {
+      // const res = await axios.get(`http://localhost:3000/api/discount/get`, {
+      //   headers: {
+      //     Authorization: `Bearer ${MOCK_AUTH.token}`,
+      //   },
+      // });
+       const res = await api.get(`/discount/get`, {
         headers: {
           Authorization: `Bearer ${MOCK_AUTH.token}`,
         },

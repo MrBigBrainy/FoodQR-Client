@@ -12,6 +12,7 @@ import { motion } from "motion/react";
 import { Plus, Search } from "lucide-react";
 import RedWineLoader from "@/components/loader/RedWineLoader";
 import toast from "react-hot-toast";
+import api from "@/api/axios";
 
 function AdminAddMenu() {
   const { storeId } = useParams();
@@ -90,8 +91,11 @@ function AdminAddMenu() {
 
   const handleConfirmDelete = async (menuId) => {
     try {
-      const res = await axios.delete(
-        `http://localhost:3000/api/store/menu/${menuId}`
+      // const res = await axios.delete(
+      //   `http://localhost:3000/api/store/menu/${menuId}`
+      // );
+      const res = await api.delete(
+        `/store/menu/${menuId}`
       );
       console.log("delete success");
       getMenu();
