@@ -3,25 +3,28 @@ import { motion } from 'motion/react';
 import { Check, Clock, Loader2, User } from 'lucide-react';
 import Header from '../components/Header';
 
+import useMenuStore from "@/stores/useMenuStore";
+import useUserStore from "@/stores/userStore";
+
 const PaymentStatusPage = () => {
-  // Mock data to match the image
-  const users = [
-    {
-      id: 1,
-      name: 'Pim',
-      amount: 512.53,
-      status: 'pending', // pending | paid
-      avatarColor: 'bg-yellow-400',
-    },
-    {
-      id: 2,
-      name: 'คุณ', // You
-      amount: 85.60,
-      status: 'paid',
-      avatarColor: 'bg-red-600',
-      isCurrentUser: true,
-    },
-  ];
+  const userOrder = useMenuStore((state) => state.userOrder);
+  const currentLineId = useUserStore((state) => state.lineId);
+
+  // Transform userOrder data to match the UI requirements
+  const users = userOrder.map(([userId, items]) => {
+    const user = items[0]; // Get user info from the first item (it's flattened or directly on the item)
+    const amount = items.reduce((acc, item) => acc + (item.quantity * (item.menu?.netPrice || 0)), 0);
+    
+    return {
+      id: userId,
+      name: user?.displayName || 'Guest',
+      amount: amount,
+      status: 'pending', // Default status for now
+      avatarColor: 'bg-gray-200', // Default color, or derive from something if needed
+      imageUrl: user?.imageUrl,
+      isCurrentUser: userId === currentLineId,
+    };
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -75,8 +78,12 @@ const PaymentStatusPage = () => {
                 }`}
                 >
                 <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white shadow-sm ${user.avatarColor}`}>
-                    {user.isCurrentUser ? <User size={20} /> : <span className="text-sm font-bold">P</span>}
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-white shadow-sm overflow-hidden bg-gray-200">
+                        {user.imageUrl ? (
+                            <img src={user.imageUrl} alt={user.name} className="w-full h-full object-cover" />
+                        ) : (
+                            <User size={20} className="text-gray-500" />
+                        )}
                     </div>
                     <div>
                     <p className="font-bold text-gray-800">{user.name}</p>
