@@ -28,7 +28,7 @@ function DividedCard({selectedNetPrice, userOrder, paymentMethod, setPaymentMeth
       id: "pay-all",
       title: "จ่ายรวม",
       subtitle: "ชำระเงินพร้อมกันทั้งหมด",
-      price: `฿${selectedNetPrice}`,
+      price: null,
     },
     {
       id: "split-item",
@@ -104,7 +104,7 @@ function DividedCard({selectedNetPrice, userOrder, paymentMethod, setPaymentMeth
                   transition={{ duration: 0.3, ease: "easeOut" }}
                   className="mt-3 overflow-hidden"
                 >
-                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 flex items-center justify-between gap-4">
+                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 flex items-center justify-center gap-4">
                     
                     {/* Counter Section */}
                     <div className="flex flex-col items-center gap-2 flex-1">
@@ -124,15 +124,6 @@ function DividedCard({selectedNetPrice, userOrder, paymentMethod, setPaymentMeth
                           +
                         </button>
                       </div>
-                    </div>
-
-                    {/* Divider */}
-                    <div className="w-px h-12 bg-gray-200"></div>
-
-                    {/* Price Section */}
-                    <div className="flex flex-col items-center gap-1 flex-1">
-                      <span className="text-xs font-medium text-gray-500">จ่ายคนละ</span>
-                      <span className="text-xl font-bold text-red-600">฿{pricePerPerson}</span>
                     </div>
 
                   </div>

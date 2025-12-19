@@ -37,7 +37,7 @@ function CartCard({ item }) {
 
   return (
     <motion.div
-      layout
+
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -100 }}
@@ -105,12 +105,22 @@ function CartCard({ item }) {
       {/* Note Section */}
       <div className="mt-3 pt-3 border-t border-gray-50">
         {isEditingNote ? (
-          <div className="flex gap-2">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex gap-2"
+          >
             <input
               type="text"
               value={currentNote}
               onChange={(e) => setCurrentNote(e.target.value)}
-              onBlur={handleNoteSave}
+              onBlur={() => {
+                // Small delay to allow button click to register if needed, 
+                // though onBlur usually handles it. 
+                // Using timeout to prevent immediate unmount if clicking button?
+                // Actually, if onBlur saves, it's fine.
+                handleNoteSave();
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleNoteSave();
               }}
@@ -119,26 +129,29 @@ function CartCard({ item }) {
               className="flex-1 text-sm p-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition"
             />
             <button
+              onMouseDown={(e) => e.preventDefault()} // Prevent blur when clicking button
               onClick={handleNoteSave}
-              className="px-3 py-1 bg-gray-900 text-white text-xs rounded-lg font-medium"
+              className="px-3 py-1 bg-[#C10007] text-white text-xs rounded-lg font-medium shadow-sm hover:bg-[#a30006] transition-colors"
             >
               บันทึก
             </button>
-          </div>
+          </motion.div>
         ) : (
-          <div
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             onClick={() => setIsEditingNote(true)}
             className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-700 cursor-pointer group transition-colors"
           >
             <Edit3 size={12} className="group-hover:text-red-500" />
             {currentNote ? (
-              <span className="text-gray-700 font-medium bg-yellow-50 px-2 py-0.5 rounded text-ellipsis line-clamp-1">
-                Note: {currentNote}
+              <span className="text-gray-500 font-medium text-ellipsis line-clamp-1">
+                {currentNote}
               </span>
             ) : (
               <span>เพิ่มหมายเหตุถึงร้านค้า...</span>
             )}
-          </div>
+          </motion.div>
         )}
       </div>
     </motion.div>

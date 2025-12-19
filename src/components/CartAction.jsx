@@ -1,12 +1,12 @@
 import React from "react";
-import { ArrowLeft, Bell, Receipt } from "lucide-react";
+import { ArrowLeft, Bell } from "lucide-react";
 import { Link, useParams } from "react-router";
 //onclick bg-color #FF6900
 const MenuActions = () => {
   const { storeId, tableId } = useParams();
   const handleBackClick = () => console.log("Go back to menu clicked");
   const handleCallStaffClick = () => console.log("Call staff clicked");
-  const handleCheckBillClick = () => console.log("Check bill clicked");
+
   //test
   return (
     <div className="bg-white p-4 max-w-lg mx-auto  pt-4 ">
@@ -26,10 +26,7 @@ const MenuActions = () => {
             <p>เรียกพนักงาน</p>
           </button>
 
-          <button className="bg-[#C10007] flex gap-2 justify-center items-center text-white font-medium py-2 px-3 rounded-lg shadow-md hover:bg-[#a30006] transition-colors w-full cursor-pointer">
-            <Receipt className="w-5 h-5 mr-2" />
-            <p>เช็คบิล</p>
-          </button>
+
         </div>
       </div>
     </div>

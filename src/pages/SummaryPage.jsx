@@ -11,16 +11,20 @@ import { getUserOrderByOrderId } from "@/api/userOrder.api";
 import useQrStore from "@/stores/qrStore";
 import useUserStore from "@/stores/userStore";
 import useCartStore from "@/stores/cartStore";
+import useMenuStore from "@/stores/useMenuStore";
 import api from "@/api/axios";
 
 function SummaryPage() {
   const navigate = useNavigate();
   const { storeId, tableId } = useParams();
   const { orderId } = useQrStore();
-  const [userOrder, setUserOrder] = useState(null);
-  const [eachUserOrder, setEachUserOrder] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('pay-all')
-  const [totalOrder, setTotalOrder] = useState([]);
+
+   const userOrder = useMenuStore((state) => state.userOrder);
+   const totalOrder = useMenuStore((state) => state.totalOrder);
+   const eachUserOrder = useMenuStore((state) => state.eachUserOrder);
+console.log('total order', totalOrder)
+
   const [splitCount, setSplitCount] = useState(1);
   const [vat, setVat] = useState(0);
 
@@ -32,9 +36,9 @@ function SummaryPage() {
   const discountCard = useCartStore((state) => state.discountCard)
   const discountAmount = useCartStore((state) => state.discountAmount)
   
-  const totalPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.price), 0);
-  const totalDiscount = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.discount), 0);
-  const totalNetPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.netPrice), 0);
+  const totalPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * (item.menu?.price || 0)), 0);
+  const totalDiscount = totalOrder.reduce((acc, item) => acc + (item.quantity * (item.menu?.discount || 0)), 0);
+  const totalNetPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * (item.menu?.netPrice || 0)), 0);
   // const vat = (totalNetPrice * 0.07).toFixed(0)
 
   useEffect(() => console.log('userOrder', userOrder), [userOrder])
@@ -81,24 +85,24 @@ function SummaryPage() {
                 }
   }
 
-  useEffect(() => {
-    async function getUserOrder() {
-      const response = await getUserOrderByOrderId({ orderId: orderId || 1 });
-      setTotalOrder(response.data.data)
-      const groupedData = response.data.data.reduce((acc, item) => {
-      const key = item.lineId;
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(item);
-      return acc;
-      }, {});
-      console.log("groupeddata", groupedData)
-      setEachUserOrder(groupedData)
-      const newData = Object.entries(groupedData)
-      console.log("newData", newData)
-      setUserOrder(newData);
-    }
-    getUserOrder();
-  }, [])
+  // useEffect(() => {
+  //   async function getUserOrder() {
+  //     const response = await getUserOrderByOrderId({ orderId: orderId || 1 });
+  //     setTotalOrder(response.data.data)
+  //     const groupedData = response.data.data.reduce((acc, item) => {
+  //     const key = item.lineId;
+  //     if (!acc[key]) acc[key] = [];
+  //     acc[key].push(item);
+  //     return acc;
+  //     }, {});
+  //     console.log("groupeddata", groupedData)
+  //     setEachUserOrder(groupedData)
+  //     const newData = Object.entries(groupedData)
+  //     console.log("newData", newData)
+  //     setUserOrder(newData);
+  //   }
+  //   getUserOrder();
+  // }, [])
 
    useEffect(() => {
       if (userOrder && userOrder.length > 0) {

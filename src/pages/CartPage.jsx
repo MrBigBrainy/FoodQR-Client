@@ -25,7 +25,7 @@ function CartPage() {
         </h2>
 
         <motion.div
-          layout
+
           className="space-y-4"
         >
           <AnimatePresence mode="popLayout">

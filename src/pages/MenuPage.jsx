@@ -6,8 +6,12 @@ import CartIcon from '@/components/CartIcon';
 import CoffeeLoader from '../components/loader/coffeeLoader';
 import RedWineLoader from '@/components/loader/RedWineLoader';
 
+import BillSplitInstructionModal from '@/components/BillSplitInstructionModal';
+
 function MenuPage() {
   const menu = useMenuStore((state) => state.menu);
+
+  useEffect(() => console.log(menu), [menu]);
 
   useEffect(() => console.log(menu), [menu]);
 
@@ -63,6 +67,7 @@ function MenuPage() {
         )}
       </div>
       {/* <CartIcon /> */}
+      <BillSplitInstructionModal />
     </div>
   );
 }

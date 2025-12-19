@@ -22,6 +22,7 @@ import RedWineLoader from "@/components/loader/RedWineLoader";
 import PaymentQRPage from "@/pages/PaymentQRPage";
 import PaymentStatusPage from "@/pages/PaymentStatusPage";
 import NotFoundPage from "../pages/NotFoundPage";
+import DeliveryLoader from "../components/loader/DeliveryLoader";
 
 const router = createBrowserRouter([
   { path: "/store/:storeId/table/:tableName/:tableId/order/:orderId/bill", element: <MenuBill /> },
@@ -52,7 +53,10 @@ const router = createBrowserRouter([
    { path: "/test2", element: <Billing /> },
    { path: "/test3", element: <PaymentQRPage /> },
   { path: "/test4", element: <PaymentStatusPage /> },
-   { path: "/test5", element: <RedWineLoader /> },
+  { path: "/test5", element: <RedWineLoader /> },
+  { path: "/test6", element: <MenuBill /> },
+  { path: "/test7", element: <DeliveryLoader /> },
+   
   {
     path: '/admin/store/:storeId',
     element: <AdminPage />,

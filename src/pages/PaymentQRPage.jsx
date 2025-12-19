@@ -97,7 +97,7 @@ const PaymentQRPage = () => {
             transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
             className="bg-white p-4 rounded-xl border-2 border-gray-100 shadow-sm mb-6"
         >
-            {qrCode ? (
+            {/* {qrCode ? (
                 <img 
                     src={qrCode} 
                     alt="Payment QR Code" 
@@ -107,7 +107,12 @@ const PaymentQRPage = () => {
                 <div className="w-[200px] h-[200px] bg-gray-200 flex items-center justify-center rounded-lg text-gray-400">
                     No QR Code
                 </div>
-            )}
+            )} */}
+            <img 
+                src="/qrPayment.jpg" 
+                alt="Payment QR Code" 
+                className="w-full h-full object-contain"
+            />
            
         </motion.div>
 
