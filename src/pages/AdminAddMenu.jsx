@@ -10,6 +10,7 @@ import useMenuStore from "@/stores/useMenuStore";
 import { getStoreMenu } from "@/api/store.api";
 import { motion } from "motion/react";
 import { Plus, Search } from "lucide-react";
+import RedWineLoader from "@/components/loader/RedWineLoader";
 
 function AdminAddMenu() {
   const { storeId } = useParams();
@@ -30,6 +31,7 @@ function AdminAddMenu() {
         console.error("Failed to fetch menu:", err);
       } finally {
         useMenuStore.getState().setLoading(false);
+        setIsLoading(false);
       }
     };
 
@@ -157,16 +159,22 @@ function AdminAddMenu() {
       </div>
 
       {/* Menu Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredMenu.map((menu) => (
-          <MenuCardAdmin
-            key={menu.id}
-            menu={menu}
-            onEdit={handleEditClick}
-            onDelete={handleDeleteClick}
-          />
-        ))}
-      </div>
+      {isLoading ? (
+        <div className="flex-1 flex items-center justify-center min-h-[400px]">
+          <RedWineLoader scale={1} />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredMenu.map((menu) => (
+            <MenuCardAdmin
+              key={menu.id}
+              menu={menu}
+              onEdit={handleEditClick}
+              onDelete={handleDeleteClick}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Add Modal */}
       <Modal

@@ -170,7 +170,7 @@ function DiscountList() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-64 bg-white rounded-2xl shadow-lg border border-gray-100">
-        <RedWineLoader scale={0.8} />
+        <RedWineLoader scale={1} />
         <p className="mt-4 text-gray-500 font-medium animate-pulse">กำลังโหลดข้อมูล...</p>
       </div>
     );

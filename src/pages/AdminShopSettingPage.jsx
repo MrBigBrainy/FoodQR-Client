@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { FileText, Save, Store, MapPin, Receipt, Percent, CreditCard, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import RedWineLoader from '@/components/loader/RedWineLoader';
 import api from '@/api/axios';
 import { getStoreById, updateStoreById } from '@/api/store.api';
 import AddDropZone from '@/components/addmenu/AddDropZone';
@@ -32,6 +33,7 @@ function AdminShopSettingPage() {
   const [storeId] = useState(1);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
   
   const currentLogoUrl = watch('logoUrl');
 
@@ -53,6 +55,8 @@ function AdminShopSettingPage() {
 
       } catch (error) {
         console.error('Error fetching shop settings:', error);
+      } finally {
+        setIsFetching(false);
       }
     };
     fetchShopSettings();
@@ -159,7 +163,12 @@ function AdminShopSettingPage() {
           initial="hidden"
           animate="visible"
         >
-          <form onSubmit={handleSubmit(onSubmit)}>
+          {isFetching ? (
+            <div className="flex items-center justify-center min-h-[400px]">
+              <RedWineLoader scale={1} />
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-6 max-w-3xl mx-auto">
               
               <motion.div variants={itemVariants} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -374,7 +383,8 @@ function AdminShopSettingPage() {
                 {loading ? 'กำลังบันทึก...' : isUploading ? 'กำลังอัปโหลดรูปภาพ...' : 'บันทึกการตั้งค่า'}
               </motion.button>
             </div>
-          </form>
+            </form>
+          )}
         </motion.div>
       </div>
     </motion.div>
