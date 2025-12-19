@@ -16,7 +16,7 @@ const ThankYouCard = () => {
       className="w-full bg-white rounded-3xl shadow-xl overflow-hidden p-8 relative text-center border border-gray-100"
     >
       {/* Decorative Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500" />
+      {/* <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500" /> */}
       <div className="absolute -top-10 -right-10 w-32 h-32 bg-red-50 rounded-full blur-3xl opacity-50" />
       <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-yellow-50 rounded-full blur-3xl opacity-50" />
 
@@ -31,15 +31,6 @@ const ThankYouCard = () => {
           transition={{ delay: 0.6, duration: 0.5 }}
         >
             <CheckCircle2 size={48} className="text-green-500" strokeWidth={2.5} />
-        </motion.div>
-        
-        <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.8 }}
-            className="absolute -top-2 -right-2 bg-yellow-400 text-white p-1.5 rounded-full shadow-sm"
-        >
-            <Sparkles size={16} fill="currentColor" />
         </motion.div>
       </motion.div>
 
@@ -68,7 +59,7 @@ const ThankYouCard = () => {
         className="flex justify-center"
       >
         <button className="px-8 py-3 bg-red-600 text-white rounded-xl font-bold shadow-lg shadow-red-200 hover:bg-red-700 transition-colors active:scale-95">
-          กลับสู่หน้าหลัก
+          ให้คะแนนร้านเรา
         </button>
       </motion.div>
     </motion.div>
