@@ -2,7 +2,7 @@ import React from "react";
 
 function UserSummary({user, userOrder}) {
   const totalItems = userOrder.reduce((acc, item) => acc + item.quantity, 0);
-  const totalAmount = userOrder.reduce((acc, item) => acc + (item.quantity * item.menu.price), 0);
+  const totalAmount = userOrder.reduce((acc, item) => acc + (item.quantity * (item.menu?.price || 0)), 0);
 
   return (
     <div className="bg-white p-4 rounded-xl shadow-md border border-gray-200 mx-5">
@@ -31,11 +31,11 @@ function UserSummary({user, userOrder}) {
         {userOrder.map((item, index) => (
           <div key={index} className="flex justify-between items-center">
             <div className="truncate pr-2">
-              {item.menu.name}{" "}
+              {item.menu?.name}{" "}
               <span className="font-medium text-gray-500">x{item.quantity}</span>
             </div>
             <div className="font-semibold text-gray-800 whitespace-nowrap">
-              ฿{item.quantity * item.menu.price}
+              ฿{item.quantity * (item.menu?.price || 0)}
             </div>
           </div>
         ))}
