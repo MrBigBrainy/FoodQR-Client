@@ -5,9 +5,14 @@ import api from "@/api/axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import useQrStore from "@/stores/qrStore";
 
 function CartOrder() {
-  const {lineId} = useUserStore.getState();
+  const lineId = useUserStore((state) => state.lineId);
+  const pictureUrl = useUserStore((state) => state.pictureUrl);
+  const displayName = useUserStore((state) => state.displayName);
+  const orderId = useQrStore((state) => state.orderId)
+  
   const cart = useCartStore.getState();
   const { clearCart } = useCartStore();
   const navigate = useNavigate();
@@ -16,7 +21,7 @@ function CartOrder() {
     try {
       const orderPromises = cart.items.map((item) => 
         api.post("/userOrder/createOrder", {
-         menuId: item.id, quantity: item.amount, note: item.note, lineId: lineId, orderId: 1
+         menuId: item.id, quantity: item.amount, note: item.note, lineId, orderId, displayName, imageUrl: pictureUrl
         })
       );
 
