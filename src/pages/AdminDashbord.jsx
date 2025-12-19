@@ -104,61 +104,78 @@ const AdminDashboard = () => {
         visible: { opacity: 1, y: 0 }
     };
 
-    return (
-        <div className="flex bg-gray-50 min-h-screen">
-            {/* Main Content Area */}
-            <motion.main 
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                className="flex-1 p-6 max-w-7xl mx-auto"
-            >
-                                icon={Coins}
-                                color="red"
-                            />
-                            <DataCardAdmin 
-                                title="จำนวนออเดอร์" 
-                                count={orderToday} 
-                                icon={ShoppingBag}
-                                color="orange"
-                            />
-                            <DataCardAdmin 
-                                title="ลูกค้าทั้งหมด" 
-                                count={customerToday} 
-                                icon={Users}
-                                color="blue"
-                            />
-                            <DataCardAdmin 
-                                title="โต๊ะที่ว่าง" 
-                                count={`${availableTable}/${allTable}`} 
-                                icon={LayoutGrid}
-                                color="green"
+   return (
+    <div className="flex bg-gray-50 min-h-screen">
+        {/* Main Content Area */}
+        <motion.main
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="flex-1 p-6 max-w-7xl mx-auto"
+        >
+            {isLoading ? (
+                <RedWineLoader />
+            ) : (
+                <>
+                    {/* ===== Summary Cards ===== */}
+                    <motion.div
+                        variants={itemVariants}
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6"
+                    >
+                        <DataCardAdmin
+                            title="ยอดขายวันนี้"
+                            count={saleToday}
+                            icon={Coins}
+                            color="red"
+                        />
+                        <DataCardAdmin
+                            title="จำนวนออเดอร์"
+                            count={orderToday}
+                            icon={ShoppingBag}
+                            color="orange"
+                        />
+                        <DataCardAdmin
+                            title="ลูกค้าทั้งหมด"
+                            count={customerToday}
+                            icon={Users}
+                            color="blue"
+                        />
+                        <DataCardAdmin
+                            title="โต๊ะที่ว่าง"
+                            count={`${availableTable}/${allTable}`}
+                            icon={LayoutGrid}
+                            color="green"
+                        />
+                    </motion.div>
+
+                    {/* ===== Chart Section ===== */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Line Chart */}
+                        <motion.div
+                            variants={itemVariants}
+                            className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-gray-100"
+                        >
+                            <LineChart
+                                data={lineData}
+                                title="ยอดขายรายชั่วโมง"
                             />
                         </motion.div>
 
-                        {/* Chart Section */}
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            {/* Line Chart */}
-                            <motion.div 
-                                variants={itemVariants}
-                                className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-gray-100"
-                            >
-                                <LineChart data={lineData} title="ยอดขายรายชั่วโมง" />
-                            </motion.div>
-
-                            {/* Doughnut Chart */}
-                            <motion.div 
-                                variants={itemVariants}
-                                className="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-gray-100"
-                            >
-                                <DoughnutChart data={doughnutData} title="ประเภทลูกค้า" />
-                            </motion.div>
-                        </div>
-                    </>
-                )}
-            </motion.main>
-        </div>
-    );
+                        {/* Doughnut Chart */}
+                        <motion.div
+                            variants={itemVariants}
+                            className="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-gray-100"
+                        >
+                            <DoughnutChart
+                                data={doughnutData}
+                                title="ประเภทลูกค้า"
+                            />
+                        </motion.div>
+                    </div>
+                </>
+            )}
+        </motion.main>
+    </div>
+);
 };
-
 export default AdminDashboard;
