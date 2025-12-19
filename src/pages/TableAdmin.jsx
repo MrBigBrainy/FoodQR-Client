@@ -125,7 +125,8 @@ function TableAdmin() {
             
             // Refresh tables list
             const tablesRes = await getTables(storeId);
-            setTables(tablesRes.data.tables || []);
+            // setTables(tablesRes.data.tables || []);
+            setTables(tablesRes.data || []);
             
             // Reset form and close modal
             reset();
@@ -151,7 +152,8 @@ function TableAdmin() {
             await deleteTable(tableToDelete.id);
             // Refresh tables list
             const tablesRes = await getTables(storeId);
-            setTables(tablesRes.data.tables || []);
+             // setTables(tablesRes.data.tables || []);
+            setTables(tablesRes.data || []);
             toast.success("ลบโต๊ะสำเร็จ!");
             setIsDeleteModalOpen(false);
             setTableToDelete(null);
@@ -217,7 +219,8 @@ function TableAdmin() {
             
             // Refresh tables to show new status
             const tablesRes = await getTables(storeId);
-            setTables(tablesRes.data.tables || []);
+             // setTables(tablesRes.data.tables || []);
+            setTables(tablesRes.data || []);
             
         } catch (error) {
             console.error("Error closing table:", error);

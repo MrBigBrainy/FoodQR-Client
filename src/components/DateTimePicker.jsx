@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, X } from 'lucide-react';
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, X, ChevronUp, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 const DateTimePicker = ({ label, value, onChange, minDate, required = false }) => {
@@ -132,14 +132,20 @@ const DateTimePicker = ({ label, value, onChange, minDate, required = false }) =
     return days;
   };
 
-  // Format display value
-  const displayValue = value ? new Date(value).toLocaleString('th-TH', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }) : '';
+  // Format display value to match design: "31 ธ.ค. 2568 01:07 น."
+  const formatDisplayValue = (dateValue) => {
+    if (!dateValue) return '';
+    const date = new Date(dateValue);
+    const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+    const day = date.getDate();
+    const month = thaiMonths[date.getMonth()];
+    const year = date.getFullYear() + 543; // Convert to Buddhist Era
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${day} ${month} ${year} ${hours}:${minutes} น.`;
+  };
+
+  const displayValue = value ? formatDisplayValue(value) : '';
 
   return (
     <div className="relative" ref={containerRef}>
@@ -157,8 +163,7 @@ const DateTimePicker = ({ label, value, onChange, minDate, required = false }) =
         `}
       >
         <div className="flex items-center gap-3 text-gray-700">
-          <CalendarIcon size={18} className="text-red-500" />
-          <span className={`font-medium ${!value ? 'text-gray-400' : ''}`}>
+          <span className={`font-medium ${!value ? 'text-gray-400' : 'text-gray-800'}`}>
             {displayValue || 'เลือกวันและเวลา'}
           </span>
         </div>
@@ -209,28 +214,78 @@ const DateTimePicker = ({ label, value, onChange, minDate, required = false }) =
 
             {/* Time Picker */}
             <div className="border-t border-gray-100 pt-4 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-gray-600">
-                <Clock size={16} />
-                <span className="text-sm font-medium">เวลา</span>
+              <div className="flex items-center gap-2 text-gray-700">
+                <Clock size={16} className="text-gray-600" />
+                <span className="text-sm font-medium text-gray-800">เวลา</span>
               </div>
               <div className="flex items-center gap-2">
-                <input
-                  type="number"
-                  min="0"
-                  max="23"
-                  value={String(time.hours).padStart(2, '0')}
-                  onChange={(e) => handleTimeChange('hours', e.target.value)}
-                  className="w-12 p-1 text-center border border-gray-200 rounded-lg text-sm font-medium focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
-                />
-                <span className="text-gray-400">:</span>
-                <input
-                  type="number"
-                  min="0"
-                  max="59"
-                  value={String(time.minutes).padStart(2, '0')}
-                  onChange={(e) => handleTimeChange('minutes', e.target.value)}
-                  className="w-12 p-1 text-center border border-gray-200 rounded-lg text-sm font-medium focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
-                />
+                {/* Hours Input with Up/Down Buttons */}
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    max="23"
+                    value={String(time.hours).padStart(2, '0')}
+                    onChange={(e) => handleTimeChange('hours', e.target.value)}
+                    className="w-14 px-2 py-2 text-center border border-red-200 rounded-lg text-sm font-medium focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none bg-white"
+                  />
+                  <div className="absolute right-1 top-0 bottom-0 flex flex-col justify-center">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleTimeChange('hours', time.hours + 1);
+                      }}
+                      className="p-0.5 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      <ChevronUp size={12} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleTimeChange('hours', time.hours - 1);
+                      }}
+                      className="p-0.5 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      <ChevronDown size={12} />
+                    </button>
+                  </div>
+                </div>
+                <span className="text-gray-400 text-lg font-medium">:</span>
+                {/* Minutes Input with Up/Down Buttons */}
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    max="59"
+                    value={String(time.minutes).padStart(2, '0')}
+                    onChange={(e) => handleTimeChange('minutes', e.target.value)}
+                    className="w-14 px-2 py-2 text-center border border-gray-200 rounded-lg text-sm font-medium focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none bg-white"
+                  />
+                  <div className="absolute right-1 top-0 bottom-0 flex flex-col justify-center">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleTimeChange('minutes', time.minutes + 1);
+                      }}
+                      className="p-0.5 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      <ChevronUp size={12} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleTimeChange('minutes', time.minutes - 1);
+                      }}
+                      className="p-0.5 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      <ChevronDown size={12} />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
             

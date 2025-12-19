@@ -103,7 +103,7 @@ function SidebarAdmin() {
           </div>
           <div>
             <h1 className="text-xl font-bold text-gray-900 tracking-tight">
-              FoodQR
+              TOH-R-HARN
             </h1>
             <p className="text-xs text-gray-500 font-medium">Admin Panel</p>
           </div>

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import CustomSelect from "@/components/CustomSelect";
 import DateTimePicker from "@/components/DateTimePicker";
+import toast from "react-hot-toast";
 
 const MOCK_AUTH = {
   storeId: 1,
@@ -67,12 +68,22 @@ function CreateDiscountForm({ onCouponCreated }) {
     e.preventDefault();
     setSubmitError(null);
     if (!formData.code || formData.amount <= 0) {
-      setSubmitError("กรุณากรอกรหัสคูปอง ชื่อ และมูลค่าส่วนลดให้ถูกต้อง");
+      const errorMessage = "กรุณากรอกรหัสคูปอง ชื่อ และมูลค่าส่วนลดให้ถูกต้อง";
+      setSubmitError(errorMessage);
+      toast.error(errorMessage, {
+        icon: '⚠️',
+        duration: 3000,
+      });
       return;
     }
 
     if (!formData.startTime || !formData.endTime) {
-      setSubmitError("กรุณาเลือกวันส่วนลดให้ถูกต้อง");
+      const errorMessage = "กรุณาเลือกวันส่วนลดให้ถูกต้อง";
+      setSubmitError(errorMessage);
+      toast.error(errorMessage, {
+        icon: '⚠️',
+        duration: 3000,
+      });
       return;
     }
 
@@ -99,7 +110,10 @@ function CreateDiscountForm({ onCouponCreated }) {
       );
 
       console.log("Backend Response (Axios):", response.data);
-      alert(`✅ สร้างคูปอง ${formData.code} สำเร็จ!`);
+      toast.success(`สร้างคูปอง "${formData.code}" สำเร็จ!`, {
+        icon: '✅',
+        duration: 3000,
+      });
 
       if (onCouponCreated) {
         onCouponCreated();
@@ -116,9 +130,19 @@ function CreateDiscountForm({ onCouponCreated }) {
       });
     } catch (error) {
       if (error.response && error.response.data) {
-        setSubmitError("ชื่อคูปองนี้ถูกใช้อยู่หรือกำลังใช้อยู่");
+        const errorMessage = error.response.data.message || "ชื่อคูปองนี้ถูกใช้อยู่หรือกำลังใช้อยู่";
+        setSubmitError(errorMessage);
+        toast.error(errorMessage, {
+          icon: '❌',
+          duration: 4000,
+        });
       } else {
-        setSubmitError("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
+        const errorMessage = "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้";
+        setSubmitError(errorMessage);
+        toast.error(errorMessage, {
+          icon: '❌',
+          duration: 4000,
+        });
       }
     } finally {
       setIsSubmitting(false);

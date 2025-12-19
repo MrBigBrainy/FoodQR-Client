@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import { Plus, Percent } from "lucide-react";
 import RedWineLoader from "@/components/loader/RedWineLoader";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const MOCK_AUTH = {
   storeId: 1,
@@ -39,6 +40,8 @@ function AdminDiscount() {
         usage_count: d.count,
         usage_limit: d.maxCount || 0,
         status: d.isActive ? "ใช้งาน" : "หมดอายุ",
+        startTime: d.startTime,
+        endTime: d.endTime,
         raw: d,
       }));
 
@@ -58,7 +61,7 @@ function AdminDiscount() {
   const handleCouponCreated = () => {
     setRefreshKey((prev) => prev + 1);
     setIsModalOpen(false);
-    alert("✅ สร้างคูปองสำเร็จ! กำลังอัปเดตรายการ...");
+    // Toast notification is already shown in CreateDiscountForm
   };
 
   const handleRefresh = () => {
