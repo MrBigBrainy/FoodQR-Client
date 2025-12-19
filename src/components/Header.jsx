@@ -30,11 +30,11 @@ function Header() {
         >
           {storeInfo?.logoUrl ? (
              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-white p-1 shadow-md">
+                <div className="w-12 h-12 rounded-full bg-white shadow-md overflow-hidden border-2 border-white/20">
                   <img 
                     src={storeInfo.logoUrl} 
                     alt={storeInfo.name} 
-                    className="w-full h-full object-contain rounded-lg"
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <div>
