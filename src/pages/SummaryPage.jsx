@@ -23,7 +23,7 @@ function SummaryPage() {
    const userOrder = useMenuStore((state) => state.userOrder);
    const totalOrder = useMenuStore((state) => state.totalOrder);
    const eachUserOrder = useMenuStore((state) => state.eachUserOrder);
-
+console.log('total order', totalOrder)
 
   const [splitCount, setSplitCount] = useState(1);
   const [vat, setVat] = useState(0);
@@ -36,9 +36,9 @@ function SummaryPage() {
   const discountCard = useCartStore((state) => state.discountCard)
   const discountAmount = useCartStore((state) => state.discountAmount)
   
-  const totalPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.price), 0);
-  const totalDiscount = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.discount), 0);
-  const totalNetPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * item.menu.netPrice), 0);
+  const totalPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * (item.menu?.price || 0)), 0);
+  const totalDiscount = totalOrder.reduce((acc, item) => acc + (item.quantity * (item.menu?.discount || 0)), 0);
+  const totalNetPrice = totalOrder.reduce((acc, item) => acc + (item.quantity * (item.menu?.netPrice || 0)), 0);
   // const vat = (totalNetPrice * 0.07).toFixed(0)
 
   useEffect(() => console.log('userOrder', userOrder), [userOrder])
