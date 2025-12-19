@@ -2,10 +2,9 @@ import React from "react";
 import { ArrowLeft, Bell } from "lucide-react";
 import { Link, useParams } from "react-router";
 //onclick bg-color #FF6900
-const MenuActions = () => {
+const MenuActions = ({ onCallStaff, staffCalled }) => {
   const { storeId, tableId } = useParams();
   const handleBackClick = () => console.log("Go back to menu clicked");
-  const handleCallStaffClick = () => console.log("Call staff clicked");
 
   //test
   return (
@@ -21,9 +20,13 @@ const MenuActions = () => {
       </Link>
       <div className="flex space-x-4">
         <div className="flex justify-between w-full space-x-4">
-          <button className="bg-[#C10007] flex gap-2 justify-center items-center text-white font-medium py-2 px-3 rounded-lg shadow-md hover:bg-[#a30006] transition-colors w-full cursor-pointer">
+          <button 
+            onClick={onCallStaff}
+            disabled={staffCalled}
+            className={`${staffCalled ? 'bg-green-600 hover:bg-green-700' : 'bg-[#C10007] hover:bg-[#a30006]'} flex gap-2 justify-center items-center text-white font-medium py-2 px-3 rounded-lg shadow-md transition-colors w-full cursor-pointer`}
+          >
             <Bell className="w-5 h-5 mr-2" />
-            <p>เรียกพนักงาน</p>
+            <p>{staffCalled ? 'พนักงานกำลังมา...' : 'เรียกพนักงาน'}</p>
           </button>
 
 
