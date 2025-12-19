@@ -29,9 +29,9 @@ export default function HistoryCard() {
   const navigate = useNavigate();
   const { totalOrder } = useMenuStore();
 
-  // Sort orders by updatedAt descending (newest first)
+  // Sort orders by orderTime descending (newest first)
   const sortedOrders = [...totalOrder].sort((a, b) => 
-    new Date(b.updatedAt) - new Date(a.updatedAt)
+    new Date(b.orderTime) - new Date(a.orderTime)
   );
 
   return (
@@ -89,7 +89,7 @@ export default function HistoryCard() {
                         <div>
                             <div className="font-bold text-gray-800 text-sm">{item.displayName || "Unknown User"}</div>
                             <div className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
-                                {formatDate(item.updatedAt)}
+                                {formatDate(item.orderTime)}
                             </div>
                         </div>
                     </div>
