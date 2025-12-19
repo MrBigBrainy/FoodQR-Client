@@ -11,16 +11,20 @@ import { getUserOrderByOrderId } from "@/api/userOrder.api";
 import useQrStore from "@/stores/qrStore";
 import useUserStore from "@/stores/userStore";
 import useCartStore from "@/stores/cartStore";
+import useMenuStore from "@/stores/useMenuStore";
 import api from "@/api/axios";
 
 function SummaryPage() {
   const navigate = useNavigate();
   const { storeId, tableId } = useParams();
   const { orderId } = useQrStore();
-  const [userOrder, setUserOrder] = useState(null);
-  const [eachUserOrder, setEachUserOrder] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('pay-all')
-  const [totalOrder, setTotalOrder] = useState([]);
+
+   const userOrder = useMenuStore((state) => state.userOrder);
+   const totalOrder = useMenuStore((state) => state.totalOrder);
+   const eachUserOrder = useMenuStore((state) => state.eachUserOrder);
+
+
   const [splitCount, setSplitCount] = useState(1);
   const [vat, setVat] = useState(0);
 

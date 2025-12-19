@@ -28,7 +28,7 @@ function DividedCard({selectedNetPrice, userOrder, paymentMethod, setPaymentMeth
       id: "pay-all",
       title: "จ่ายรวม",
       subtitle: "ชำระเงินพร้อมกันทั้งหมด",
-      price: `฿${selectedNetPrice}`,
+      price: null,
     },
     {
       id: "split-item",
