@@ -114,10 +114,10 @@ export default function HistoryCard() {
                     <div className="flex gap-3">
                         {/* User Image */}
                          <div className="shrink-0">
-                            {item.user?.imageUrl ? (
+                            {item.imageUrl ? (
                                 <img 
-                                    src={item.user.imageUrl} 
-                                    alt={item.user.displayName} 
+                                    src={item.imageUrl} 
+                                    alt={item.displayName} 
                                     className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
                                 />
                             ) : (
