@@ -8,6 +8,7 @@ import { Link, useParams, useNavigate } from "react-router";
 import { easeInOut, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { getUserOrderByOrderId } from "@/api/userOrder.api";
+import { updateOrder } from "@/api/order.api";
 import useQrStore from "@/stores/qrStore";
 import useUserStore from "@/stores/userStore";
 import useCartStore from "@/stores/cartStore";
@@ -63,7 +64,10 @@ console.log('total order', totalOrder)
     }
 
   async function handlePaymentClick () {
-                try {
+    try {
+                  const result = await updateOrder({orderId, status: 'กำลังจ่ายเงิน', subtotal: totalPrice, total: totalNetPrice})            
+                  console.log('handlePaymentResult' ,result)
+
                   const omiseResponse = await createSource()
                   console.log('new src id:', omiseResponse.id);
 
