@@ -169,7 +169,7 @@ function DividedCard({selectedNetPrice, userOrder, paymentMethod, setPaymentMeth
                               </div>
                             </div>
                             <div className="text-right">
-                              <span className="font-bold text-red-600 text-lg">฿{userTotal.toFixed(2)}</span>
+                              <span className="font-bold text-red-600 text-lg">฿{Number(selectedNetPrice).toFixed(2)}</span>
                               <span className="text-[10px] text-gray-500 block">(ยอดของคุณ)</span>
                             </div>
                           </div>
