@@ -1,6 +1,8 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-const useMenuStore = create((set, get) => ({
+
+const useMenuStore = create(persist((set, get) => ({
     menu: [],
     userOrder: [],
     totalOrder: [],
@@ -13,6 +15,8 @@ const useMenuStore = create((set, get) => ({
     setTotalOrder: (totalOrder) => set({ totalOrder }),
     setEachUserOrder: (eachUserOrder) => set({ eachUserOrder }),
     setStoreInfo: (storeInfo) => set({ storeInfo }),
+}), {
+    name: 'menu-storage',
 }));
 
 export default useMenuStore;
