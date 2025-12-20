@@ -3,6 +3,9 @@ import { ArrowLeft, Receipt, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import useMenuStore from "@/stores/useMenuStore";
+import RedWineLoader from "./loader/RedWineLoader";
+import { getUserOrderByOrderId } from "@/api/userOrder.api";
+import useQrStore from "@/stores/qrStore";
 
 function formatTHB(amount) {
   return new Intl.NumberFormat("th-TH", {
@@ -31,6 +34,8 @@ export default function HistoryCard() {
   const { setTotalOrder } = useMenuStore.getState();
   const { setEachUserOrder } = useMenuStore.getState();
   const { setUserOrder } = useMenuStore.getState();
+  const { orderId } = useQrStore();
+  const [loading, setLoading] = useState(true);
 
   // Sort orders by orderTime descending (newest first)
   const sortedOrders = [...totalOrder].sort((a, b) => 
@@ -39,23 +44,33 @@ export default function HistoryCard() {
 
       useEffect(() => {
         async function getUserOrder() {
-          const response = await getUserOrderByOrderId({ orderId: orderId || 1 });
-          setTotalOrder(response.data.data)
-          console.log('totalOrder', response.data.data)
-          const groupedData = response.data.data.reduce((acc, item) => {
-          const key = item.lineId;
-          if (!acc[key]) acc[key] = [];
-          acc[key].push(item);
-          return acc;
-          }, {});
-          console.log("groupeddata", groupedData)
-          setEachUserOrder(groupedData)
-          const newData = Object.entries(groupedData)
-          console.log("newData", newData)
-          setUserOrder(newData);
+          try {
+            const response = await getUserOrderByOrderId({ orderId: orderId || 1 });
+            setTotalOrder(response.data.data)
+            console.log('totalOrder', response.data.data)
+            const groupedData = response.data.data.reduce((acc, item) => {
+              const key = item.lineId;
+              if (!acc[key]) acc[key] = [];
+              acc[key].push(item);
+              return acc;
+            }, {});
+            console.log("groupeddata", groupedData)
+            setEachUserOrder(groupedData)
+            const newData = Object.entries(groupedData)
+            console.log("newData", newData)
+            setUserOrder(newData);
+          } catch (error) {
+            console.error("Error fetching user order:", error);
+          } finally {
+            setLoading(false);
+          }
         }
         getUserOrder();
-      }, [])
+      }, [orderId])
+  if (loading) {
+    return <RedWineLoader />;
+  }
+
   return (
     <motion.div
       className="min-h-screen bg-gray-50 pb-28"
