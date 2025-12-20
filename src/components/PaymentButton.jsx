@@ -30,16 +30,16 @@ const PaymentButton = ({onClick, amount}) => {
   const handlePayment = async () => {
     console.log('--')
     try {
-      const omiseResponse = await createSource();
+      // const omiseResponse = await createSource();
 
-      const response = await api.post("/omise", {
-        source: omiseResponse.id,
-      });
-      console.log(response);
-      setBilling({
-        qrUrl: response.data.qrUrl,
-        chargeId: response.data.chargeId,
-      });
+      // const response = await api.post("/omise", {
+      //   source: omiseResponse.id,
+      // });
+      // console.log(response);
+      // setBilling({
+      //   qrUrl: response.data.qrUrl,
+      //   chargeId: response.data.chargeId,
+      // });
       navigate("/billing");
     } catch (error) {
       console.error(error);

@@ -6,9 +6,9 @@ const useUserStore = create(persist((set, get) => ({
   lineId: null,
   pictureUrl: null,
   displayName: null,
-  setUserStore: ({ lineId, pictureUrl, displayName }) =>
+  setUserStore: ({ userId, pictureUrl, displayName }) =>
     set(() => ({
-      lineId,
+      lineId: userId,
       pictureUrl,
       displayName,
     })),
