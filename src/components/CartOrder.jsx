@@ -12,12 +12,21 @@ function CartOrder() {
   const pictureUrl = useUserStore((state) => state.pictureUrl);
   const displayName = useUserStore((state) => state.displayName);
   const orderId = useQrStore((state) => state.orderId)
+
+  console.log('lineId', lineId)
+  console.log('pictureUrl', pictureUrl)
+  console.log('displayName', displayName)
+  console.log('orderId', orderId)
   
   const cart = useCartStore.getState();
   const { clearCart } = useCartStore();
   const navigate = useNavigate();
 
   async function handleSubmitOrder() {
+      console.log('lineId handleSubmitOrder', lineId)
+      console.log('pictureUrl handleSubmitOrder', pictureUrl)
+      console.log('displayName handleSubmitOrder', displayName)
+      console.log('orderId handleSubmitOrder', orderId)
     try {
       const orderPromises = cart.items.map((item) => 
         api.post("/userOrder/createOrder", {
