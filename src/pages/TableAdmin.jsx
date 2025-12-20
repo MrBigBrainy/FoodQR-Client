@@ -93,21 +93,45 @@ function TableAdmin() {
     }, [storeId]);
 
     useEffect(() => console.log(tables), [tables]);
+useEffect(() => {
+  console.log("start socket tableStatusUpdated");
 
-    useEffect(() => {
+  const onConnect = () => {
+    console.log("🟢 socket connected", socket.id);
 
-        console.log("start socket tableStatusUpdated")
-        socket.on('tableStatusUpdated', (updatedTable) => {
-            console.log("event tableStatusUpdated start")
-            console.log("updated Table", updatedTable)
-    setTables((prev) =>
-      prev.map(o => o.id === updatedTable.tableId ? { ...o, status: updatedTable.status } : o)
+    // join room again (important after refresh)
+    socket.emit("joinStore", { storeId });
+
+    // listen AFTER connect
+    socket.on("tableStatusUpdated", handleUpdate);
+  };
+
+  const handleUpdate = (updatedTable) => {
+    console.log("🔥 event tableStatusUpdated", updatedTable);
+
+    setTables(prev =>
+      prev.map(t =>
+        t.id === updatedTable.tableId
+          ? { ...t, status: updatedTable.status }
+          : t
+      )
     );
-    console.log("event tableStatusUpdated end")
-  });
+  };
 
-  return () => socket.off('tableStatusUpdated');
-}, []);
+  if (socket.connected) {
+    onConnect();
+  }
+
+  socket.on("connect", onConnect);
+
+  return () => {
+    socket.off("connect", onConnect);
+    socket.off("tableStatusUpdated", handleUpdate);
+  };
+}, [storeId]);
+
+
+
 
 
     const onSubmit = async (data) => {
@@ -245,7 +269,8 @@ function TableAdmin() {
                 tableId: selectedTableForOrder.id,
                 status: "in_use"
             }
-            await updateTableStatus(tableStatusData)
+            const result = await updateTableStatus(tableStatusData)
+            console.log("result update table status", result)
 
             
             // Open billing page in new tab

@@ -28,12 +28,34 @@ function formatDate(dateString) {
 export default function HistoryCard() {
   const navigate = useNavigate();
   const { totalOrder } = useMenuStore();
+  const { setTotalOrder } = useMenuStore.getState();
+  const { setEachUserOrder } = useMenuStore.getState();
+  const { setUserOrder } = useMenuStore.getState();
 
   // Sort orders by orderTime descending (newest first)
   const sortedOrders = [...totalOrder].sort((a, b) => 
     new Date(b.orderTime) - new Date(a.orderTime)
   );
 
+      useEffect(() => {
+        async function getUserOrder() {
+          const response = await getUserOrderByOrderId({ orderId: orderId || 1 });
+          setTotalOrder(response.data.data)
+          console.log('totalOrder', response.data.data)
+          const groupedData = response.data.data.reduce((acc, item) => {
+          const key = item.lineId;
+          if (!acc[key]) acc[key] = [];
+          acc[key].push(item);
+          return acc;
+          }, {});
+          console.log("groupeddata", groupedData)
+          setEachUserOrder(groupedData)
+          const newData = Object.entries(groupedData)
+          console.log("newData", newData)
+          setUserOrder(newData);
+        }
+        getUserOrder();
+      }, [])
   return (
     <motion.div
       className="min-h-screen bg-gray-50 pb-28"

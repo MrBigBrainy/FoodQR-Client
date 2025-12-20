@@ -32,7 +32,7 @@ function MenuPage() {
       <div className="max-w-6xl mx-auto pb-36 px-4">
         {useMenuStore((state) => state.loading) ? (
           <div className="flex justify-center items-center min-h-[50vh]">
-            <div className="bg-white/80 backdrop-blur-sm p-8 rounded-full shadow-lg border border-white/50">
+            <div>
               {/* <CoffeeLoader scale={0.4} /> */}
               <RedWineLoader scale={1} />
             </div>

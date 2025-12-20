@@ -8,9 +8,11 @@ import { useParams } from 'react-router'
 function AdminPage() {
     const { storeId } = useParams();
     useEffect(() => {
+        console.log('adminpage storeId', storeId)
         if (!storeId) return
         socket.on("connect", () => {
-            socket.emit("joinStore", storeId);
+            console.log('adminpage connect')
+            socket.emit("joinStore", {storeId});
         });
 
         return () => {
