@@ -76,14 +76,15 @@ console.log('total order', totalOrder)
                   //   })
                   //   console.log(response)
                     
-                    navigate('/test3', { 
-                        state: { 
-                            amount: totalNetPrice, 
-                            qrCode: response.data.qrUrl, 
-                            orderNo: orderId, 
-                            tableNo: tableId 
-                        } 
-                    });
+                    // navigate('/test3', { 
+                    //     state: { 
+                    //         amount: totalNetPrice, 
+                    //         qrCode: response.data.qrUrl, 
+                    //         orderNo: orderId, 
+                    //         tableNo: tableId 
+                    //     } 
+                    // });
+                    navigate('/test3');
                 } catch (error) {
                     console.error("Payment error:", error);
                 }
