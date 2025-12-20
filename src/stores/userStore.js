@@ -1,6 +1,8 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-const useUserStore = create((set, get) => ({
+
+const useUserStore = create(persist((set, get) => ({
   lineId: null,
   pictureUrl: null,
   displayName: null,
@@ -10,6 +12,8 @@ const useUserStore = create((set, get) => ({
       pictureUrl,
       displayName,
     })),
+}), {
+  name: 'user-storage',
 }));
 
 export default useUserStore;
