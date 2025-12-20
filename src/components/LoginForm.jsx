@@ -47,7 +47,7 @@ function LoginForm() {
       toast.success('เข้าสู่ระบบสำเร็จ!');
 
       if (storeId) {
-        socket.emit('joinStore', { storeId });
+        // socket.emit('joinStore', { storeId });
         navigate(`/admin/store/${storeId}`);
       } else {
         navigate('/admin/createStore');
