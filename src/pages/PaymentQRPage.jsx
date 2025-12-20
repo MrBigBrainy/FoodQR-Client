@@ -18,9 +18,9 @@ const PaymentQRPage = () => {
   const [statusThai, setStatusThai] = useState("รอชำระเงิน");
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const shopName = "Na-ni-no-Sushi POS";
-  const shopNameThai = "นานิโนะ ซูชิ";
-  const shopSubName = "Nanino Sushi";
+  const shopName = "Minna No Sushi";
+  const shopNameThai = "มินนะ โนะ ซูชิ";
+  const shopSubName = "Minna No Sushi";
   
   const displayAmount = amount ? `฿${amount.toLocaleString()}` : "฿0.00";
 
