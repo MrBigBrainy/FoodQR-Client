@@ -68,13 +68,13 @@ console.log('total order', totalOrder)
                   const result = await updateOrder({orderId, status: 'กำลังจ่ายเงิน', subtotal: totalPrice, total: totalNetPrice})            
                   console.log('handlePaymentResult' ,result)
 
-                  const omiseResponse = await createSource()
-                  console.log('new src id:', omiseResponse.id);
+                  // const omiseResponse = await createSource()
+                  // console.log('new src id:', omiseResponse.id);
 
-                    const response = await api.post('/omise', {
-                        source: omiseResponse.id
-                    })
-                    console.log(response)
+                  //   const response = await api.post('/omise', {
+                  //       source: omiseResponse.id
+                  //   })
+                  //   console.log(response)
                     
                     navigate('/test3', { 
                         state: { 

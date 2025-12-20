@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, Receipt, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
@@ -42,31 +42,31 @@ export default function HistoryCard() {
     new Date(b.orderTime) - new Date(a.orderTime)
   );
 
-      // useEffect(() => {
-      //   async function getUserOrder() {
-      //     try {
-      //       const response = await getUserOrderByOrderId({ orderId: orderId || 1 });
-      //       setTotalOrder(response.data.data)
-      //       console.log('totalOrder', response.data.data)
-      //       const groupedData = response.data.data.reduce((acc, item) => {
-      //         const key = item.lineId;
-      //         if (!acc[key]) acc[key] = [];
-      //         acc[key].push(item);
-      //         return acc;
-      //       }, {});
-      //       console.log("groupeddata", groupedData)
-      //       setEachUserOrder(groupedData)
-      //       const newData = Object.entries(groupedData)
-      //       console.log("newData", newData)
-      //       setUserOrder(newData);
-      //     } catch (error) {
-      //       console.error("Error fetching user order:", error);
-      //     } finally {
-      //       setLoading(false);
-      //     }
-      //   }
-      //   getUserOrder();
-      // }, [orderId])
+      useEffect(() => {
+        async function getUserOrder() {
+          try {
+            const response = await getUserOrderByOrderId({ orderId: orderId || 1 });
+            setTotalOrder(response.data.data)
+            console.log('totalOrder', response.data.data)
+            const groupedData = response.data.data.reduce((acc, item) => {
+              const key = item.lineId;
+              if (!acc[key]) acc[key] = [];
+              acc[key].push(item);
+              return acc;
+            }, {});
+            console.log("groupeddata", groupedData)
+            setEachUserOrder(groupedData)
+            const newData = Object.entries(groupedData)
+            console.log("newData", newData)
+            setUserOrder(newData);
+          } catch (error) {
+            console.error("Error fetching user order:", error);
+          } finally {
+            setLoading(false);
+          }
+        }
+        getUserOrder();
+      }, [orderId])
   if (loading) {
     return <RedWineLoader />;
   }
